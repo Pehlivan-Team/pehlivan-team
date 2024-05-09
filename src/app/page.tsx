@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
 import { Reveal } from "@/components/reveal";
+import { Separator } from "@/components/ui/separator";
 export default function Home() {
   return (
     <main className="overflow-hidden">
@@ -33,7 +34,7 @@ export default function Home() {
         <br />
         <br />
         <Reveal width="fit-content" left={true}>
-          <Card className=" flex flex-row bg-black text-white border-none justify-between items-center gap-5 xl:px-64">
+          <Card className=" flex md:flex-row flex-col bg-black text-white border-none justify-between items-center gap-5 xl:px-64">
             <Image
               src="/img/sari.jpeg"
               alt="araclar"
@@ -51,8 +52,9 @@ export default function Home() {
             </div>
           </Card>
         </Reveal>
+        <Separator />
         <Reveal width="fit-content">
-          <Card className=" flex flex-row bg-black text-white border-none justify-center items-center gap-5 xl:px-64">
+          <Card className=" flex md:flex-row flex-col bg-black text-white border-none justify-center items-center gap-5 xl:px-64">
             <div>
               <h1 className="text-6xl font-bol">Sarı</h1>
               <p className="text-4xl">
@@ -70,8 +72,10 @@ export default function Home() {
             />
           </Card>
         </Reveal>
+        <Separator />
+
         <Reveal width="fit-content" left={true}>
-          <Card className=" flex flex-row bg-black text-white border-none justify-between items-center gap-5 xl:px-64">
+          <Card className=" flex md:flex-row flex-col bg-black text-white border-none justify-between items-center gap-5 xl:px-64">
             <Image
               src="/img/sari.jpeg"
               alt="araclar"
