@@ -1,99 +1,155 @@
-"use client";
-import Hero from "@/components/landing/hero";
-import { Card } from "@/components/ui/card";
+import Motion from "@/components/motion/drag-on-load";
 import Image from "next/image";
-import React from "react";
-import { Reveal } from "@/components/reveal";
-import { Separator } from "@/components/ui/separator";
+import logo from "@/assets/logo_png.png";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Award, BatteryCharging, Zap } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
 export default function Home() {
   return (
-    <main className="overflow-hidden">
-      <Hero />
-      <div className="flex flex-col items-center justify-center w-full p-10">
-        <h2 className="text-4xl font-bold">Bizi Tanıyın</h2>
-        <p className="text-3xl text-center">
-          Pehlivan Team , geleceğin mühendislerinden oluşan , ileri
-          teknolojileri kullanarak alternatif enerjili araçlar üreten Trakya
-          Üniversitesi Tasarım ve Proje Topluluğu altında bir üniversite
-          ekibidir.2014 yılında kurulan ekibimiz elde ettiği başarılarla
-          kazandığı tecrübeyi katlayarak heyecanlı bir şekilde yoluna devam
-          etmektedir.Takımımız bugüne kadar ürettiği araçlarla ve katıldığı
-          yarışlarda elde ettiği başarılarla her kesimden insanın takdirini
-          kazanmıştır.
+    <div className="bg-gray-950 h-screen w-screen ">
+      <section className="bg-gray-900 xl:py-56 py-40 align-middle justify-center items-center flex flex-col">
+        <Motion className="flex flex-col " motionDirection="down">
+          <div className="flex-col pb-10 flex align-middle justify-center items-center">
+            <h1 className="text-white text-6xl font-extrabold">Pehlivan</h1>
+            <h1 className="text-white text-6xl font-extrabold">Team</h1>
+          </div>
+        </Motion>
+        <p className="text-white text-xl ">
+          Elektrikli araç teknolojisinin sınırlarını zorlayan üniversite
+          projesi. Sürdürülebilir ulaşımda devrim yaratmamıza katılın.
         </p>
-      </div>
+      </section>
 
-      <article className="flex flex-col items-center justify-center w-full bg-black text-white p-16 gap-16">
-        <h2 className="text-4xl font-bold">Araçlarımız</h2>
-        <p className="text-3xl text-center">
-          Pehlivan Team olarak 2014 yılından bu yana birçok araç ürettik ve
-          yarışmalara katıldık. Bu araçlarımızdan bazıları aşağıda
-          gösterilmektedir.
-        </p>
-        <br />
-        <br />
-        <br />
-        <Reveal width="fit-content" left={true}>
-          <Card className=" flex md:flex-row flex-col bg-black text-white border-none justify-between items-center gap-5 xl:px-64">
-            <Image
-              src="/img/sari.jpeg"
-              alt="araclar"
-              width={400}
-              height={400}
-            />
-            <div>
-              <h1 className="text-6xl font-bol">Sarı</h1>
-              <p className="text-4xl">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
-                quas sequi similique assumenda nam, exercitationem dicta.
-                Quidem, temporibus ut suscipit modi nulla aperiam! Quos nihil
-                nostrum accusamus dignissimos possimus repellendus.
-              </p>
-            </div>
-          </Card>
-        </Reveal>
-        <Separator />
-        <Reveal width="fit-content">
-          <Card className=" flex md:flex-row flex-col bg-black text-white border-none justify-center items-center gap-5 xl:px-64">
-            <div>
-              <h1 className="text-6xl font-bol">Sarı</h1>
-              <p className="text-4xl">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
-                quas sequi similique assumenda nam, exercitationem dicta.
-                Quidem, temporibus ut suscipit modi nulla aperiam! Quos nihil
-                nostrum accusamus dignissimos possimus repellendus.
-              </p>
-            </div>
-            <Image
-              src="/img/sari.jpeg"
-              alt="araclar"
-              width={400}
-              height={400}
-            />
-          </Card>
-        </Reveal>
-        <Separator />
+      <section
+        id="about"
+        className=" max-xl:w-screen py-12 md:py-24 lg:py-32 bg-gray-50 justify-center align-middle text-center"
+      >
+        <div className="px-4 md:px-6">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
+            Projemiz Hakkında
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Motion className="flex flex-col" motionDirection="left">
+              <Card>
+                <CardContent className="flex flex-col items-center space-y-2 p-6">
+                  <BatteryCharging className="h-12 w-12 text-green-500" />
+                  <h3 className="text-xl font-bold">
+                    Yenilikçi Batarya Teknolojisi
+                  </h3>
+                  <p className="text-center text-gray-600">
+                    Uzun menzil ve daha hızlı şarj için ileri teknoloji batarya
+                    çözümleri geliştiriyoruz.
+                  </p>
+                </CardContent>
+              </Card>
+            </Motion>
+            <Motion className="flex flex-col" motionDirection="down">
+              <Card>
+                <CardContent className="flex flex-col items-center space-y-2 p-6">
+                  <Zap className="h-12 w-12 text-yellow-500" />
+                  <h3 className="text-xl font-bold">Verimli Motorlar</h3>
+                  <p className="text-center text-gray-600">
+                    Gücü ve verimliliği optimize etmek için yüksek verimli
+                    Mitsuba motorları kullanıyoruz.
+                  </p>
+                </CardContent>
+              </Card>
+            </Motion>
+            <Motion className="flex flex-col" motionDirection="right">
+              <Card>
+                <CardContent className="flex flex-col items-center space-y-2 p-6">
+                  <Award className="h-12 w-12 text-blue-500" />
+                  <h3 className="text-xl font-bold">Ödüllü Tasarım</h3>
+                  <p className="text-center text-gray-600">
+                    Form ve işlevi birleştiren şık, aerodinamik araçlar
+                    yaratıyoruz.
+                  </p>
+                </CardContent>
+              </Card>
+            </Motion>
+          </div>
+        </div>
+      </section>
 
-        <Reveal width="fit-content" left={true}>
-          <Card className=" flex md:flex-row flex-col bg-black text-white border-none justify-between items-center gap-5 xl:px-64">
-            <Image
-              src="/img/sari.jpeg"
-              alt="araclar"
-              width={400}
-              height={400}
-            />
-            <div>
-              <h1 className="text-6xl font-bol">Sarı</h1>
-              <p className="text-4xl">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
-                quas sequi similique assumenda nam, exercitationem dicta.
-                Quidem, temporibus ut suscipit modi nulla aperiam! Quos nihil
-                nostrum accusamus dignissimos possimus repellendus.
+      <section
+        id="achievements"
+        className=" bg-slate-200 w-full py-12 md:py-24 lg:py-32"
+      >
+        <div className="pl-2 pr-2 px-4 md:px-6">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
+            Başarılarımız
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">
+                  1. Yer - EV İnovasyon Yarışması 2023
+                </h3>
+                <p className="text-gray-600">
+                  Çığır açan batarya yönetim sistemimizle tanındık.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">
+                  En İyi Tasarım - Üniversite EV Fuarı
+                </h3>
+                <p className="text-gray-600">
+                  Şık ve verimli araç tasarımımızla ödüllendirildik.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+      <section id="team" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
+        <div className="pl-2 pr-2 px-4 md:px-6">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
+            Ekibimizle Tanışın
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((member) => (
+              <Card key={member}>
+                <CardContent className="flex flex-col items-center space-y-2 p-6">
+                  <div className="w-24 h-24 rounded-full bg-gray-300" />
+                  <h3 className="text-lg font-semibold">
+                    Takım Üyesi {member}
+                  </h3>
+                  <p className="text-sm text-gray-600 text-center">
+                    Rol / Uzmanlık
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section
+        id="contact"
+        className="w-full py-12 md:py-24 lg:py-32 bg-black text-white"
+      >
+        <div className="pl-2 pr-2 px-4 md:px-6">
+          <div className="flex flex-col items-center space-y-4 text-center">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Yolculuğumuza Katılın
+              </h2>
+              <p className="mx-auto max-w-[600px] text-gray-300 md:text-xl">
+                Elektrikli araçlar ve sürdürülebilir teknolojiyle ilgileniyor
+                musunuz? Daha fazla bilgi almak veya ekibimize katılmak için
+                bizimle iletişime geçin!
               </p>
             </div>
-          </Card>
-        </Reveal>
-      </article>
-    </main>
+            <div className="w-full max-w-sm space-y-2"></div>
+            <Button className="w-full bg-white text-black hover:bg-gray-200">
+              Bize Ulaşın
+            </Button>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
