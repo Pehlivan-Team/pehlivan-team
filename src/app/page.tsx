@@ -1,9 +1,6 @@
 import Motion from "@/components/motion/drag-on-load";
-import Image from "next/image";
-import logo from "@/assets/logo_png.png";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Award, BatteryCharging, Zap } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
