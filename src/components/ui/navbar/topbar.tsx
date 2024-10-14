@@ -6,16 +6,16 @@ const Topbar = () => {
     <div className="bg-gray-950 text-white w-screen h-16">
       <div className="flex justify-between items-center h-full px-4">
         <Image src={logo} alt="Logo" className="h-10 w-10" />
-        <h1 className="text-2xl">Pehlivan Team</h1>
+        <h1 className="text-2xl"></h1>
         <div className="flex space-x-4">
-          <a href="#" className="text-white">
-            Home
+          <a href="#achievements" className="text-white">
+            Başarılarımız
           </a>
-          <a href="#" className="text-white">
-            About
+          <a href="#team" className="text-white">
+            Takım
           </a>
-          <a href="#" className="text-white">
-            Contact
+          <a href="#contact" className="text-white">
+            Bize Ulaş
           </a>
         </div>
       </div>

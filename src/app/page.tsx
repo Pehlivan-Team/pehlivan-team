@@ -2,13 +2,63 @@ import Motion from "@/components/motion/drag-on-load";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Award, BatteryCharging, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo_png.png";
+import Image from "next/image";
 
 export default function Home() {
+  const members = [
+    {
+      name: "Fatih Coşar",
+      role: "Takım Kaptanı / Makine Mühendisliği",
+      img: logo,
+    },
+    {
+      name: "Yener Süphan Güneş",
+      role: "Elektrik ve Yazılım Başkanı/Elektrik-Elektronik Mühendisliği",
+      img: logo,
+    },
+    {
+      name: "Ozan Çağan Işık",
+      role: "Tasarım Başkanı / Makine Mühendisliği",
+      img: logo,
+    },
+    {
+      name: "Kaan Yılmaz",
+      role: "Analiz Başkanı / Makine Mühendisliği",
+      img: logo,
+    },
+    {
+      name: "Mert Kılıç",
+      role: "Gövde Tasarım Başkanı / Makine Mühendisliği",
+      img: logo,
+    },
+    {
+      name: "Mirza Berk Demirtaş",
+      role: "Mekanik Başkanı / Makine Mühendisliği",
+      img: logo,
+    },
+    {
+      name: "Eşref Kaan Kurtoğlu",
+      role: "Gövde Sorumlusu /Makine Mühendisliği",
+      img: logo,
+    },
+    {
+      name: "Emirhan Fidan",
+      role: "Mekanik Sorumlusu /Makine Mühendisliği",
+      img: logo,
+    },
+    {
+      name: "Emir Yavuz",
+      role: "Mekanik Sorumlusu /Makine Mühendisliği",
+      img: logo,
+    },
+  ];
   return (
     <div className="bg-gray-950 h-screen w-screen ">
-      <section className="bg-gray-900 xl:py-56 py-40 align-middle justify-center items-center flex flex-col">
+      <section className="bg-gray-900 xl:pb-56 pb-40 align-middle justify-center items-center flex flex-col">
         <Motion className="flex flex-col " motionDirection="down">
           <div className="flex-col pb-10 flex align-middle justify-center items-center">
+            <Image src={logo} alt="Logo" width={300} height={100} />
             <h1 className="text-white text-6xl font-extrabold">Pehlivan</h1>
             <h1 className="text-white text-6xl font-extrabold">Team</h1>
           </div>
@@ -78,24 +128,46 @@ export default function Home() {
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
             Başarılarımız
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold mb-2">
-                  1. Yer - EV İnovasyon Yarışması 2023
+                  Tübitak Efficiency Challenge - 2015
                 </h3>
-                <p className="text-gray-600">
-                  Çığır açan batarya yönetim sistemimizle tanındık.
-                </p>
+                <p className="text-gray-600">Tasarım Ödüllü</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold mb-2">
-                  En İyi Tasarım - Üniversite EV Fuarı
+                  FormulaG Güneş Arabaları Yarışı - 2014
+                </h3>
+                <p className="text-gray-600">Kurul Özel Ödülü</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">
+                  FormulaG Güneş Arabaları Yarışı - 2014
+                </h3>
+                <p className="text-gray-600">Üçünülük Ödülü</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">
+                  Tübitak Efficiency Challenge - 2016
+                </h3>
+                <p className="text-gray-600">İkincilik Ödülü</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">
+                  Tübitak Efficiency Challenge - 2016
                 </h3>
                 <p className="text-gray-600">
-                  Şık ve verimli araç tasarımımızla ödüllendirildik.
+                  Communication Award - En İyi Sunum Ödülü
                 </p>
               </CardContent>
             </Card>
@@ -108,15 +180,19 @@ export default function Home() {
             Ekibimizle Tanışın
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((member) => (
-              <Card key={member}>
+            {members.map((member) => (
+              <Card key={member.name}>
                 <CardContent className="flex flex-col items-center space-y-2 p-6">
-                  <div className="w-24 h-24 rounded-full bg-gray-300" />
-                  <h3 className="text-lg font-semibold">
-                    Takım Üyesi {member}
-                  </h3>
+                  <div className="w-24 h-24 rounded-full bg-gray-300">
+                    <Image
+                      src={member.img}
+                      alt={member.name}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  </div>
+                  <h3 className="text-lg font-semibold">{member.name}</h3>
                   <p className="text-sm text-gray-600 text-center">
-                    Rol / Uzmanlık
+                    {member.role}
                   </p>
                 </CardContent>
               </Card>
