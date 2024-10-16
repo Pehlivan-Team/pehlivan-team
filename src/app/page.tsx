@@ -4,55 +4,10 @@ import { Award, BatteryCharging, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_png.png";
 import Image from "next/image";
+import { members } from "@/constants/members";
 
 export default function Home() {
-  const members = [
-    {
-      name: "Fatih Coşar",
-      role: "Takım Kaptanı / Makine Mühendisliği",
-      img: logo,
-    },
-    {
-      name: "Yener Süphan Güneş",
-      role: "Elektrik ve Yazılım Başkanı/Elektrik-Elektronik Mühendisliği",
-      img: logo,
-    },
-    {
-      name: "Ozan Çağan Işık",
-      role: "Tasarım Başkanı / Makine Mühendisliği",
-      img: logo,
-    },
-    {
-      name: "Kaan Yılmaz",
-      role: "Analiz Başkanı / Makine Mühendisliği",
-      img: logo,
-    },
-    {
-      name: "Mert Kılıç",
-      role: "Gövde Tasarım Başkanı / Makine Mühendisliği",
-      img: logo,
-    },
-    {
-      name: "Mirza Berk Demirtaş",
-      role: "Mekanik Başkanı / Makine Mühendisliği",
-      img: logo,
-    },
-    {
-      name: "Eşref Kaan Kurtoğlu",
-      role: "Gövde Sorumlusu /Makine Mühendisliği",
-      img: logo,
-    },
-    {
-      name: "Emirhan Fidan",
-      role: "Mekanik Sorumlusu /Makine Mühendisliği",
-      img: logo,
-    },
-    {
-      name: "Emir Yavuz",
-      role: "Mekanik Sorumlusu /Makine Mühendisliği",
-      img: logo,
-    },
-  ];
+  const membersArray = JSON.parse(JSON.stringify(members));
   return (
     <div className="bg-gray-950 h-screen w-screen ">
       <section className="bg-gray-900 xl:pb-56 pb-40 align-middle justify-center items-center flex flex-col">
@@ -180,22 +135,24 @@ export default function Home() {
             Ekibimizle Tanışın
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {members.map((member) => (
-              <Card key={member.name}>
-                <CardContent className="flex flex-col items-center space-y-2 p-6">
-                  <div className="w-24 h-24 rounded-full bg-gray-300">
-                    <Image
-                      src={member.img}
-                      alt={member.name}
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  </div>
-                  <h3 className="text-lg font-semibold">{member.name}</h3>
-                  <p className="text-sm text-gray-600 text-center">
-                    {member.role}
-                  </p>
-                </CardContent>
-              </Card>
+            {membersArray.map((member: any) => (
+              <a key={member.name} className="" href={`/members/${member.id}`}>
+                <Card key={member.name}>
+                  <CardContent className="flex flex-col items-center space-y-2 p-6">
+                    <div className="w-24 h-24 rounded-full bg-gray-300">
+                      <Image
+                        src={member.img}
+                        alt={member.name}
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    </div>
+                    <h3 className="text-lg font-semibold">{member.name}</h3>
+                    <p className="text-sm text-gray-600 text-center">
+                      {member.role}
+                    </p>
+                  </CardContent>
+                </Card>
+              </a>
             ))}
           </div>
         </div>
