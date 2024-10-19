@@ -1,3 +1,4 @@
+"use client";
 import Motion from "@/components/motion/drag-on-load";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Award, BatteryCharging, Zap } from "lucide-react";
@@ -5,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_png.png";
 import Image from "next/image";
 import { members } from "@/constants/members";
+import React from "react";
 
 export default function Home() {
   const membersArray = JSON.parse(JSON.stringify(members));
+
   return (
     <div className="bg-gray-950 h-screen w-screen ">
       <section className="bg-gray-900 xl:pb-56 pb-40 align-middle justify-center items-center flex flex-col">
