@@ -1,3 +1,3 @@
 import { members } from "./members";
-
-export { members };
+import { cars } from "./cars";
+export { members, cars };

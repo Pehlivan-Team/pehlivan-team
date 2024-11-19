@@ -3,77 +3,81 @@ import Motion from "@/components/motion/drag-on-load";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Award, BatteryCharging, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo_png.png";
 import Image from "next/image";
 import { members } from "@/constants/members";
 import React from "react";
+import MainPageHeader from "@/components/main-page-components/MainPageHeader";
+import MainPageAboutCards from "@/components/main-page-components/MainPageAboutCards";
 
 export default function Home() {
   const membersArray = JSON.parse(JSON.stringify(members));
 
   return (
     <div className="bg-gray-950 h-screen w-screen ">
-      <section className="bg-gray-900 xl:pb-56 pb-40 align-middle justify-center items-center flex flex-col">
-        <Motion className="flex flex-col " motionDirection="down">
-          <div className="flex-col pb-10 flex align-middle justify-center items-center">
-            <Image src={logo} alt="Logo" width={300} height={100} />
-            <h1 className="text-white text-6xl font-extrabold">Pehlivan</h1>
-            <h1 className="text-white text-6xl font-extrabold">Team</h1>
-          </div>
-        </Motion>
-        <p className="text-white text-xl ">
-          Elektrikli araç teknolojisinin sınırlarını zorlayan üniversite
-          projesi. Sürdürülebilir ulaşımda devrim yaratmamıza katılın.
-        </p>
-      </section>
+      <MainPageHeader />
 
-      <section
-        id="about"
-        className=" max-xl:w-screen py-12 md:py-24 lg:py-32 bg-gray-50 justify-center align-middle text-center"
-      >
-        <div className="px-4 md:px-6">
+      <MainPageAboutCards />
+
+      <section id="cars" className="bg-gray-100 w-full py-12 md:py-24 lg:py-32">
+        <div className="pl-2 pr-2 px-4 md:px-6">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
-            Projemiz Hakkında
+            Araçlarımız
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Motion className="flex flex-col" motionDirection="left">
-              <Card>
-                <CardContent className="flex flex-col items-center space-y-2 p-6">
-                  <BatteryCharging className="h-12 w-12 text-green-500" />
-                  <h3 className="text-xl font-bold">
-                    Yenilikçi Batarya Teknolojisi
-                  </h3>
-                  <p className="text-center text-gray-600">
-                    Uzun menzil ve daha hızlı şarj için ileri teknoloji batarya
-                    çözümleri geliştiriyoruz.
-                  </p>
-                </CardContent>
-              </Card>
-            </Motion>
-            <Motion className="flex flex-col" motionDirection="down">
-              <Card>
-                <CardContent className="flex flex-col items-center space-y-2 p-6">
-                  <Zap className="h-12 w-12 text-yellow-500" />
-                  <h3 className="text-xl font-bold">Verimli Motorlar</h3>
-                  <p className="text-center text-gray-600">
-                    Gücü ve verimliliği optimize etmek için yüksek verimli
-                    Mitsuba motorları kullanıyoruz.
-                  </p>
-                </CardContent>
-              </Card>
-            </Motion>
-            <Motion className="flex flex-col" motionDirection="right">
-              <Card>
-                <CardContent className="flex flex-col items-center space-y-2 p-6">
-                  <Award className="h-12 w-12 text-blue-500" />
-                  <h3 className="text-xl font-bold">Ödüllü Tasarım</h3>
-                  <p className="text-center text-gray-600">
-                    Form ve işlevi birleştiren şık, aerodinamik araçlar
-                    yaratıyoruz.
-                  </p>
-                </CardContent>
-              </Card>
-            </Motion>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">
+                  Pehlivan Solar - 2015
+                </h3>
+                <p className="text-gray-600">FORMULA G 2015, TÜBİTAK 2015</p>
+                <Image
+                  src="https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png"
+                  alt="Pehlivan Solar - 2015"
+                  width={300}
+                  height={200}
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">Elektrak - 2016</h3>
+                <p className="text-gray-600">FORMULA G 2016, TÜBİTAK 2016</p>
+                <Image
+                  src="https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png"
+                  alt="Elektrak - 2016"
+                  width={300}
+                  height={200}
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">
+                  Pehlivan Monte - 2019
+                </h3>
+                <p className="text-gray-600">FORMULA G 2017, TÜBİTAK 2017</p>
+                <Image
+                  src="https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png"
+                  alt="Pehlivan Monte - 2019"
+                  width={300}
+                  height={200}
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">
+                  Pehlivan MONTE-RC - 2021
+                </h3>
+                <p className="text-gray-600">FORMULA G 2018, TÜBİTAK 2018</p>
+                <Image
+                  src="https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png"
+                  alt="Pehlivan MONTE-RC - 2021"
+                  width={300}
+                  height={200}
+                />
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -177,8 +181,10 @@ export default function Home() {
               </p>
             </div>
             <div className="w-full max-w-sm space-y-2"></div>
-            <Button className="w-full bg-white text-black hover:bg-gray-200">
-              Bize Ulaşın
+            <Button asChild className=" bg-white text-black hover:bg-gray-200">
+              <a href="mailto:pehli1team@gmail.com" className="text-black">
+                Bize Ulaşın
+              </a>
             </Button>
           </div>
         </div>
