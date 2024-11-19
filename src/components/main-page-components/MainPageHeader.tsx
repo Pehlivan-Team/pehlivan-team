@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import logo from "@/assets/logo_png.png";
 
-export default function MainPageHeader() {
+export default function MainPageHeader() {  
+    
   return (
     <div className="w-screen h-[100vh] justify-center align-middle flex items-center  flex-col">
       <motion.div
