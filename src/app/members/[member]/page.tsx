@@ -4,14 +4,11 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const page = ({ params }: { params: { member: any } }) => {
-  console.log(params);
   const members = JSON.parse(JSON.stringify(membersArray));
-
   const select_member = () => {
     return members.find((member: any) => member.id === params.member);
   };
 
-  console.log(select_member);
   return (
     <div>
       <Card className="m-4">
