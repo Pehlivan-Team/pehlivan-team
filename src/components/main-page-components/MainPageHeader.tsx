@@ -3,12 +3,11 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import logo from "@/assets/logo_png.png";
 
-export default function MainPageHeader() {  
-    
+export default function MainPageHeader() {
   return (
-    <div className="w-screen h-[100vh] justify-center align-middle flex items-center  flex-col">
+    <div className="w-screen h-[100vh] justify-center align-middle flex items-center  flex-col bg-teal-950">
       <motion.div
-        className=" flex bg-white lg:w-80 lg:h-80 w-32 h-32 flex-row justify-center align-middle rounded-full"
+        className=" flex bg-white lg:w-60 lg:h-60 w-32 h-32 flex-row justify-center align-middle rounded-full"
         drag
         dragConstraints={{ left: -50, right: 50, top: -50, bottom: 0 }}
         initial={{ x: 200, opacity: 0 }}
@@ -20,7 +19,13 @@ export default function MainPageHeader() {
           transition: { duration: 1, ease: "circInOut", stiffness: 100 },
         }}
       >
-        <Image draggable={false} src={logo} width={300} height={300} alt="Logo" />
+        <Image
+          draggable={false}
+          src={logo}
+          width={300}
+          height={300}
+          alt="Logo"
+        />
       </motion.div>
       <motion.h1
         className="text-white text-3xl my-24"

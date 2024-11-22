@@ -8,79 +8,18 @@ import { members } from "@/constants/members";
 import React from "react";
 import MainPageHeader from "@/components/main-page-components/MainPageHeader";
 import MainPageAboutCards from "@/components/main-page-components/MainPageAboutCards";
+import MainPageCars from "@/components/main-page-components/MainPageCars";
 
 export default function Home() {
   const membersArray = JSON.parse(JSON.stringify(members));
 
   return (
-    <div className="bg-gray-950 h-screen w-screen ">
+    <div className="bg-gray-950 h-screen w-screen">
       <MainPageHeader />
 
       <MainPageAboutCards />
 
-      <section id="cars" className="bg-gray-100 w-full py-12 md:py-24 lg:py-32">
-        <div className="pl-2 pr-2 px-4 md:px-6">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
-            Araçlarımız
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold mb-2">
-                  Pehlivan Solar - 2015
-                </h3>
-                <p className="text-gray-600">FORMULA G 2015, TÜBİTAK 2015</p>
-                <Image
-                  src="https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png"
-                  alt="Pehlivan Solar - 2015"
-                  width={300}
-                  height={200}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold mb-2">Elektrak - 2016</h3>
-                <p className="text-gray-600">FORMULA G 2016, TÜBİTAK 2016</p>
-                <Image
-                  src="https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png"
-                  alt="Elektrak - 2016"
-                  width={300}
-                  height={200}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold mb-2">
-                  Pehlivan Monte - 2019
-                </h3>
-                <p className="text-gray-600">FORMULA G 2017, TÜBİTAK 2017</p>
-                <Image
-                  src="https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png"
-                  alt="Pehlivan Monte - 2019"
-                  width={300}
-                  height={200}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold mb-2">
-                  Pehlivan MONTE-RC - 2021
-                </h3>
-                <p className="text-gray-600">FORMULA G 2018, TÜBİTAK 2018</p>
-                <Image
-                  src="https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png"
-                  alt="Pehlivan MONTE-RC - 2021"
-                  width={300}
-                  height={200}
-                />
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+      <MainPageCars />
 
       <section
         id="achievements"
