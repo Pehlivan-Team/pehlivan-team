@@ -4,7 +4,7 @@ export const cars = [
     year: 2015,
     awards: ["FORMULA G 2015", "TÜBİTAK 2015"],
     photos: [
-      "https://pehlivansolar.com/wp-content/uploads/2019/12/pehlivan-solar-2015.jpg",
+      "https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png",
     ],
     carDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     carPage: "/cars/pehlivan-solar",
@@ -14,7 +14,7 @@ export const cars = [
     year: 2016,
     awards: ["FORMULA G 2016", "TÜBİTAK 2016"],
     photos: [
-      "https://pehlivansolar.com/wp-content/uploads/2019/12/elektrak-2016.jpg",
+      "https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png",
     ],
     carDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     carPage: "/cars/elektrak",
@@ -24,7 +24,7 @@ export const cars = [
     year: 2019,
     awards: ["FORMULA G 2017", "TÜBİTAK 2017"],
     photos: [
-      "https://pehlivansolar.com/wp-content/uploads/2019/12/pehlivan-monte-2019.jpg",
+      "https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png",
     ],
     carDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     carPage: "/cars/pehlivan-monte",
@@ -34,7 +34,7 @@ export const cars = [
     year: 2021,
     awards: ["FORMULA G 2018", "TÜBİTAK 2018"],
     photos: [
-      "https://pehlivansolar.com/wp-content/uploads/2019/12/pehlivan-monte-rc-2021.jpg",
+      "https://bys.trakya.edu.tr/cache/img-thumb/a/af/af9/af9d/af9dee9a6229799a047998db29ff848f.png",
     ],
     carDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     carPage: "/cars/pehlivan-monte-rc",
