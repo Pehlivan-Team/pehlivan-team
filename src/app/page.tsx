@@ -12,6 +12,7 @@ import MainPageCars from "@/components/main-page-components/MainPageCars";
 import { useScroll } from "framer-motion";
 
 import { motion } from "framer-motion";
+import CurrentCar from "@/components/main-page-components/CurrentCar";
 
 export default function Home() {
   const membersArray = JSON.parse(JSON.stringify(members));
@@ -23,6 +24,8 @@ export default function Home() {
       <MainPageAboutCards />
 
       <MainPageCars />
+
+      <CurrentCar />
 
       <section
         id="achievements"
