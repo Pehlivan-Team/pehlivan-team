@@ -6,7 +6,7 @@ function Car({ params }: { params: { car: string } }) {
   const selectedCar = cars[Number(params.car)];
   return (
     <div className="bg-background flex flex-col gap-10 m-10">
-      <div className="bg-background flex gap-10 m-10 ">
+      <div className="bg-background flex lg:flex-row sm:flex-col gap-10 m-10 ">
         <div id="cardesc">
           <h1 className="text-4xl font-bold">{selectedCar.name}</h1>
           <h2>{selectedCar.year}</h2>
