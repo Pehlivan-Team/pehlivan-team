@@ -9,6 +9,9 @@ import React from "react";
 import MainPageHeader from "@/components/main-page-components/MainPageHeader";
 import MainPageAboutCards from "@/components/main-page-components/MainPageAboutCards";
 import MainPageCars from "@/components/main-page-components/MainPageCars";
+import { useScroll } from "framer-motion";
+
+import { motion } from "framer-motion";
 
 export default function Home() {
   const membersArray = JSON.parse(JSON.stringify(members));
@@ -125,6 +128,20 @@ export default function Home() {
                 Bize Ulaşın
               </a>
             </Button>
+            <div className="flex flex-col">
+              <div>
+                Takım Kaptanı :{" "}
+                <a href="tel:+905433213813" className="font-bold text-xl">
+                  Fatih Coşar : +90 543 321 3813
+                </a>
+              </div>
+              <div>
+                Takım Kaptan Yardımcısı :{" "}
+                <a href="tel:+905307617004" className="font-bold text-xl">
+                  Eşref Kaan Kurtoğlu : +90 530 761 7004
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>

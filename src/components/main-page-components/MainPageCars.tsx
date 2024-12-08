@@ -28,7 +28,7 @@ function MainPageCars() {
                     <h3 className="text-white">{car.year}</h3>
                   </CardHeader>
                   <Image
-                    className="rounded-lg w-max"
+                    className="rounded-lg w-full h-48 object-cover"
                     src={car.photos[0]}
                     alt={car.name + " photo"}
                     width={200}
