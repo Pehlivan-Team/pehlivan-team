@@ -7,7 +7,7 @@ function MainPageCars() {
   return (
     <section
       id="cars"
-      className="bg-red-950 w-full py-12 md:py-24 lg:py-32 justify-center flex"
+      className="bg-red-950 w-screen py-12 md:py-24 lg:py-32 justify-center flex overflow-hidden"
     >
       <div className="pl-2 pr-2 px-4 md:px-6">
         <h2 className="text-3xl text-white font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
@@ -17,7 +17,7 @@ function MainPageCars() {
           {cars.map((car, index) => (
             <Link href={"/cars/" + index} key={index}>
               <Card
-                className="bg-slate-900 bg-opacity-60 flex flex-wrap justify-center md:w-[25vw] w-screen rounded-2xl hover:shadow-lg "
+                className="bg-slate-900 bg-opacity-60 flex flex-wrap justify-center md:w-[25vw] w-[85vw] rounded-2xl hover:shadow-lg "
                 key={index}
               >
                 <CardContent className="p-6">

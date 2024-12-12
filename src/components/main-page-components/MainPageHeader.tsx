@@ -11,28 +11,50 @@ import logo from "@/assets/logo_png.png";
 import { Button } from "@/components/ui/button";
 
 export default function MainPageHeader() {
-  const dragControl = useDragControls();
+  const [switchAnim, setSwitchAnim] = React.useState(false);
 
-  const [pehliLogo, setPehliLogo] = React.useState(true);
+  const createRandomBubbleArray = () => {
+    const arr = [];
+    for (let i = 0; i < 100; i++) {
+      arr.push({
+        x: Math.random() * 10,
+        y: Math.random() * 10,
+      });
+    }
+    return arr;
+  };
 
+  const [bubbles, setBubbles] = React.useState(createRandomBubbleArray());
+
+  setTimeout(() => {
+    setSwitchAnim(true);
+  }, 2000);
   return (
     <div className="w-screen h-[100vh] justify-center align-middle flex items-center  flex-col bg-teal-950">
       <motion.div
-        drag={pehliLogo}
+        id="logo"
+        drag
         dragElastic={0.3}
-        dragSnapToOrigin={pehliLogo}
-        dragControls={dragControl}
         dragConstraints={{ top: -100, left: -100, right: 100, bottom: 100 }}
         className="bg-white"
-        animate={{
-          opacity: [0, 1, 1, 1, 1],
-          scale: [1, 2, 2, 1, 1],
-          rotate: [180, 0, 0, 360, 360],
-          borderRadius: ["0%", "0%", "50%", "50%", "100%"],
+        variants={{
+          initial: {
+            opacity: [0, 1, 1, 1, 1],
+            scale: [1, 2, 2, 1, 1],
+            rotate: [180, 0, 0, 360, 360],
+            borderRadius: ["0%", "0%", "50%", "50%", "100%"],
+          },
+          bubble: {
+            x: bubbles.map((_, i) => bubbles[i].x),
+            y: bubbles.map((_, i) => bubbles[i].y),
+          },
         }}
+        animate={switchAnim ? "bubble" : "initial"}
         transition={{
-          duration: 2,
+          duration: switchAnim ? 100 : 2,
           ease: "easeInOut",
+          repeatType: "loop",
+          repeat: Infinity,
         }}
       >
         <Image

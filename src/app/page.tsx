@@ -89,18 +89,24 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {membersArray.map((member: any) => (
               <a key={member.name} className="" href={`/members/${member.id}`}>
-                <Card key={member.name}>
+                <Card key={member.name} className="h-60">
                   <CardContent className="flex flex-col items-center space-y-2 p-6">
                     <div className="w-24 h-24 rounded-full bg-gray-300">
                       <Image
                         src={member.img}
                         alt={member.name}
+                        width={96}
+                        height={96}
                         className="w-full h-full object-cover rounded-full"
                       />
                     </div>
-                    <h3 className="text-lg font-semibold">{member.name}</h3>
+                    <h3 className="text-lg font-semibold text-center">
+                      {member.name}
+                    </h3>
                     <p className="text-sm text-gray-600 text-center">
-                      {member.role}
+                      {member.role.split("/")
+                        ? member.role.split("/")[0]
+                        : member.role}
                     </p>
                   </CardContent>
                 </Card>

@@ -17,7 +17,7 @@ const page = ({ params }: { params: { member: any } }) => {
         <CardHeader>
           {select_member().name}
 
-          <Image src={select_member().img} alt="member" width={100} />
+          <Image src={select_member().img} alt="member" width={100} height={100} />
         </CardHeader>
 
         <CardContent>
