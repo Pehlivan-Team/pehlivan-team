@@ -5,10 +5,11 @@ import { Carousel, CarouselContent } from "@/components/ui/carousel";
 function Car({ params }: { params: { car: string } }) {
   const selectedCar = cars[Number(params.car)];
   return (
-    <div className="bg-background flex flex-col gap-10 m-10">
-      <div className="bg-background flex lg:flex-row flex-col gap-10 m-10 ">
-        <div id="cardesc  " className="w-[35vw]">
+    <div className="bg-[#1f1f1f] text-white flex flex-col gap-10 lg:p-10 py-16 min-h-[100vh]">
+      <div className=" flex lg:flex-row flex-col gap-10 m-10 ">
+        <div id="cardesc  " className="lg:w-[35vw]">
           <h1 className="text-4xl font-bold">{selectedCar.name}</h1>
+          <div className="flex">TAKIM KAPTANI :<b>{selectedCar.teamLeader}</b></div>
           <h2>{selectedCar.year}</h2>
           <h3>{selectedCar.awards.toString()}</h3>
           <p>{selectedCar.carDesc}</p>
@@ -33,11 +34,6 @@ function Car({ params }: { params: { car: string } }) {
             ))}
           </CarouselContent>
         </Carousel>
-      </div>
-
-      <div>
-        TAKIM KAPTANI :
-        <h1 className="font-bold text-xl">{selectedCar.teamLeader}</h1>
       </div>
     </div>
   );

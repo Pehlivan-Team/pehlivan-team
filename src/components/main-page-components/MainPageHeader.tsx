@@ -30,7 +30,7 @@ export default function MainPageHeader() {
     setSwitchAnim(true);
   }, 2000);
   return (
-    <div className="w-screen h-[100vh] justify-center align-middle flex items-center  flex-col bg-teal-950">
+    <div className="w-screen h-[100vh] justify-center align-middle flex items-center  flex-col bg-teal-gray-950">
       <motion.div
         id="logo"
         drag

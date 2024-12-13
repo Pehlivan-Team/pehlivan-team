@@ -4,18 +4,31 @@ import Image from "next/image";
 
 const CurrentCar = () => {
   return (
-    <section className="w-screen flex justify-center py-5 ">
-      <div>
-        <h1 className="text-5xl font-bold">PEHLI1</h1>
-
-        <div className="flex gap-5">
-          <h2 className="text-3xl font-bold">Takım Kaptanı</h2>
-          <h3 className="text-2xl">Fatih Coşar</h3>
+    <div className="bg-[#265fc9] text-white flex flex-row gap-10 lg:p-10 py-16 ">
+         <div className="w-[500px] rounded-lg">
+          <Image
+            src={pehli1}
+            alt="car"
+            width={1000}
+            height={1000}
+          />
+        </div>
+      <div className=" flex lg:flex-row flex-col gap-10 m-10 ">
+        <div id="cardesc  " className="lg:w-[35vw]">
+          <h1 className="text-4xl font-bold">Pehli1</h1>
+          <div className="flex">
+            TAKIM KAPTANI :<b>Fatih Coşar</b>
+          </div>
+          <h2>2024</h2>
+          <p>
+            Halihazırda geliştirilmekte olan Pehli1 Tubitak Efficiency Challenge
+            yarışmasına hazırlanmaktadır
+          </p>
         </div>
 
-        <Image src={pehli1} alt="pehli1" width={500} height={500} />
+     
       </div>
-    </section>
+    </div>
   );
 };
 

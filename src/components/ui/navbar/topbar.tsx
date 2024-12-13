@@ -1,15 +1,22 @@
+"use client";
 import React from "react";
 import logo from "@/assets/logo_png.png";
 import Image from "next/image";
-
+import { motion } from "framer-motion";
 const Topbar = () => {
   return (
-    <div className="h-16 bg-gray-950">
-      <div className="bg-gray-950 lg:bg-opacity-65 z-10 text-white w-screen h-16 fixed">
+    <div className=" bg-gray-950 ">
+      <div className="bg-[#ff0620] lg:bg-opacity-65 z-10 text-white w-screen h-16 fixed rounded-b-3xl pr-24 pl-12">
         <nav className="flex  bg-transparent  justify-between items-center h-16 px-4">
-          <a href="/">
+          <motion.a
+            initial={{ rotateZ: 0 }}
+            whileHover={{ rotateZ: 360 }}
+            transition={{ duration: .7 , ease: "circInOut" }}
+            href="/"
+            className="bg-white rounded"
+          >
             <Image src={logo} alt="Logo" className="h-10 w-10" />
-          </a>
+          </motion.a>
           <h1 className="text-2xl"></h1>
           <div className="flex space-x-4">
             <a href="/#achievements" className="text-white">
