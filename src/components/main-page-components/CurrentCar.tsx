@@ -4,8 +4,8 @@ import Image from "next/image";
 
 const CurrentCar = () => {
   return (
-    <div className="bg-[#265fc9] text-white flex flex-row gap-10 lg:p-10 py-16 ">
-         <div className="w-[500px] rounded-lg">
+    <div className="bg-[#265fc9] text-white flex flex-col-reverse lg:flex-row gap-10 lg:p-10 py-16 ">
+         <div className="w-[500px] rounded-lg mx-10">
           <Image
             src={pehli1}
             alt="car"
