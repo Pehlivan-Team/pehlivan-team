@@ -20,7 +20,7 @@ const Topbar = () => {
           </motion.a>
           <h1 className="text-2xl"></h1>
           <div className="flex space-x-4">
-            <a href="instagram.com/pehlivanteam" className="text-white">
+            <a href="https://www.instagram.com/pehlivanteam" className="text-white">
               <InstagramLogoIcon className="h-6 w-6" />
             </a>
             <a href="https://www.linkedin.com/company/pehlivan-team/" className="text-white">
