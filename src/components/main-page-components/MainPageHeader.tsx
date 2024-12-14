@@ -31,9 +31,15 @@ export default function MainPageHeader() {
     setSwitchAnim(true);
   }, 2000);
   return (
-    <div className="w-screen h-[100vh] justify-center align-middle flex items-center flex-col bg-gray-950 lg:flex-row lg:justify-around lg:items-center">
-      <div className="absolute inset-0 z-0">
-        <Image src={bg} layout="fill" objectFit="cover" alt="bg" className="opacity-20" />
+    <div className="w-screen h-[100vh] justify-center align-middle flex items-center flex-col  lg:flex-row lg:justify-around lg:items-center">
+      <div className="absolute inset-0 z-[0]">
+        <Image
+          src={bg}
+          layout="fill"
+          objectFit="cover"
+          alt="bg"
+          className="opacity-20"
+        />
       </div>
       <div className="flex flex-col items-center">
         <motion.div
@@ -95,10 +101,10 @@ export default function MainPageHeader() {
           Elektrikli araç teknolojisinin sınırlarını zorlayan üniversite
           projesi. Sürdürülebilir ulaşımda devrim yaratmamıza katılın.
         </motion.p>
-        <div className="flex flex-row gap-10 ">
+        <div className="flex flex-row gap-10 z-[2] ">
           <Button
             variant={"link"}
-            className="mt-10 bg-white"
+            className="mt-10 bg-white "
             onClick={() => {
               window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
             }}
