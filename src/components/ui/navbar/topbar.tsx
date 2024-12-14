@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const Topbar = () => {
   return (
     <div className=" bg-gray-950 ">
-      <div className="bg-[#ff0620] lg:bg-opacity-65 z-10 text-white w-screen h-16 fixed rounded-b-3xl pr-24 pl-12">
+      <div className="bg-[#ff0620] lg:bg-opacity-65 z-10 text-white w-screen h-16 fixed rounded-b-3xl md:pr-24 md:pl-12">
         <nav className="flex  bg-transparent  justify-between items-center h-16 px-4">
           <motion.a
             initial={{ rotateZ: 0 }}
