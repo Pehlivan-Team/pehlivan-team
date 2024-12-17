@@ -31,7 +31,7 @@ export default function MainPageHeader() {
     setSwitchAnim(true);
   }, 2000);
   return (
-    <div className="w-[90vw] h-[100vh] justify-center align-middle flex items-center flex-col  lg:flex-row lg:justify-around lg:items-center overflow-clip">
+    <div className="w-[100vw] h-[100vh] justify-center align-middle flex items-center flex-col  lg:flex-row lg:justify-around lg:items-center overflow-clip">
       <div className="absolute inset-0 z-[0]">
         <Image
           src={bg}
