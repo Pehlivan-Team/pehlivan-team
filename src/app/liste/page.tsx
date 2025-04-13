@@ -17,7 +17,7 @@ const createLink = (uuid: string) => {
   return url;
 };
 
-const page = async () => {
+const Liste = async () => {
   const mekanikList = await opensheet("Mekanik");
   const govdeList = await opensheet("Gövde");
   const elektrikList = await opensheet("Elektrik");
@@ -90,4 +90,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default Liste;
