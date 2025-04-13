@@ -12,7 +12,7 @@ const opensheet = async (team: string) => {
   return fetch(url).then((response) => response.json());
 };
 
-const page = async ({ params }: { params: { slug: string } }) => {
+const Redir = async ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
   console.log("slug", slug);
   var slugger;
@@ -38,4 +38,4 @@ const page = async ({ params }: { params: { slug: string } }) => {
   return <div>page</div>;
 };
 
-export default page;
+export default Redir;
