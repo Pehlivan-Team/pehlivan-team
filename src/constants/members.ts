@@ -36,6 +36,10 @@ const description_cols = {
     "Emir Yavuz, mekanikten sorumlu ve makine mühendisliği öğrencisidir.",
     "Mekanik bileşenlerin en yüksek performans için sorunlarını giderir ve optimize eder.",
   ],
+  "tolga-topcu": [
+    "Tolga Topcu, mekanikten sorumlu ve makine mühendisliği öğrencisidir.",
+    "Mekanik bileşenlerin en yüksek performans için sorunlarını giderir ve optimize eder.",
+  ],
 };
 
 export const members = [
@@ -152,6 +156,6 @@ export const members = [
       linkedin: "https://www.linkedin.com/in/tolga-top%C3%A7u-9b91a230a/",
       instagram: "https://www.instagram.com/t0lga_topcu",
     },
-    description: description_cols["emir-yavuz"],
+    description: description_cols["tolga-topcu"],
   },
 ];
