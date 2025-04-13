@@ -9,7 +9,7 @@ const Members = () => {
 
   return (
     <div>
-      <section id="team" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
+      <section id="team" className="w-full py-24 md:py-24 lg:py-32 bg-gray-100">
         <div className="pl-2 pr-2 px-4 md:px-6">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
             Ekibimizle Tanışın
@@ -24,11 +24,15 @@ const Members = () => {
                         src={member.img}
                         alt={member.name}
                         className="w-full h-full object-cover rounded-full"
+                        width={400}
+                        height={400}
                       />
                     </div>
                     <h3 className="text-lg font-semibold">{member.name}</h3>
                     <p className="text-sm text-gray-600 text-center">
-                      {member.role}
+                    {member.role.split("/")
+                        ? member.role.split("/")[0]
+                        : member.role}
                     </p>
                   </CardContent>
                 </Card>

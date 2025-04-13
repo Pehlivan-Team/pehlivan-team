@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Topbar from "@/components/ui/navbar/topbar";
+import { Topbar, BottomBar } from "@/components/ui/navbar/topbar";
 
 export const metadata: Metadata = {
   title: "Pehlivan Team",
@@ -16,6 +16,7 @@ export default function RootLayout({
     <html lang="en" className="overflow-x-hidden">
       <body>
         <Topbar />
+        <BottomBar />
         {children}
       </body>
     </html>

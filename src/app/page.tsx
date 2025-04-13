@@ -19,7 +19,7 @@ export default function Home() {
   const membersArray = JSON.parse(JSON.stringify(members));
 
   return (
-    <div className="bg-gray-950 h-screen w-screen overflow-x-clip">
+    <div className="bg-gray-950 h-screen w-screen overflow-x-clip ">
       <MainPageHeader />
 
       <MainPageAboutCards />
