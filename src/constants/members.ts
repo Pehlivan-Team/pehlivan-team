@@ -150,7 +150,7 @@ export const members = [
   {
     id: "tolga-topcu",
     name: "Tolga Topcu",
-    role: "Mekanik Sorumlusu /Makine Mühendisliği",
+    role: "Gövde Sorumlusu /Makine Mühendisliği",
     img: "https://media.licdn.com/dms/image/v2/D4E03AQGxGIBRX9zziw/profile-displayphoto-shrink_400_400/B4EZVdoVaOHUAg-/0/1741032611659?e=1750291200&v=beta&t=gL7FZ2ICM8YzfJVjNzNXdDXx4aQrLo-uAiHZmUckk0Q",
     socials: {
       linkedin: "https://www.linkedin.com/in/tolga-top%C3%A7u-9b91a230a/",
