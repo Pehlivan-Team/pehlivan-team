@@ -38,7 +38,7 @@ const description_cols = {
   ],
   "tolga-topcu": [
     "Tolga Topcu, mekanikten sorumlu ve makine mühendisliği öğrencisidir.",
-    "Mekanik bileşenlerin en yüksek performans için sorunlarını giderir ve optimize eder.",
+    "Gövde bileşenlerin en yüksek performans için sorunlarını giderir ve optimize eder.",
   ],
 };
 
