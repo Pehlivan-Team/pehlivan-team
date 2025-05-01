@@ -24,10 +24,10 @@ const Liste = async () => {
 
   console.log("liste ", elektrikList);
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen pb-16 bg-gray-100">
       <h1 className="text-xl font-bold ">Pehlivan Team İhtiyaç Listesi</h1>
       <div className="flex flex-col">
-        <div className="flex flex-row gap-3 border-black border-2 rounded-sm p-2 mt-4">
+        <div className="flex lg:flex-row flex-col gap-3 border-black border-2 rounded-sm p-4 mt-4">
           <div className="flex flex-col">
             <h2 className="text-lg font-bold">Mekanik</h2>
             {mekanikList.map((item: any) => (
