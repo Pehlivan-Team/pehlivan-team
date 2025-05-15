@@ -14,6 +14,7 @@ import { useScroll } from "framer-motion";
 import { motion } from "framer-motion";
 import CurrentCar from "@/components/main-page-components/CurrentCar";
 import MainPageAchievements from "@/components/main-page-components/MainPageAchievements";
+import SponsorSlider from "@/components/main-page-components/SponsorSlider";
 
 export default function Home() {
   const membersArray = JSON.parse(JSON.stringify(members));
@@ -21,6 +22,8 @@ export default function Home() {
   return (
     <div className="bg-gray-950 h-screen w-screen overflow-x-clip ">
       <MainPageHeader />
+
+      <SponsorSlider />
 
       <MainPageAboutCards />
 
@@ -30,7 +33,6 @@ export default function Home() {
 
       <MainPageAchievements />
 
-      
       <section id="team" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
         <div className="pl-2 pr-2 px-4 md:px-6">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">

@@ -4,6 +4,7 @@ import logo from "@/assets/logo_png.png";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
+import { Mail, ScrollText, Trophy, UsersRound } from "lucide-react";
 const Topbar = () => {
   return (
     <div className=" bg-gray-950 ">
@@ -62,7 +63,7 @@ const BottomBar = () => {
           <Image src={logo} alt="Logo" className="h-10 w-10" />
         </motion.a>
         <h1 className="text-2xl"></h1>
-        <div className="flex space-x-4">
+        <div className="flex  gap-x-2">
           <a
             href="https://www.instagram.com/pehlivanteam"
             className="text-white"
@@ -76,13 +77,13 @@ const BottomBar = () => {
             <LinkedInLogoIcon className="h-6 w-6" />
           </a>
           <a href="/#achievements" className="text-white">
-            Başarılarımız
+            <Trophy  />
           </a>
           <a href="/members" className="text-white">
-            Takım
+           <UsersRound />
           </a>
-          <a href="/#contact" className="text-white">
-            Bize Ulaş
+          <a href="/#contact" className="text-white ">
+            <Mail />
           </a>
         </div>
       </nav>
