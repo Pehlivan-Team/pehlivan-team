@@ -15,12 +15,15 @@ import { motion } from "framer-motion";
 import CurrentCar from "@/components/main-page-components/CurrentCar";
 import MainPageAchievements from "@/components/main-page-components/MainPageAchievements";
 import SponsorSlider from "@/components/main-page-components/SponsorSlider";
+import WelcomeModal from "@/components/main-page-components/WelcomeModal";
 
 export default function Home() {
   const membersArray = JSON.parse(JSON.stringify(members));
 
   return (
     <div className="bg-gray-950 h-screen w-screen overflow-x-clip ">
+      <WelcomeModal />
+
       <MainPageHeader />
 
       <SponsorSlider />
