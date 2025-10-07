@@ -16,13 +16,16 @@ import CurrentCar from "@/components/main-page-components/CurrentCar";
 import MainPageAchievements from "@/components/main-page-components/MainPageAchievements";
 import SponsorSlider from "@/components/main-page-components/SponsorSlider";
 import WelcomeModal from "@/components/main-page-components/WelcomeModal";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
   const membersArray = JSON.parse(JSON.stringify(members));
+  const searchParams = useSearchParams();
+  const showModal = searchParams.has("welcome");
 
   return (
     <div className="bg-gray-950 h-screen w-screen overflow-x-clip ">
-      <WelcomeModal />
+      <WelcomeModal show={showModal} />
 
       <MainPageHeader />
 
@@ -92,16 +95,10 @@ export default function Home() {
                 Bize Ulaşın
               </a>
             </Button>
-            <div className="flex flex-col">
+            <div className="flex flex-col pb-10">
               <div>
-                Takım Kaptanı :{" "}
-                <a href="tel:+905433213813" className="font-bold text-xl">
-                  Fatih Coşar : +90 543 321 3813
-                </a>
-              </div>
-              <div>
-                Takım Kaptan Yardımcısı :{" "}
-                <a href="tel:+905307617004" className="font-bold text-xl">
+                Takım Kaptanı <br />
+                <a href="tel:+905307617004" className="font-bold ">
                   Eşref Kaan Kurtoğlu : +90 530 761 7004
                 </a>
               </div>

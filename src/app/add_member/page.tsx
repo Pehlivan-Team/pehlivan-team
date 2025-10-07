@@ -94,8 +94,8 @@ function page() {
             department: "",
           },
         });
-        return router.push("https://pehli1team.com/" , {
-          scroll: false
+        return router.push("https://pehli1team.com?welcome=true", {
+          scroll: false,
         });
       })
       .catch((error) => {
