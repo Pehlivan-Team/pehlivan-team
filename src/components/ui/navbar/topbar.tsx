@@ -4,7 +4,14 @@ import logo from "@/assets/logo_png.png";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
-import { Mail, ScrollText, Trophy, UsersRound } from "lucide-react";
+import Link from "next/link";
+import {
+  Link as LinkIcon,
+  Mail,
+  ScrollText,
+  Trophy,
+  UsersRound,
+} from "lucide-react";
 const Topbar = () => {
   return (
     <div className=" bg-gray-950 ">
@@ -21,27 +28,27 @@ const Topbar = () => {
           </motion.a>
           <h1 className="text-2xl"></h1>
           <div className="flex space-x-4">
-            <a
+            <Link
               href="https://www.instagram.com/pehlivanteam"
               className="text-white"
             >
               <InstagramLogoIcon className="h-6 w-6" />
-            </a>
-            <a
+            </Link>
+            <Link
               href="https://www.linkedin.com/company/pehlivan-team/"
               className="text-white"
             >
               <LinkedInLogoIcon className="h-6 w-6" />
-            </a>
-            <a href="/#achievements" className="text-white">
+            </Link>
+            <Link href="/#achievements" className="text-white">
               Başarılarımız
-            </a>
-            <a href="/members" className="text-white">
-              Takım
-            </a>
-            <a href="/#contact" className="text-white">
-              Bize Ulaş
-            </a>
+            </Link>
+            <Link href="/add_member" className="text-white">
+              Topluluğa Katıl
+            </Link>
+            <Link href="/#contact" className="text-white">
+              Bize Ulaşın
+            </Link>
           </div>
         </nav>
       </div>
@@ -77,10 +84,10 @@ const BottomBar = () => {
             <LinkedInLogoIcon className="h-6 w-6" />
           </a>
           <a href="/#achievements" className="text-white">
-            <Trophy  />
+            <Trophy />
           </a>
-          <a href="/members" className="text-white">
-           <UsersRound />
+          <a href="/add_member" className="text-white">
+            <UsersRound />
           </a>
           <a href="/#contact" className="text-white ">
             <Mail />

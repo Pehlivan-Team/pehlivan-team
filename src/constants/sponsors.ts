@@ -1,3 +1,5 @@
+import cobanoglulogo from "@/assets/cobanoglu.jpg";
+
 interface Sponsor {
   name: string;
   logo: string;
@@ -20,7 +22,7 @@ const Sponsors: Sponsor[] = [
   },
   {
     name: "UzunKöprü Ticaret ve Sanayi Odası",
-    logo: "https://imghost.net/ib/c58YKT5mzhQqh0Y_1747312962.jpg",
+    logo: "https://www.utso.org.tr/assets/img/logo.png",
     url: "https://www.utso.org.tr/",
     logoWidth: 200,
     logoHeight: 200,
@@ -29,7 +31,7 @@ const Sponsors: Sponsor[] = [
   },
   {
     name: "UzunKöprü Belediyesi",
-    logo: "https://imghost.net/ib/wCmziNqH4x3tvtf_1747313022.jpg",
+    logo: "https://uzunkopru.bel.tr/wp-content/uploads/2024/05/logo_2024.png",
     url: "https://www.uzunkopru.bel.tr/",
     logoWidth: 200,
     logoHeight: 200,
@@ -38,8 +40,8 @@ const Sponsors: Sponsor[] = [
   },
   {
     name: "Çobanoğlu AV",
-    logo: "https://imghost.net/ib/6eqNSp7KFdIz0Gi_1747314635.jpg",
-    url: "https://www.uzunkopru.bel.tr/",
+    logo: "https://i.postimg.cc/MKCPzvCP/cobanoglu.jpg",
+    url: "https://www.instagram.com/cobanogluav/",
     logoWidth: 200,
     logoHeight: 200,
     description: "Çobanoğlu AV",
@@ -47,7 +49,7 @@ const Sponsors: Sponsor[] = [
   },
   {
     name: "Bilişim Deposu",
-    logo: "https://imghost.net/ib/C9YWIrRLIYZOpS4_1747315391.jpg",
+    logo: "https://haritane.com/yer/bilisim-deposu-672772.jpg",
     url: "https://www.bilisimdeposu.com/",
     logoWidth: 200,
     logoHeight: 200,

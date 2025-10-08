@@ -39,7 +39,7 @@ export default function Home() {
 
       <MainPageAchievements />
 
-      <section id="team" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
+      {/* <section id="team" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
         <div className="pl-2 pr-2 px-4 md:px-6">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
             Ekibimizle Tanışın
@@ -72,7 +72,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
       <section
         id="contact"
         className="w-full py-12 md:py-24 lg:py-32 bg-black text-white"

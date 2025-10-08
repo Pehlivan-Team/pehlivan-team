@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import React from "react";
 import { useRouter } from "next/navigation";
-import z from "zod";
+import z, { set } from "zod";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "İsim en az 2 karakter olmalı." }),
@@ -29,6 +29,7 @@ const formSchema = z.object({
 
 function page() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = React.useState(false);
   const [formState, setFormState] = React.useState({
     values: {
       name: "",
@@ -47,6 +48,8 @@ function page() {
   });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
+    setIsLoading(true);
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
@@ -58,6 +61,7 @@ function page() {
       const errors = parsedData.error.message || "";
       const fieldErrors = parsedData.error.message;
       console.log(fieldErrors);
+      setIsLoading(false);
       return;
     }
 
@@ -101,6 +105,7 @@ function page() {
       .catch((error) => {
         console.error("Error:", error);
         alert("Form gönderilirken bir hata oluştu.");
+        setIsLoading(false);
       });
   };
 
@@ -209,6 +214,7 @@ function page() {
               </FieldError>
             </Field>
             <button
+              disabled={isLoading}
               type="submit"
               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
             >
