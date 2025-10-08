@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import z, { set } from "zod";
 import {
   Select,
@@ -422,8 +422,8 @@ function page() {
             team: "",
           },
         });
-        alert("Form başarıyla gönderildi!");
         setIsLoading(false);
+        router.push("/?welcome=true");
       })
       .catch((error) => {
         console.error("Error:", error);
