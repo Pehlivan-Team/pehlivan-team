@@ -25,6 +25,7 @@ const formSchema = z.object({
     .string()
     .min(2, { message: "Bölüm en az 2 karakter olmalı." })
     .optional(),
+  team: z.string().min(2, { message: "Lütfen bir takım seçin." }),
 });
 
 function page() {
@@ -37,6 +38,7 @@ function page() {
       phone: "",
       student_number: "",
       department: "",
+      team: "",
     },
     errors: {
       name: "",
@@ -44,6 +46,7 @@ function page() {
       phone: "",
       student_number: "",
       department: "",
+      team: "",
     },
   });
   const handleSubmit = (e: React.FormEvent) => {
@@ -89,6 +92,7 @@ function page() {
             phone: "",
             student_number: "",
             department: "",
+            team: "",
           },
           errors: {
             name: "",
@@ -96,6 +100,7 @@ function page() {
             phone: "",
             student_number: "",
             department: "",
+            team: "",
           },
         });
         return router.push("https://pehli1team.com?welcome=true", {
@@ -110,13 +115,15 @@ function page() {
   };
 
   return (
-    <div className="pt-20">
-      <div>TASARIM PROJE TOPLULUĞU 2025-2026 DÖNEMİ ÜYE KAYDI</div>
-      <div>
+    <div className="sm:pt-0 lg:pt-20 min-h-screen flex flex-col gap-2p-4">
+      <div className="text-lg font-bold">
+        TASARIM PROJE TOPLULUĞU 2025-2026 DÖNEMİ ÜYE KAYDI
+      </div>
+      <div className="max-w-3xl text-sm sm:text-base text-gray-800">
         Aşağıdaki formu doldurarak topluluğumuza üye olabilirsiniz. Formu
         doldurduktan sonra en kısa sürede sizinle iletişime geçilecektir.
       </div>
-      <div className="max-w-md mx-auto mt-8 p-5">
+      <div className="max-w-md mx-auto sm:mt-0 mt-8 p-5">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <FieldGroup>
             <Field>
@@ -213,10 +220,43 @@ function page() {
                 {formState.errors.department}
               </FieldError>
             </Field>
+            <Field>
+              <FieldLabel htmlFor="team">
+                Hangi Takıma Katılmak İstiyorsunuz?
+              </FieldLabel>
+              <select
+                id="team"
+                name="team"
+                className="w-full px-3 py-2 border border-gray-300 rounded backdrop:bg-black"
+                value={formState.values.team}
+                onChange={(e) =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    values: { ...prev.values, team: e.target.value },
+                  }))
+                }
+                required
+              >
+                <option value="-">Lütfen bir takım seçin</option>
+                <option value="Pehli1">Pehlivan Team / Elektrikli Araç</option>
+                <option value="Roket">Pehlivan Team / Roket</option>
+                <option value="Linux">Pehlivan Team / Linux Geliştirme</option>
+                <option value="Börü">Börü / Otonom Araç</option>
+                <option value="PR">PR / İçerik Üretimi</option>
+              </select>
+
+              <FieldError className="text-red-500">
+                {formState.errors.team}
+              </FieldError>
+
+              <FieldError className="text-red-500">
+                {formState.errors.department}
+              </FieldError>
+            </Field>
             <button
               disabled={isLoading}
               type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition mb-32"
             >
               Gönder
             </button>
