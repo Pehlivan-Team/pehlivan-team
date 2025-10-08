@@ -4,7 +4,7 @@ import { google } from "googleapis";
 export async function POST(request: NextRequest) {
   const { name, email, phone, student_number, department, team } =
     await request.json();
-  if (!name || !phone || !student_number || !team)
+  if (!name || !phone || !student_number || !team || !department)
     return Response.json({ success: false, error: "ERR_MISSING_FIELDS" });
   try {
     console.log(process.env.GOOGLE_PRIVATE_KEY);
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
             student_number,
             phone,
             email ? email : "BOŞ",
-            department ? department : "BOŞ",
+            department,
             team ? team : "BOŞ",
           ],
         ],
