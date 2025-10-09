@@ -6,16 +6,43 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
-import { Mail, Trophy, Milestone, Users, Menu as MenuIcon, UserPlus } from "lucide-react";
+import {
+  Mail,
+  Trophy,
+  Milestone,
+  Users,
+  Menu as MenuIcon,
+  UserPlus,
+  LinkIcon,
+} from "lucide-react";
 import { useActiveSection } from "@/hooks/use-active-section";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const socialLinks = [
-  { href: "https://www.instagram.com/pehlivanteam", Icon: InstagramLogoIcon, label: "Instagram" },
-  { href: "https://www.linkedin.com/company/pehlivan-team/", Icon: LinkedInLogoIcon, label: "LinkedIn" },
+  {
+    href: "https://www.instagram.com/pehlivanteam",
+    Icon: InstagramLogoIcon,
+    label: "Instagram",
+  },
+  {
+    href: "https://www.linkedin.com/company/pehlivan-team/",
+    Icon: LinkedInLogoIcon,
+    label: "LinkedIn",
+  },
 ];
 
 const internalLinks = [
@@ -24,9 +51,10 @@ const internalLinks = [
   { href: "/#achievements", label: "Başarılarımız", Icon: Trophy },
   { href: "/add_member", label: "Topluluğa Katıl", Icon: UserPlus },
   { href: "/#contact", label: "Bize Ulaşın", Icon: Mail },
+  { href: "/shortener", label: "Link Kısaltıcı", Icon: LinkIcon },
 ];
 
-const internalLinkIds = internalLinks.map(link => link.href);
+const internalLinkIds = internalLinks.map((link) => link.href);
 
 const Logo = () => (
   <motion.a
@@ -49,7 +77,14 @@ const Topbar = () => {
         <Logo />
         <div className="flex items-center space-x-6">
           {socialLinks.map(({ href, Icon, label }) => (
-            <a key={href} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="text-gray-300 transition-colors hover:text-white">
+            <a
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="text-gray-300 transition-colors hover:text-white"
+            >
               <Icon className="w-6 h-6" />
             </a>
           ))}
@@ -73,7 +108,6 @@ const Topbar = () => {
   );
 };
 
-
 // --- BOTTOMBAR REMAINS THE SAME ---
 const BottomBar = () => {
   const activeSection = useActiveSection(internalLinkIds);
@@ -83,14 +117,16 @@ const BottomBar = () => {
     { href: "/add_member", label: "Topluluğa Katıl", Icon: UserPlus },
     { href: "/#contact", label: "Bize Ulaşın", Icon: Mail },
   ];
-  
-  const menuLinks = internalLinks.filter(link => !primaryActions.some(action => action.href === link.href));
+
+  const menuLinks = internalLinks.filter(
+    (link) => !primaryActions.some((action) => action.href === link.href)
+  );
 
   return (
     <footer className="fixed bottom-0 z-50 w-full px-2 lg:hidden print:hidden">
       <nav className="flex items-center justify-between h-16 px-4 bg-black/30 backdrop-blur-lg border-t border-white/10 rounded-t-3xl">
         <Logo />
-        
+
         <div className="flex items-center gap-x-2">
           <TooltipProvider delayDuration={0}>
             {primaryActions.map(({ href, Icon, label }) => (
@@ -100,13 +136,17 @@ const BottomBar = () => {
                     href={href}
                     className={cn(
                       "p-2 rounded-full transition-colors",
-                      activeSection === href ? "bg-red-500/50 text-white" : "text-gray-300 hover:bg-white/10"
+                      activeSection === href
+                        ? "bg-red-500/50 text-white"
+                        : "text-gray-300 hover:bg-white/10"
                     )}
                   >
                     <Icon className="w-6 h-6" />
                   </Link>
                 </TooltipTrigger>
-                <TooltipContent><p>{label}</p></TooltipContent>
+                <TooltipContent>
+                  <p>{label}</p>
+                </TooltipContent>
               </Tooltip>
             ))}
 
@@ -114,12 +154,18 @@ const BottomBar = () => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-gray-300 hover:bg-white/10 hover:text-white">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-gray-300 hover:bg-white/10 hover:text-white"
+                    >
                       <MenuIcon className="w-6 h-6" />
                     </Button>
                   </SheetTrigger>
                 </TooltipTrigger>
-                <TooltipContent><p>Daha Fazla</p></TooltipContent>
+                <TooltipContent>
+                  <p>Daha Fazla</p>
+                </TooltipContent>
               </Tooltip>
               <SheetContent className="bg-gray-950/90 backdrop-blur-lg border-l-slate-700 text-white">
                 <SheetHeader>
@@ -133,7 +179,9 @@ const BottomBar = () => {
                       onClick={() => setIsSheetOpen(false)}
                       className={cn(
                         "flex items-center gap-4 text-lg p-2 rounded-md transition-colors",
-                         activeSection === href ? "bg-red-500/50 text-white" : "hover:bg-slate-800"
+                        activeSection === href
+                          ? "bg-red-500/50 text-white"
+                          : "hover:bg-slate-800"
                       )}
                     >
                       <Icon className="w-6 h-6" />
@@ -142,11 +190,17 @@ const BottomBar = () => {
                   ))}
                 </div>
                 <div className="absolute bottom-8 left-6 flex space-x-6">
-                    {socialLinks.map(({ href, Icon, label }) => (
-                        <a key={href} href={href} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
-                            <Icon className="w-7 h-7" />
-                        </a>
-                    ))}
+                  {socialLinks.map(({ href, Icon, label }) => (
+                    <a
+                      key={href}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-white"
+                    >
+                      <Icon className="w-7 h-7" />
+                    </a>
+                  ))}
                 </div>
               </SheetContent>
             </Sheet>
