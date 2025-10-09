@@ -54,7 +54,7 @@ const featuredProjectsData = [
     description:
       "Yapay zeka ve sensör füzyonu ile kendi kendine sürüş kabiliyeti kazandırdığımız otonom aracımız. Teknofest Robotaksi yarışmasına katılım için geliştirilmektedir.",
     image: börü,
-    leader: "Belirlenecek",
+    leader: "Sergen Zıvana",
     specifications: [
       { Icon: ScanLine, label: "Sensörler", value: "LIDAR, Kamera, IMU" },
       { Icon: Cpu, label: "İşlemci", value: "Yüksek Performanslı Gömülü GPU" },
@@ -72,7 +72,7 @@ const featuredProjectsData = [
     description:
       "Görev yükünü taşımak ve roketi başarılı şekilde indirmek amacıyla tasarlanan roket projemiz.",
     image: roket,
-    leader: "Belirlenecek",
+    leader: "Tolga Topçu",
     specifications: [
       { Icon: RocketIcon, label: "İrtifa Hedefi", value: "15.000 feet" },
       { Icon: Wrench, label: "İtki", value: "Katı Yakıtlı Roket Motoru" },

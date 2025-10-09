@@ -9,7 +9,7 @@ export const teamsData = [
   {
     slug: "elektrikli-arac",
     name: "Pehlivan Team / Elektrikli Araç",
-    leader: "Fatih Coşar",
+    leader: "Eşref Kaan Kurtoğlu ",
     Icon: Zap,
     image: placeHolderEvImage, // Placeholder
     description:
@@ -25,7 +25,7 @@ export const teamsData = [
   {
     slug: "roket",
     name: "Pehlivan Team / Roket",
-    leader: "Belirlenecek",
+    leader: "Tolga Topçu",
     Icon: Rocket,
     image: placeHolderRocketImage, // Placeholder
     description:
@@ -41,7 +41,7 @@ export const teamsData = [
   {
     slug: "boru-otonom",
     name: "Börü / Otonom Araç",
-    leader: "Belirlenecek",
+    leader: "Sergen Zıvana",
     Icon: Dna,
     image: placeHolderOtonomImage, // Placeholder
     description:
@@ -57,7 +57,7 @@ export const teamsData = [
   {
     slug: "linux",
     name: "Pehlivan Team / Linux Geliştirme",
-    leader: "Belirlenecek",
+    leader: "Ercan Ersoy",
     Icon: Code,
     image: placeHolderLinuxImage, // Placeholder
     description:
@@ -73,7 +73,7 @@ export const teamsData = [
   {
     slug: "pr",
     name: "PR / İçerik Üretimi",
-    leader: "Belirlenecek",
+    leader: "Eşref Kaan Kurtoğlu",
     Icon: Mic,
     image: placeHolderPRImage, // Placeholder
     description:
