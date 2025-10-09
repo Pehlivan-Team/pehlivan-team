@@ -1,15 +1,10 @@
 "use client";
 
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import React, { useEffect } from "react";
-import { redirect, useRouter } from "next/navigation";
-import z, { set } from "zod";
 import {
   Select,
   SelectContent,
@@ -17,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 import {
   Command,
   CommandEmpty,
@@ -31,322 +25,327 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ArrowDown, ArrowUpDownIcon } from "lucide-react";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { departmentlist } from "./departments";
-import { Separator } from "@radix-ui/react-separator";
-import { CaretSortIcon } from "@radix-ui/react-icons";
+import bg from "@/assets/bg.jpg";
 
+// Zod schema for form validation
 const formSchema = z.object({
   name: z.string().min(2, { message: "İsim en az 2 karakter olmalı." }),
-  email: z.string().email({ message: "Geçerli bir email girin." }).optional(),
+  email: z
+    .string()
+    .email({ message: "Geçerli bir email girin." })
+    .optional()
+    .or(z.literal("")),
   phone: z
     .string()
     .min(10, { message: "Telefon numarası en az 10 karakter olmalı." })
-    .optional(),
+    .optional()
+    .or(z.literal("")),
   student_number: z
     .string()
     .min(5, { message: "Öğrenci numarası en az 5 karakter olmalı." }),
-  department: z
-    .string()
-    .min(2, { message: "Bölüm en az 2 karakter olmalı." })
-    .optional(),
+  department: z.string().min(2, { message: "Bölüm seçmek zorunludur." }),
   team: z.string().min(2, { message: "Lütfen bir takım seçin." }),
 });
 
-function page() {
-  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-  const router = useRouter();
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [formState, setFormState] = React.useState({
-    values: {
-      name: "",
-      email: "",
-      phone: "",
-      student_number: "",
-      department: "",
-      team: "",
-    },
-    errors: {
-      name: "",
-      email: "",
-      phone: "",
-      student_number: "",
-      department: "",
-      team: "",
-    },
-  });
+type FormState = z.infer<typeof formSchema>;
 
+function AddMemberPage() {
+  const router = useRouter();
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formState, setFormState] = useState<FormState>({
+    name: "",
+    email: "",
+    phone: "",
+    student_number: "",
+    department: "",
+    team: "",
+  });
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof FormState, string>>
+  >({});
+
+  // Handlers remain the same
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormState((prev) => ({
-      ...prev,
-      values: {
-        ...prev.values,
-        [name]: value,
-      },
-    }));
+    setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSelectChange = (name: keyof FormState, value: string) => {
+    setFormState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isLoading) return;
     setIsLoading(true);
-    const result = formState.values;
-    const parsedData = formSchema.safeParse(result);
-    console.log(parsedData);
+    setErrors({});
+
+    const parsedData = formSchema.safeParse(formState);
+
     if (!parsedData.success) {
-      console.error(parsedData.error);
-      alert("Lütfen formu doğru şekilde doldurun.");
-      const errors = parsedData.error.message || "";
-      const fieldErrors = parsedData.error.message;
-      console.log(fieldErrors);
+      const fieldErrors = parsedData.error.flatten().fieldErrors;
+      const newErrors: Partial<Record<keyof FormState, string>> = {};
+
+      for (const key in fieldErrors) {
+        if (fieldErrors[key as keyof FormState]) {
+          newErrors[key as keyof FormState] =
+            fieldErrors[key as keyof FormState]![0];
+        }
+      }
+
+      setErrors(newErrors);
       setIsLoading(false);
       return;
     }
 
-    // Form verilerini işleme (örneğin, bir API'ye gönderme)
-    fetch("/api/add_member", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(parsedData.data),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Success:", data);
-
-        setFormState({
-          values: {
-            name: "",
-            email: "",
-            phone: "",
-            student_number: "",
-            department: "",
-            team: "",
-          },
-          errors: {
-            name: "",
-            email: "",
-            phone: "",
-            student_number: "",
-            department: "",
-            team: "",
-          },
-        });
-        setIsLoading(false);
-        router.push("/?welcome=true");
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("Form gönderilirken bir hata oluştu.");
-        setIsLoading(false);
+    try {
+      const response = await fetch("/api/add_member", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsedData.data),
       });
+
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      router.push("/?welcome=true");
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Form gönderilirken bir hata oluştu.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     if (isLoading) {
-      // sayfa en üste çık
       window.scrollTo(0, 0);
     }
-    console.log(formState);
-  }, [formState, isLoading]);
+  }, [isLoading]);
 
   return (
-    <div className="sm:pt-0 lg:pt-20 min-h-screen flex flex-col gap-2p-4 justify-center items-center bg-gray-800 text-white pt-20">
-      <div className="text-lg font-bold">
-        TASARIM PROJE TOPLULUĞU 2025-2026 DÖNEMİ ÜYE KAYDI
-      </div>
-      <div className="max-w-3xl text-sm sm:text-base text-gray-200">
-        2013'ten bugüne faaliyetlerini sürdüren tasarım ve proje topluluğu Güneş
-        Arabası, Yüksek Verimli elektrikli araçlar, Kompozit sistemler,
-        Elektronik sistemler gibi konularda kendini bugüne kadar kanıtladı.
-        Şimdi de çeşitli ekipler ile başarılarını sürdürmek için yola devam
-        ediyor. Anketi doldur ve aramıza katıl.
-      </div>
-      <div className="mt-10 mb-20">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-[50vw]">
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="name">İsim Soyisim*</FieldLabel>
-              <Input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={formState.values.name}
-                onChange={handleChange}
-              />
-              <FieldError className="text-red-500">
-                {formState.errors.name}
-              </FieldError>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                value={formState.values.email}
-                onChange={handleChange}
-              />
-              <FieldError className="text-red-500">
-                {formState.errors.email}
-              </FieldError>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="phone">Telefon Numarası</FieldLabel>
-              <Input
-                type="text"
-                id="phone"
-                name="phone"
-                value={formState.values.phone}
-                onChange={handleChange}
-              />
-              <FieldError className="text-red-500">
-                {formState.errors.phone}
-              </FieldError>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="student_number">
-                Öğrenci Numarası*
-              </FieldLabel>
-              <Input
-                type="text"
-                id="student_number"
-                name="student_number"
-                required
-                value={formState.values.student_number}
-                onChange={handleChange}
-              />
-              <FieldError className="text-red-500">
-                {formState.errors.student_number}
-              </FieldError>
-            </Field>
-            <Field>
-              <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-                <PopoverTrigger asChild>
-                  <div
-                    className={cn(
-                      " cursor-pointer text-white p-2 rounded border border-gray-300",
-                      isPopoverOpen && "bg-gray-700"
-                    )}
-                  >
-                    {formState.values.department ? (
-                      `${formState.values.department}`
-                    ) : (
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-100">Bölüm seç*</span>
-                        <CaretSortIcon className="h-4 w-4 text-gray-400" />
-                      </div>
-                    )}
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent className="w-80 max-w-none bg-gray-900 ">
-                  <Command>
-                    <CommandInput
-                      placeholder="Bölüm ara..."
-                      content={formState.values.department}
-                      className="text-gray-100 bg-gray-800 "
-                    />
-                    <CommandList className="max-h-96 overflow-y-auto text-white scrollbar-hide">
-                      <CommandEmpty>Bölüm bulunamadı.</CommandEmpty>
-                      {Object.keys(departmentlist).map((faculty) => (
-                        <React.Fragment key={faculty}>
-                          <Separator
-                            key={faculty}
-                            className="h-1 bg-gray-100"
-                          />
-                          <CommandGroup
-                            key={faculty}
-                            heading={faculty}
-                            className="text-sm"
-                          >
-                            {departmentlist[faculty].map((dept, index) => (
-                              <CommandItem
-                                content={dept.key}
-                                key={dept.key}
-                                value={dept.dept}
-                                onSelect={() => {
-                                  setFormState((prev) => ({
-                                    ...prev,
-                                    values: {
-                                      ...prev.values,
-                                      department: dept.dept,
-                                    },
-                                  }));
-                                  setIsPopoverOpen(false);
-                                }}
-                              >
-                                {dept.dept}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </React.Fragment>
-                      ))}
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="team">
-                Hangi Takıma Katılmak İstiyorsunuz?
-              </FieldLabel>
-              <Select
-                name="team"
-                required
-                onValueChange={(value) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    values: { ...prev.values, team: value },
-                  }))
-                }
-                value={formState.values.team}
+    <div className="relative min-h-screen w-full flex items-center justify-center py-24 px-4">
+      {/* Background Image with Overlay */}
+      <Image
+        src={bg}
+        alt="Pehlivan Team Background"
+        layout="fill"
+        objectFit="cover"
+        className="absolute inset-0 z-0 opacity-20"
+        priority
+      />
+      <div className="absolute inset-0 z-5 bg-black/60" />
+
+      {/* Form Card */}
+      <Card className="relative z-6 w-full max-w-2xl bg-slate-900/80 backdrop-blur-sm border-slate-700 text-white shadow-2xl">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl md:text-3xl font-bold">
+            Topluluğumuza Katılın
+          </CardTitle>
+          <CardDescription className="text-gray-300 pt-2">
+            Aşağıdaki formu doldurarak Pehlivan Team ailesinin bir parçası olmak
+            için ilk adımı atın. Başvurunuzu heyecanla bekliyoruz!
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="name">İsim Soyisim*</FieldLabel>
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  value={formState.name}
+                  onChange={handleChange}
+                />
+                {errors.name && (
+                  <FieldError className="text-red-500">
+                    {errors.name}
+                  </FieldError>
+                )}
+              </Field>
+              {/* ... Other fields remain the same */}
+              <Field>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formState.email}
+                  onChange={handleChange}
+                />
+                {errors.email && (
+                  <FieldError className="text-red-500">
+                    {errors.email}
+                  </FieldError>
+                )}
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="phone">Telefon Numarası</FieldLabel>
+                <Input
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  value={formState.phone}
+                  onChange={handleChange}
+                />
+                {errors.phone && (
+                  <FieldError className="text-red-500">
+                    {errors.phone}
+                  </FieldError>
+                )}
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="student_number">
+                  Öğrenci Numarası*
+                </FieldLabel>
+                <Input
+                  type="text"
+                  id="student_number"
+                  name="student_number"
+                  required
+                  value={formState.student_number}
+                  onChange={handleChange}
+                />
+                {errors.student_number && (
+                  <FieldError className="text-red-500">
+                    {errors.student_number}
+                  </FieldError>
+                )}
+              </Field>
+              <Field>
+                <FieldLabel>Bölüm*</FieldLabel>
+                <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      className={cn(
+                        "cursor-pointer text-white p-2 rounded border border-input text-left w-full h-9 bg-transparent",
+                        isPopoverOpen && "bg-gray-700"
+                      )}
+                    >
+                      {formState.department ? (
+                        formState.department
+                      ) : (
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">
+                            Bölüm seç
+                          </span>
+                          <CaretSortIcon className="h-4 w-4 text-gray-400" />
+                        </div>
+                      )}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 max-w-none bg-gray-900">
+                    <Command >
+                      <CommandInput
+                        placeholder="Bölüm ara..."
+                        className="text-gray-100 bg-gray-800 mb-3"
+                      />
+                      <CommandList className="max-h-96 overflow-y-auto text-white scrollbar-hide">
+                        <CommandEmpty>Bölüm bulunamadı.</CommandEmpty>
+                        {Object.entries(departmentlist).map(
+                          ([faculty, depts]) => (
+                            <CommandGroup
+                              key={faculty}
+                              heading={faculty}
+                              className="text-sm"
+                            >
+                              {depts.map((dept) => (
+                                <CommandItem
+                                  key={dept.key}
+                                  value={dept.dept}
+                                  onSelect={() => {
+                                    handleSelectChange("department", dept.dept);
+                                    setIsPopoverOpen(false);
+                                  }}
+                                >
+                                  {dept.dept}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          )
+                        )}
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                {errors.department && (
+                  <FieldError className="text-red-500">
+                    {errors.department}
+                  </FieldError>
+                )}
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="team">
+                  Hangi Takıma Katılmak İstiyorsunuz?*
+                </FieldLabel>
+                <Select
+                  name="team"
+                  required
+                  onValueChange={(value) => handleSelectChange("team", value)}
+                  value={formState.team}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Takım seçin" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-60 overflow-y-auto bg-gray-700 text-white scrollbar-hide">
+                    <SelectItem value="Pehli1">
+                      Pehlivan Team / Elektrikli Araç
+                    </SelectItem>
+                    <SelectItem value="Roket">Pehlivan Team / Roket</SelectItem>
+                    <SelectItem value="Linux">
+                      Pehlivan Team / Linux Geliştirme
+                    </SelectItem>
+                    <SelectItem value="Börü">Börü / Otonom Araç</SelectItem>
+                    <SelectItem value="PR">PR / İçerik Üretimi</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.team && (
+                  <FieldError className="text-red-500">
+                    {errors.team}
+                  </FieldError>
+                )}
+              </Field>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="mt-4 flex items-center justify-center bg-red-600 text-white py-2 px-4 rounded transition-colors hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Takım seçin" />
-                </SelectTrigger>
-                <SelectContent className="max-h-60 overflow-y-auto bg-gray-700 text-white scrollbar-hide">
-                  <SelectItem value="Pehli1">
-                    Pehlivan Team / Elektrikli Araç
-                  </SelectItem>
-                  <SelectItem value="Roket">Pehlivan Team / Roket</SelectItem>
-                  <SelectItem value="Linux">
-                    Pehlivan Team / Linux Geliştirme
-                  </SelectItem>
-                  <SelectItem value="Börü">Börü / Otonom Araç</SelectItem>
-                  <SelectItem value="PR">PR / İçerik Üretimi</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <FieldError className="text-red-500">
-                {formState.errors.team}
-              </FieldError>
-
-              <FieldError className="text-red-500">
-                {formState.errors.department}
-              </FieldError>
-            </Field>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-red-600 text-white py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? "Yükleniyor..." : "Gönder"}
-            </button>
-          </FieldGroup>
-        </form>
-      </div>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Gönderiliyor...
+                  </>
+                ) : (
+                  "Başvuruyu Gönder"
+                )}
+              </button>
+            </FieldGroup>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
 
-export default page;
+export default AddMemberPage;

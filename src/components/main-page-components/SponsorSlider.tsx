@@ -1,62 +1,47 @@
+"use client";
+
 import React from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../ui/carousel";
 import Sponsors from "@/constants/sponsors";
 import Link from "next/link";
-import Autoplay from "embla-carousel-autoplay";
+import Image from "next/image";
 
 function SponsorSlider() {
   return (
-    <div className="w-[100vw] lg:h-[40vh] h-[40vh] flex flex-col items-center justify-center mx-auto  bg-black">
-      <h2 className="text-3xl font-bold text-white justify-center">
-        Sponsorlarımız
-      </h2>
-      <Carousel
-        opts={{
-          loop: true,
-          duration: 800,
-        }}
-        plugins={[
-          Autoplay({
-            delay: 5000,
-          }),
-        ]}
-      >
-        <div className="flex items-center justify-between w-full px-4 lg:px-8">
-          <CarouselPrevious className="text-white hidden lg:flex" />
-
-          <CarouselNext className="text-white hidden lg:flex" />
-        </div>
-        <CarouselContent className="">
-          {Sponsors.map((sponsor) => (
-            <CarouselItem
-              key={sponsor.name}
-              className=" flex justify-center  md:basis-1/3  ml-0 w-[30vw] lg:w-full"
-            >
-              <Link href={sponsor.url} target="_blank">
-                <div className="w-[200px] h-[35vh] lg:w-[300px] lg:h-[300px] flex items-center justify-center flex-col">
-                  <img
+    <section className="bg-gray-950 w-full py-16 md:py-24 overflow-hidden">
+      <div className="container mx-auto text-center">
+        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white mb-12">
+          Değerli Sponsorlarımız
+        </h2>
+        
+        <div className="relative w-full overflow-hidden group">
+          {/* Marquee Container */}
+          <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
+            {/* Render sponsors list twice for a seamless loop */}
+            {[...Sponsors, ...Sponsors].map((sponsor, index) => (
+              <Link
+                href={sponsor.url}
+                key={`${sponsor.name}-${index}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mx-16 flex-shrink-0" // Increased margin for more space
+                aria-label={sponsor.name}
+              >
+                {/* Each logo now has a white background for visibility and is larger */}
+                <div className="relative w-80 h-40 bg-white rounded-lg shadow-md p-2 flex items-center justify-center transition-transform duration-300 transform hover:scale-110">
+                  <Image
                     src={sponsor.logo}
-                    alt=""
-                    className="w-full h-full object-contain "
+                    alt={`${sponsor.name} logo`}
+                    layout="fill"
+                    objectFit="contain"
+                    className="p-3" // A little more padding for the larger size
                   />
-
-                  <h3 className="text-lg font-semibold  text-gray-300 text-center">
-                    {sponsor.name}
-                  </h3>
-                  <p className="text-sm text-gray-300">{sponsor.description}</p>
                 </div>
               </Link>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
-    </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 

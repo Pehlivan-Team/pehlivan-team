@@ -31,7 +31,7 @@ const Sponsors: Sponsor[] = [
   },
   {
     name: "UzunKöprü Belediyesi",
-    logo: "https://uzunkopru.bel.tr/wp-content/uploads/2024/05/logo_2024.png",
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSH2w71eLVn35bKyY_OadcwES_ismL82Rds6w&s",
     url: "https://www.uzunkopru.bel.tr/",
     logoWidth: 200,
     logoHeight: 200,

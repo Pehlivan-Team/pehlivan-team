@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Topbar, BottomBar } from "@/components/ui/navbar/topbar";
+import Footer from "@/components/ui/navbar/footer";
 
 export const metadata: Metadata = {
   title: "Pehlivan Team",
@@ -17,7 +18,9 @@ export default function RootLayout({
       <body>
         <Topbar />
         <BottomBar />
-        {children}
+        <main>{children}</main>
+
+        <Footer />
       </body>
     </html>
   );

@@ -1,127 +1,137 @@
 "use client";
 import React from "react";
-import {
-  AnimatePresence,
-  motion,
-  useDragControls,
-  useScroll,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_png.png";
 import bg from "@/assets/bg.jpg";
-import { Button } from "@/components/ui/button";
+
+// Animation variants for staggering the entrance of elements
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.6, ease: "easeInOut" },
+  },
+};
 
 export default function MainPageHeader() {
-  const [switchAnim, setSwitchAnim] = React.useState(false);
-
-  const createRandomBubbleArray = () => {
-    const arr = [];
-    for (let i = 0; i < 100; i++) {
-      arr.push({
-        x: Math.random() * 10,
-        y: Math.random() * 10,
-      });
+  const scrollToNextSection = () => {
+    // Scrolls the user to the first section after the hero
+    const firstSection = document.querySelector("section");
+    if (firstSection) {
+      firstSection.scrollIntoView({ behavior: "smooth" });
     }
-    return arr;
   };
 
-  const [bubbles, setBubbles] = React.useState(createRandomBubbleArray());
-
-  setTimeout(() => {
-    setSwitchAnim(true);
-  }, 2000);
   return (
-    <div className="w-[100vw] h-[100vh] justify-center align-middle flex items-center flex-col  lg:flex-row lg:justify-around lg:items-center overflow-clip ">
-      <div className="absolute inset-0 z-[0]">
+    <div className="relative w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden">
+      {/* Background Image with Gradient Overlay */}
+      <div className="absolute inset-0 z-0">
         <Image
           src={bg}
           layout="fill"
           objectFit="cover"
-          alt="bg"
-          className="opacity-20"
+          alt="Pehlivan Team background"
+          className="opacity-30"
+          priority
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-black/70 to-transparent" />
       </div>
-      <div className="flex flex-col items-center">
+
+      <motion.div
+        className="relative z-10 flex flex-col items-center justify-center p-4"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Draggable Logo */}
         <motion.div
-          id="logo"
           drag
-          dragElastic={0.3}
           dragConstraints={{ top: -100, left: -100, right: 100, bottom: 100 }}
-          className="bg-white"
-          variants={{
-            initial: {
-              opacity: [0, 1, 1, 1, 1],
-              scale: [1, 2, 2, 1, 1],
-              rotate: [180, 0, 0, 360, 360],
-              borderRadius: ["0%", "0%", "50%", "50%", "100%"],
-            },
-            bubble: {
-              x: bubbles.map((_, i) => bubbles[i].x),
-              y: bubbles.map((_, i) => bubbles[i].y),
-            },
-          }}
-          animate={switchAnim ? "bubble" : "initial"}
-          transition={{
-            duration: switchAnim ? 100 : 2,
-            ease: "easeInOut",
-            repeatType: "loop",
-            repeat: Infinity,
-          }}
+          dragElastic={0.2}
+          whileHover={{ scale: 1.1, rotateZ: 5 }}
+          className="cursor-grab active:cursor-grabbing bg-white/70 p-2 backdrop-blur-sm rounded-full"
+          variants={itemVariants}
         >
           <Image
             draggable={false}
             src={logo}
-            width={300}
-            height={300}
-            alt="Logo"
+            width={200}
+            height={200}
+            alt="Pehlivan Team Logo"
           />
         </motion.div>
+
+        {/* Headline */}
         <motion.h1
-          className="text-white text-3xl my-24"
-          initial={{ x: 0, y: -200, opacity: 0 }}
-          animate={{
-            x: 0,
-            y: 0,
-            opacity: 1,
-            transition: { duration: 3, ease: "circInOut" },
-          }}
+          className="mt-8 text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-7xl"
+          variants={itemVariants}
         >
           Pehlivan Team
         </motion.h1>
-      </div>
-      <div className="flex flex-col items-center">
+
+        {/* Subtitle */}
         <motion.p
-          className="text-white text-xl text-center lg:w-[50vw] "
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: 1,
-            transition: { duration: 1, ease: "circInOut" },
-          }}
+          className="mt-4 max-w-2xl text-lg text-gray-300 md:text-xl"
+          variants={itemVariants}
         >
-          Elektrikli araç teknolojisinin sınırlarını zorlayan üniversite
-          projesi. Sürdürülebilir ulaşımda devrim yaratmamıza katılın.
+          Sürdürülebilir teknoloji ve yenilikçi mühendislik ile geleceğin
+          sınırlarını zorluyoruz.
         </motion.p>
-        <div className="flex flex-row gap-10 z-[2] ">
+
+        {/* Call to Action Buttons */}
+        <motion.div
+          className="mt-10 flex flex-wrap justify-center gap-4"
+          variants={itemVariants}
+        >
           <Button
-            variant={"link"}
-            className="mt-10 bg-white "
-            onClick={() => {
-              window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
-            }}
+            asChild
+            size="lg"
+            className="bg-red-600 text-white hover:bg-red-700 transition-transform hover:scale-105 shadow-lg"
           >
-            Daha Fazla
+            <Link href="/add_member">Topluluğa Katıl</Link>
           </Button>
           <Button
-            variant={"link"}
-            className="mt-10 bg-white"
-            onClick={() => {
-              window.scrollTo({ top: 9999, behavior: "smooth" });
-            }}
+            size="lg"
+            variant="outline"
+            className="border-white text-white hover:bg-white hover:text-black transition-transform hover:scale-105 shadow-lg"
+            onClick={scrollToNextSection}
           >
-            İletişime Geçin
+            Daha Fazlasını Keşfet
           </Button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Scroll Down Indicator */}
+      <motion.div
+        className="absolute bottom-10"
+        initial={{ opacity: 0, y: 0 }}
+        animate={{ opacity: 1, y: 10 }}
+        transition={{
+          delay: 2.5,
+          duration: 1.5,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut",
+        }}
+      >
+        <ArrowDown className="h-8 w-8 text-white" />
+      </motion.div>
     </div>
   );
 }

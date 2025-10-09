@@ -1,45 +1,86 @@
+"use client";
+
 import React from "react";
-import { Card, CardContent, CardHeader } from "../ui/card";
 import Image from "next/image";
-import { cars } from "@/constants";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { cars } from "@/constants";
+import { ArrowRight } from "lucide-react";
+
+// Animation variants for the container and individual cards
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2, // This will animate each child with a 0.2s delay
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      ease: "easeInOut",
+    },
+  },
+};
+
 function MainPageCars() {
   return (
-    <section
-      id="cars"
-      className="bg-[#13439c] w-screen py-12 md:py-24 lg:py-32 justify-center flex overflow-hidden"
-    >
-      <div className="pl-2 pr-2 px-4 md:px-6">
-        <h2 className="text-3xl text-white font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
+    <section id="cars" className="bg-[#13439c] w-full py-16 md:py-24 lg:py-32">
+      <div className="container mx-auto px-4 md:px-6">
+        <h2 className="text-3xl text-white font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
           Araçlarımız
         </h2>
-        <div className="flex flex-col md:flex-row gap-2 sm:mx-[25vw] ">
+        
+        {/* Main container for staggered animations */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {cars.map((car, index) => (
-            <Link href={"/cars/" + index} key={index}>
-              <Card
-                className="bg-slate-900 bg-opacity-60 flex flex-wrap justify-center md:w-[24vw] w-[85vw] rounded-2xl hover:shadow-lg min-h-[400px] "
-                key={index}
-              >
-                <CardContent className="p-6">
-                  <CardHeader>
-                    <h3 className="text-xl font-bold mb-2 text-white">
-                      {car.name}
-                    </h3>
-                    <h3 className="text-white">{car.year}</h3>
-                  </CardHeader>
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }}
+              className="group"
+            >
+              <Link href={`/cars/${index}`}>
+                <div className="relative h-96 w-full rounded-2xl overflow-hidden shadow-lg border-2 border-transparent hover:border-red-500 transition-all duration-300">
+                  {/* Background Image */}
                   <Image
-                    className="rounded-lg w-full h-48 object-cover"
                     src={car.photos[0]}
                     alt={car.name + " photo"}
-                    width={200}
-                    height={200}
+                    layout="fill"
+                    objectFit="cover"
+                    className="z-0 transition-transform duration-300 group-hover:scale-110"
                   />
-                  <p className="text-gray-200">{car.awards.toString()}</p>
-                </CardContent>
-              </Card>
-            </Link>
+                  
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
+                  
+                  {/* Content */}
+                  <div className="relative z-20 flex flex-col justify-end h-full p-6 text-white">
+                    <h3 className="text-2xl font-bold">{car.name}</h3>
+                    <p className="text-lg text-gray-300">{car.year}</p>
+                    <div className="flex items-center mt-4 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span>Detayları Gör</span>
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

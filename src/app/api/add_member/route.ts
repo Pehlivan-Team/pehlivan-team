@@ -1,58 +1,44 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
 
 export async function POST(request: NextRequest) {
-  const { name, email, phone, student_number, department, team } =
-    await request.json();
-  if (!name || !phone || !student_number || !team || !department)
-    return Response.json({ success: false, error: "ERR_MISSING_FIELDS" });
   try {
-    console.log(process.env.GOOGLE_PRIVATE_KEY);
+    const { name, email, phone, student_number, department, team } = await request.json();
 
-    const googleAuth = new google.auth.GoogleAuth({
+    if (!name || !student_number || !team || !department) {
+      return NextResponse.json({ success: false, error: "ERR_MISSING_FIELDS" }, { status: 400 });
+    }
+
+    const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+    if (!privateKey || !process.env.GOOGLE_CLIENT_EMAIL || !process.env.SIGN_SHEET_ID) {
+      throw new Error("Missing Google API credentials in environment variables.");
+    }
+
+    const auth = new google.auth.GoogleAuth({
       credentials: {
         client_email: process.env.GOOGLE_CLIENT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(
-          /\\n/g,
-          "\n"
-        ) as string,
+        private_key: privateKey,
       },
-      scopes: [
-        "https://www.googleapis.com/auth/drive",
-        "https://www.googleapis.com/auth/drive.file",
-        "https://www.googleapis.com/auth/spreadsheets",
-      ],
+      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
 
-    const sheets = google.sheets({ version: "v4", auth: googleAuth });
+    const sheets = google.sheets({ version: "v4", auth });
     await sheets.spreadsheets.values.append({
-      spreadsheetId: process.env.SIGN_SHEET_ID!,
-      range: "A1:E1",
+      spreadsheetId: process.env.SIGN_SHEET_ID,
+      range: "A1", // Appending to the first available row
       valueInputOption: "USER_ENTERED",
       requestBody: {
-        values: [
-          [
-            name,
-            student_number,
-            phone,
-            email ? email : "BOŞ",
-            department,
-            team ? team : "BOŞ",
-          ],
-        ],
+        values: [[name, student_number, phone || "BOŞ", email || "BOŞ", department, team]],
       },
     });
 
-    return Response.json({
+    return NextResponse.json({
       success: true,
-      error: "",
-      member: { name, email, phone, student_number, department },
+      member: { name, email, phone, student_number, department, team },
     });
   } catch (error) {
-    return Response.json({
-      success: false,
-      error: (error as Error).message,
-      member: null,
-    });
+    console.error("API Error:", error);
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }
 }
