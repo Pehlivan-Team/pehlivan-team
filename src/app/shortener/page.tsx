@@ -1,20 +1,50 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Copy, Link as LinkIcon, Download, Share2, QrCode } from "lucide-react";
+import {
+  Copy,
+  Link as LinkIcon,
+  Download,
+  Share2,
+  QrCode,
+  ChevronDown,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
-import logo from "@/assets/logo_png.png"; // Import your logo
+import logo from "@/assets/logo_png.png";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function ShortenPage() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const qrCodeRef = useRef<HTMLDivElement>(null);
+  const [logoDataUrl, setLogoDataUrl] = useState<string>("");
+
+  // --- NEW: This effect loads the logo and converts it to a Data URL ---
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = logo.src;
+    img.crossOrigin = "Anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(img, 0, 0);
+        setLogoDataUrl(canvas.toDataURL("image/png"));
+      }
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,40 +76,98 @@ export default function ShortenPage() {
     alert("Kısa link kopyalandı!");
   };
 
-  const handleDownload = () => {
-    const canvas = qrCodeRef.current?.querySelector("canvas");
-    if (canvas) {
-      const pngUrl = canvas
-        .toDataURL("image/png")
-        .replace("image/png", "image/octet-stream");
-      let downloadLink = document.createElement("a");
-      downloadLink.href = pngUrl;
-      downloadLink.download = "pehlivan-team-link-qrcode.png";
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
+  const getSvgElement = (): SVGSVGElement | null => {
+    return document.querySelector("#qr-code-container svg");
+  };
+
+  const convertSvgToImage = (format: "png" | "jpeg"): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const svg = getSvgElement();
+      if (!svg) return reject(new Error("QR Code SVG not found."));
+
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+
+      canvas.width = svg.width.baseVal.value;
+      canvas.height = svg.height.baseVal.value;
+
+      img.onload = () => {
+        if (ctx) {
+          if (format === "jpeg") {
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
+          ctx.drawImage(img, 0, 0);
+          const url = canvas.toDataURL(`image/${format}`);
+          resolve(url);
+        } else {
+          reject(new Error("Canvas context could not be created."));
+        }
+      };
+      img.onerror = reject;
+      img.src =
+        "data:image/svg+xml;base64," +
+        btoa(unescape(encodeURIComponent(svgData)));
+    });
+  };
+
+  const handleDownload = async (format: "png" | "jpeg" | "svg") => {
+    let url: string;
+    try {
+      if (format === "svg") {
+        const svg = getSvgElement();
+        if (!svg) throw new Error("QR Code not found.");
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const blob = new Blob([svgData], {
+          type: "image/svg+xml;charset=utf-8",
+        });
+        url = URL.createObjectURL(blob);
+      } else {
+        url = await convertSvgToImage(format);
+      }
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `pehlivan-team-qrcode.${format}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      if (format === "svg") URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download error:", error);
+      alert(`Hata: QR kodu ${format} olarak indirilemedi.`);
     }
   };
 
   const handleShare = async () => {
-    const canvas = qrCodeRef.current?.querySelector("canvas");
-    if (canvas && navigator.share) {
-      canvas.toBlob(async (blob) => {
-        if (blob) {
-          const file = new File([blob], "pehlivan-team-qrcode.png", {
-            type: "image/png",
-          });
-          try {
-            await navigator.share({
-              title: "Pehlivan Team Kısaltılmış Link",
-              text: `Oluşturulan kısa link: ${shortUrl}`,
-              files: [file],
-            });
-          } catch (error) {
-            console.error("Paylaşım hatası:", error);
-          }
-        }
-      }, "image/png");
+    if (!navigator.share) {
+      alert("Tarayıcınız bu özelliği desteklemiyor.");
+      return;
+    }
+
+    try {
+      const dataUrl = await convertSvgToImage("jpeg");
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], "pehlivan-team-qrcode.jpg", {
+        type: "image/jpeg",
+      });
+
+      const shareData = {
+        title: "Pehlivan Team Kısaltılmış Link",
+        text: `Oluşturulan kısa link: ${shortUrl}`,
+        files: [file],
+      };
+
+      if (navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        alert("Tarayıcınız bu dosyayı paylaşmayı desteklemiyor.");
+      }
+    } catch (error) {
+      console.error("Share error:", error);
+      alert("Hata: QR kodu paylaşılamadı.");
     }
   };
 
@@ -96,7 +184,7 @@ export default function ShortenPage() {
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
             type="url"
-            placeholder="https://uzun-linkinizi-buraya-yapistirin.com/..."
+            placeholder="https://..."
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             required
@@ -140,34 +228,52 @@ export default function ShortenPage() {
                   <Copy className="h-5 w-5" />
                 </Button>
               </div>
-
               <div className="mt-4 p-6 bg-slate-800 rounded-lg">
                 <div
+                  id="qr-code-container"
                   className="bg-white p-4 rounded-lg inline-block shadow-lg"
-                  ref={qrCodeRef}
                 >
-                  <QRCodeSVG
-                    value={shortUrl}
-                    size={256}
-                    level={"H"} // High error correction for logo
-                    includeMargin={true}
-                    imageSettings={{
-                      src: logo.src,
-                      height: 48,
-                      width: 48,
-                      excavate: true,
-                    }}
-                  />
+                  {/* Only render the QR code when the logo data is ready */}
+                  {logoDataUrl && (
+                    <QRCodeSVG
+                      value={shortUrl}
+                      size={256}
+                      level={"H"}
+                      includeMargin={true}
+                      imageSettings={{
+                        src: logoDataUrl, // Use the embedded Data URL
+                        height: 48,
+                        width: 48,
+                        excavate: true,
+                      }}
+                    />
+                  )}
                 </div>
                 <div className="mt-6 flex justify-center gap-4">
-                  <Button onClick={handleDownload}>
-                    <Download className="mr-2 h-4 w-4" />
-                    İndir (.png)
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button>
+                        <Download className="mr-2 h-4 w-4" />
+                        <span>İndir</span>
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-slate-700 text-white border-slate-600">
+                      <DropdownMenuItem onClick={() => handleDownload("png")}>
+                        PNG olarak indir
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDownload("jpeg")}>
+                        JPG olarak indir
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDownload("svg")}>
+                        SVG olarak indir
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                   {typeof navigator !== "undefined" && (
                     <Button variant="outline" onClick={handleShare}>
-                      <Share2 className="mr-2 h-4 w-4" />
-                      Paylaş
+                      <Share2 className="mr-2 h-4 w-4" /> Paylaş
                     </Button>
                   )}
                 </div>

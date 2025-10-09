@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL ||
       `https://${request.headers.get("host")}`;
-    const shortUrl = `${baseUrl}/s/${slug}`;
+    const shortUrl = `https://pehli1team.com/s/${slug}`;
 
     return NextResponse.json({ success: true, shortUrl });
   } catch (error) {
