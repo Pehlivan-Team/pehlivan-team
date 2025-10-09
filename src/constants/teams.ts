@@ -39,7 +39,7 @@ export const teamsData = [
     ],
   },
   {
-    slug: "borü-otonom",
+    slug: "boru-otonom",
     name: "Börü / Otonom Araç",
     leader: "Belirlenecek",
     Icon: Dna,
