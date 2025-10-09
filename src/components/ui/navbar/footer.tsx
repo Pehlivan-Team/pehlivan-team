@@ -1,15 +1,18 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Github, Instagram, Linkedin } from "lucide-react";
+import { Github, Instagram, Linkedin, LinkIcon, Mail, Milestone, Trophy, UserPlus, Users } from "lucide-react";
 import logo from "@/assets/logo_png.png";
 
 const Footer = () => {
   const quickLinks = [
-    { href: "/", label: "Ana Sayfa" },
-    { href: "/timeline", label: "Tarihçe" },
-    { href: "/add_member", label: "Bize Katıl" },
-  ];
+  { href: "/teams", label: "Takımlarımız", Icon: Users },
+  { href: "/timeline", label: "Tarihçe", Icon: Milestone },
+  { href: "/#achievements", label: "Başarılarımız", Icon: Trophy },
+  { href: "/add_member", label: "Topluluğa Katıl", Icon: UserPlus },
+  { href: "/#contact", label: "Bize Ulaşın", Icon: Mail },
+  { href: "/shortener", label: "Link Kısaltıcı", Icon: LinkIcon },
+];
 
   const socialLinks = [
     {

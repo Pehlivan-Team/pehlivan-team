@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Loader2, Printer } from "lucide-react";
+import { Loader2, PlusCircle, Printer } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react"; // <-- THIS IS THE FIX: Import the QRCode component
 import logo from "@/assets/logo_png.png";
 import Image from "next/image";
@@ -151,6 +151,12 @@ const ListePage = () => {
             </h1>
             <PrintButton />
           </div>
+          <Link href="/liste/add">
+            <Button variant="outline">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Yeni Ürün Ekle
+            </Button>
+          </Link>
           {/* Header that only shows on the printed page */}
           <div className="hidden print:flex justify-between items-center border-b-2 pb-4 mb-4">
             <div className="flex items-center gap-4">

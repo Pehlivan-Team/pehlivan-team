@@ -11,6 +11,7 @@ import CurrentCar from "@/components/main-page-components/CurrentCar";
 import SponsorSlider from "@/components/main-page-components/SponsorSlider";
 import WelcomeModal from "@/components/main-page-components/WelcomeModal";
 import ContactSection from "@/components/main-page-components/ContactSection";
+import FeaturedProjects from "@/components/main-page-components/FeaturedProjects";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -28,7 +29,8 @@ export default function Home() {
       <MainPageAboutCards />
       <MainPageAchievements />
       <MainPageCars />
-      <CurrentCar />
+     {/*  <CurrentCar /> */}
+      <FeaturedProjects />
       <ContactSection />
     </div>
   );
