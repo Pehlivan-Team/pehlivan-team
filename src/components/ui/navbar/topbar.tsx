@@ -14,6 +14,7 @@ import {
   Menu as MenuIcon,
   UserPlus,
   LinkIcon,
+  GithubIcon,
 } from "lucide-react";
 import { useActiveSection } from "@/hooks/use-active-section";
 import {
@@ -31,7 +32,9 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import AuthButton from "@/components/auth/AuthButton";
+import AuthButton from "@/components/auth/AuthButton"; // 1. AuthButton'ı import ediyoruz
+import { Separator } from "@/components/ui/separator"; // 2. Ayırıcı (Separator) import ediyoruz
+import MobileAuth from "@/components/auth/MobileAuthButton";
 
 const socialLinks = [
   {
@@ -44,14 +47,19 @@ const socialLinks = [
     Icon: LinkedInLogoIcon,
     label: "LinkedIn",
   },
+  {
+    href: "https://www.github.com/Pehlivan-Team",
+    Icon: GithubIcon,
+    label: "GitHub",
+  },
 ];
 
 const internalLinks = [
-  { href: "/teams", label: "Takımlarımız", Icon: Users },
+  { href: "/teams", label: "Takımlar", Icon: Users },
   { href: "/timeline", label: "Tarihçe", Icon: Milestone },
-  { href: "/#achievements", label: "Başarılarımız", Icon: Trophy },
-  { href: "/add_member", label: "Topluluğa Katıl", Icon: UserPlus },
-  { href: "/#contact", label: "Bize Ulaşın", Icon: Mail },
+  { href: "/#achievements", label: "Başarılar", Icon: Trophy },
+  { href: "/add_member", label: "Bize Katıl", Icon: UserPlus },
+  { href: "/#contact", label: "İletişim", Icon: Mail },
   { href: "/shortener", label: "Link Kısaltıcı", Icon: LinkIcon },
 ];
 
@@ -69,7 +77,6 @@ const Logo = () => (
   </motion.a>
 );
 
-// --- CHANGES ARE IN THE TOPBAR COMPONENT ---
 const Topbar = () => {
   const activeSection = useActiveSection(internalLinkIds);
   return (
@@ -89,7 +96,7 @@ const Topbar = () => {
               <Icon className="w-6 h-6" />
             </a>
           ))}
-          {/* Updated this section to include icons */}
+          <div className="h-6 w-px bg-slate-700" />
           {internalLinks.map(({ href, label, Icon }) => (
             <Link
               key={href}
@@ -104,21 +111,20 @@ const Topbar = () => {
             </Link>
           ))}
           <div className="h-6 w-px bg-slate-700" />
-          <AuthButton /> {/* 3. AuthButton'ı buraya ekle */}
+          <AuthButton />
         </div>
       </nav>
     </header>
   );
 };
 
-// --- BOTTOMBAR REMAINS THE SAME ---
 const BottomBar = () => {
   const activeSection = useActiveSection(internalLinkIds);
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
 
   const primaryActions = [
-    { href: "/add_member", label: "Topluluğa Katıl", Icon: UserPlus },
-    { href: "/#contact", label: "Bize Ulaşın", Icon: Mail },
+    { href: "/add_member", label: "Bize Katıl", Icon: UserPlus },
+    { href: "/#contact", label: "İletişim", Icon: Mail },
   ];
 
   const menuLinks = internalLinks.filter(
@@ -170,7 +176,7 @@ const BottomBar = () => {
                   <p>Daha Fazla</p>
                 </TooltipContent>
               </Tooltip>
-              <SheetContent className="bg-gray-950/90 backdrop-blur-lg border-l-slate-700 text-white">
+              <SheetContent className="bg-gray-950/90 backdrop-blur-lg border-l-slate-700 text-white flex flex-col">
                 <SheetHeader>
                   <SheetTitle className="text-white text-2xl">Menü</SheetTitle>
                 </SheetHeader>
@@ -192,18 +198,26 @@ const BottomBar = () => {
                     </Link>
                   ))}
                 </div>
-                <div className="absolute bottom-8 left-6 flex space-x-6">
-                  {socialLinks.map(({ href, Icon, label }) => (
-                    <a
-                      key={href}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-white"
-                    >
-                      <Icon className="w-7 h-7" />
-                    </a>
-                  ))}
+
+                <div className="mt-auto">
+                  <Separator className="my-4 bg-slate-700" />
+                  <div className="flex items-center justify-between px-2">
+                    <div className="flex space-x-4">
+                      {socialLinks.map(({ href, Icon, label }) => (
+                        <a
+                          key={href}
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-400 hover:text-white"
+                        >
+                          <Icon className="w-6 h-6" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                  <Separator className="my-4 bg-slate-700" />
+                  <MobileAuth />
                 </div>
               </SheetContent>
             </Sheet>

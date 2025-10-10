@@ -23,7 +23,7 @@ export async function createShortLink(longUrl: string, requestHeaders: Headers):
     });
 
     // Construct the full short URL and return it
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `https://${requestHeaders.get('host')}`;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `https://pehli1team.com`;
     return `${baseUrl}/s/${slug}`;
 
   } catch (error) {

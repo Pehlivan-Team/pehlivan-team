@@ -1,7 +1,20 @@
 import React from "react";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { LayoutDashboard, Link as LinkIcon, ListTodo, Milestone } from "lucide-react";
+import {
+  LayoutDashboard,
+  Link as LinkIcon,
+  ListTodo,
+  Milestone,
+} from "lucide-react";
+import { MobileSidebar } from "./_components/MobileSideBar";
+
+const navLinks = [
+  { href: "/admin", label: "Dashboard", Icon: LayoutDashboard },
+  { href: "/admin/links", label: "Kısa Linkler", Icon: LinkIcon },
+  { href: "/admin/needs", label: "İhtiyaç Listesi", Icon: ListTodo },
+  { href: "/admin/timeline", label: "Tarihçe Yönetimi", Icon: Milestone },
+];
 
 export default async function AdminLayout({
   children,
@@ -11,7 +24,6 @@ export default async function AdminLayout({
   const session = await getServerSession();
 
   if (!session) {
-    // Bu normalde middleware tarafından yakalanır, ama bir ek güvenlik katmanı olarak kalabilir.
     return (
       <div className="min-h-screen flex items-center justify-center">
         Erişim yetkiniz yok.
@@ -20,29 +32,39 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex pt-16">
-      <aside className="w-64 bg-gray-950 p-4 border-r border-slate-800 hidden md:block">
-        <nav className="flex flex-col space-y-2">
-          <h2 className="text-lg font-semibold mb-2">Admin Paneli</h2>
-          <Link href="/admin" className="flex items-center gap-2 p-2 rounded hover:bg-slate-800">
-            <LayoutDashboard size={20} />
-            <span>Dashboard</span>
-          </Link>
-          <Link href="/admin/links" className="flex items-center gap-2 p-2 rounded hover:bg-slate-800">
-            <LinkIcon size={20} />
-            <span>Kısa Linkler</span>
-          </Link>
-          <Link href="/admin/needs" className="flex items-center gap-2 p-2 rounded hover:bg-slate-800">
-            <ListTodo size={20} />
-            <span>İhtiyaç Listesi</span>
-          </Link>
-           <Link href="/admin/timeline" className="flex items-center gap-2 p-2 rounded hover:bg-slate-800">
-            <Milestone size={20} />
-            <span>Tarihçe Yönetimi</span>
-          </Link>
-        </nav>
+    <div className="flex min-h-screen w-full flex-col bg-gray-900 text-white">
+      {/* MASAÜSTÜ SOL MENÜ */}
+      <aside className="hidden border-r bg-gray-950/95 md:block">
+        <div className="flex h-full max-h-screen flex-col gap-2">
+          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+            <Link href="/" className="flex items-center gap-2 font-semibold">
+              <span className="">Pehlivan Team</span>
+            </Link>
+          </div>
+          <div className="flex-1">
+            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+              {navLinks.map(({ href, label, Icon }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </div>
       </aside>
-      <main className="flex-1 p-8">{children}</main>
+
+      {/* MOBİL VE ANA İÇERİK ALANI */}
+      <div className="flex flex-col">
+        <MobileSidebar /> {/* Mobil üst barı buraya ekledik */}
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
