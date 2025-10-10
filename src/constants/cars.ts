@@ -1,10 +1,10 @@
-import solar1 from "@/assets/arabalar/solar.jpeg";
-import solar2 from "@/assets/arabalar/solar2.jpg";
+import solar1 from "@/public/arabalar/solar.jpeg";
+import solar2 from "@/public/arabalar/solar2.jpg";
 
-import mavi1 from "@/assets/arabalar/mavi1.jpeg";
-import mavi2 from "@/assets/arabalar/mavi2.jpeg";
+import mavi1 from "@/public/arabalar/mavi1.jpeg";
+import mavi2 from "@/public/arabalar/mavi2.jpeg";
 
-import sari1 from "@/assets/arabalar/sarı1.jpeg";
+import sari1 from "@/public/arabalar/sarı1.jpeg";
 
 export const cars = [
   {

@@ -5,8 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo_png.png";
-import bg from "@/assets/bg.jpg";
+import logo from "@/public/logo_png.png";
+import bg from "@/public/bg.jpg";
 
 // Animation variants for staggering the entrance of elements
 const containerVariants = {

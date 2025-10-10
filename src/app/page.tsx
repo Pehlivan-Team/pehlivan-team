@@ -18,8 +18,6 @@ export default function Home() {
   const showModal = searchParams.has("welcome");
 
   return (
-    // The h-screen class was removed here to fix the layout issue.
-    // I also removed w-screen and overflow-x-clip as they are handled by the layout.
     <div className="bg-gray-950 overflow-x-clip text-white">
       <WelcomeModal show={showModal} />
 
@@ -29,9 +27,9 @@ export default function Home() {
       <MainPageAboutCards />
       <MainPageAchievements />
       <MainPageCars />
-     {/*  <CurrentCar /> */}
       <FeaturedProjects />
       <ContactSection />
+      {/* --- END OF SECTIONS ---*/}
     </div>
   );
 }

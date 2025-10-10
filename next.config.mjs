@@ -15,6 +15,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "haritane.com",
       "encrypted-tbn0.gstatic.com",
+      "files.edgestore.dev",
     ],
   },
   experimental: {

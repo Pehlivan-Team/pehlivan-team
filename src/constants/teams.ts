@@ -1,9 +1,9 @@
 import { Rocket, Zap, Dna, Mic, Code } from "lucide-react";
-import placeHolderRocketImage from "@/assets/placeholder_ROCKET.jpg";
-import placeHolderEvImage from "@/assets/placeholder_EV.jpg";
-import placeHolderOtonomImage from "@/assets/placeholder_BORU.jpg";
-import placeHolderLinuxImage from "@/assets/placeholder_Linux.jpg";
-import placeHolderPRImage from "@/assets/placeholder_PR.jpg";
+import placeHolderRocketImage from "@/public/placeholder_ROCKET.jpg";
+import placeHolderEvImage from "@/public/placeholder_EV.jpg";
+import placeHolderOtonomImage from "@/public/placeholder_BORU.jpg";
+import placeHolderLinuxImage from "@/public/placeholder_Linux.jpg";
+import placeHolderPRImage from "@/public/placeholder_PR.jpg";
 
 export const teamsData = [
   {

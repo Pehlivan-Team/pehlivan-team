@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Github, Instagram, Linkedin, LinkIcon, Mail, Milestone, Trophy, UserPlus, Users } from "lucide-react";
-import logo from "@/assets/logo_png.png";
+import logo from "@/public/logo_png.png";
 
 const Footer = () => {
   const quickLinks = [

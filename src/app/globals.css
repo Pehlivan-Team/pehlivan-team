@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import 'tailwind-scrollbar-hide/v4';
+@import "tailwind-scrollbar-hide/v4";
 
 body {
   font-family: Arial, Helvetica, sans-serif;
@@ -40,7 +40,19 @@ body {
     --chart-4: #66cc99;
     --chart-5: #ffb333;
     --radius: 0.5rem;
+
+    /* --- SONNER İÇİN YENİ DEĞİŞKENLER (Aydınlık Mod) --- */
+    --sonner-toast-background: #ffffff;
+    --sonner-toast-foreground: #1c1c1c;
+    --sonner-toast-border: #d9d9d9;
+
+    --sonner-success-background: #f0fff4;
+    --sonner-success-foreground: #22c55e;
+
+    --sonner-error-background: #fff1f2;
+    --sonner-error-foreground: #ef4444;
   }
+
   .dark {
     --background: #1c1c1c;
     --foreground: #d6d6d6;
@@ -66,6 +78,17 @@ body {
     --chart-3: #ff9933;
     --chart-4: #9933cc;
     --chart-5: #ff3399;
+
+    /* --- SONNER İÇİN YENİ DEĞİŞKENLER (Karanlık Mod) --- */
+    --sonner-toast-background: #2c2c2c;
+    --sonner-toast-foreground: #d6d6d6;
+    --sonner-toast-border: #404040;
+
+    --sonner-success-background: #162a1e;
+    --sonner-success-foreground: #4ade80;
+
+    --sonner-error-background: #f7032c;
+    --sonner-error-foreground: #f87171;
   }
 }
 

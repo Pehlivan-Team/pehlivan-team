@@ -11,7 +11,7 @@ import {
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "@/assets/logo_png.png";
+import logo from "@/public/logo_png.png";
 import { useRouter } from "next/navigation";
 
 function WelcomeModal({ show }: { show: boolean }) {

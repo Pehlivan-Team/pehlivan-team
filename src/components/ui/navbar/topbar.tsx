@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import logo from "@/assets/logo_png.png";
+import logo from "@/public/logo_png.png";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import AuthButton from "@/components/auth/AuthButton";
 
 const socialLinks = [
   {
@@ -102,6 +103,8 @@ const Topbar = () => {
               <span>{label}</span>
             </Link>
           ))}
+          <div className="h-6 w-px bg-slate-700" />
+          <AuthButton /> {/* 3. AuthButton'ı buraya ekle */}
         </div>
       </nav>
     </header>

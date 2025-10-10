@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Award, BatteryCharging, CircuitBoard, Wrench } from "lucide-react";
-import pehli1 from "@/assets/arabalar/pehli1.png";
+import pehli1 from "@/public/arabalar/pehli1.png";
 
 // 1. All car data is now in one place for easy updates.
 const currentCarData = {

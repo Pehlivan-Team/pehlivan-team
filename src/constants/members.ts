@@ -1,4 +1,4 @@
-const logo = require("../assets/logo_png.png");
+const logo = require("../public/logo_png.png");
 const description_cols = {
   "fatih-cosar": [
     "Fatih Coşar, takım kaptanı ve makine mühendisliği öğrencisidir.",

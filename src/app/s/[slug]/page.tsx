@@ -1,47 +1,38 @@
-import { google } from "googleapis";
 import { redirect, notFound } from "next/navigation";
+import { collection, query, where, getDocs, limit } from "firebase/firestore";
+import { db } from "@/lib/firebase"; // Firebase konfigürasyonumuzu import ediyoruz
 
 async function getUrlFromSlug(slug: string): Promise<string | null> {
   try {
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
-    const sheetId = process.env.LINK_SHORTENER_SHEET_ID;
+    // Firestore'da "links" koleksiyonunu hedefliyoruz
+    const linksCollectionRef = collection(db, "links");
 
-    if (!privateKey || !process.env.GOOGLE_CLIENT_EMAIL || !sheetId) {
-      throw new Error("API için gerekli ortam değişkenleri eksik.");
+    // 'slug' alanı, gelen URL parametresiyle eşleşen dokümanı aramak için bir sorgu oluşturuyoruz
+    const q = query(linksCollectionRef, where("slug", "==", slug), limit(1));
+
+    // Sorguyu çalıştırıyoruz
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      // Eğer hiçbir doküman bulunamazsa, null döndür
+      console.log(`Slug bulunamadı: ${slug}`);
+      return null;
     }
-    
-    const auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.GOOGLE_CLIENT_EMAIL,
-        private_key: privateKey,
-      },
-      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-    });
 
-    const sheets = google.sheets({ version: "v4", auth });
-    
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: sheetId,
-      // FIX: Changed "Sheet1!A:B" to just "A:B" to use the first available sheet
-      range: "A:B", 
-    });
-
-    const rows = response.data.values;
-    if (rows) {
-      const row = rows.find(r => r[0] === slug);
-      if (row && row[1]) {
-        return row[1];
-      }
-    }
-    return null;
-
+    // Bulunan ilk dokümanın 'longUrl' alanını al ve döndür
+    const docData = querySnapshot.docs[0].data() as { longUrl: string };
+    return docData.longUrl;
   } catch (error) {
-    console.error("Redirect Error:", error);
+    console.error("Firestore read error:", error);
     return null;
   }
 }
 
-export default async function ShortLinkRedirectPage({ params }: { params: { slug: string } }) {
+export default async function ShortLinkRedirectPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const longUrl = await getUrlFromSlug(params.slug);
 
   if (!longUrl) {

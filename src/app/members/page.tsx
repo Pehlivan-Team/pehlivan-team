@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "@/assets/logo_png.png";
+import logo from "@/public/logo_png.png";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { members as membersArray } from "@/constants/members";

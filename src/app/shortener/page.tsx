@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
-import logo from "@/assets/logo_png.png";
+import logo from "@/public/logo_png.png";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +29,9 @@ export default function ShortenPage() {
   const [error, setError] = useState("");
   const [logoDataUrl, setLogoDataUrl] = useState<string>("");
 
-  // --- NEW: This effect loads the logo and converts it to a Data URL ---
+  // Logo resmini Data URL formatına dönüştürme
+  // Bunu useEffect içinde yapıyoruz ki sadece bir kez çalışsın
+
   useEffect(() => {
     const img = new window.Image();
     img.src = logo.src;
@@ -51,7 +53,11 @@ export default function ShortenPage() {
     setIsLoading(true);
     setError("");
     setShortUrl("");
-
+    /* API ile iletişim kurarak kısa link oluşturma
+     * Başarılı olursa kısa linki state'e kaydet
+     * Hata olursa hata mesajını state'e kaydet
+     * İstek süresince butonu devre dışı bırak
+     */
     try {
       const response = await fetch("/api/shorten", {
         method: "POST",
@@ -79,7 +85,7 @@ export default function ShortenPage() {
   const getSvgElement = (): SVGSVGElement | null => {
     return document.querySelector("#qr-code-container svg");
   };
-
+  /* SVG'yi Canvas'a dönüştürme (PNG veya JPEG için) */
   const convertSvgToImage = (format: "png" | "jpeg"): Promise<string> => {
     return new Promise((resolve, reject) => {
       const svg = getSvgElement();
@@ -113,6 +119,14 @@ export default function ShortenPage() {
     });
   };
 
+  /* QR Kodu İndirme
+   * SVG, PNG ve JPEG formatlarını destekler
+   * Eğer istek gelirse -ki sanmıyorum- WebP ve diğer formatlar da eklenebilir
+   TODO: LOGOSUZ OLMADAN DA İNDİRME SEÇENEĞİ EKLE!
+   TODO: KENDI LOGOMUZU YÜKLEME SEÇENEĞİ EKLE!
+   ! Safaride SVG indirme çalışmıyor, diğer tarayıcılarda test ettim sorun yok.
+   * PNG ve JPEG tüm modern tarayıcılarda sorunsuz çalışıyor.
+   */
   const handleDownload = async (format: "png" | "jpeg" | "svg") => {
     let url: string;
     try {
@@ -140,7 +154,12 @@ export default function ShortenPage() {
       alert(`Hata: QR kodu ${format} olarak indirilemedi.`);
     }
   };
-
+  /*
+   * QR Kodu Paylaşma (Web Share API)
+   * Not: Bu özellik her tarayıcıda desteklenmeyebilir
+   * jpg formatında logo ile birlikte paylaşım yapar
+   * Kaynak: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
+   */
   const handleShare = async () => {
     if (!navigator.share) {
       alert("Tarayıcınız bu özelliği desteklemiyor.");
@@ -233,7 +252,7 @@ export default function ShortenPage() {
                   id="qr-code-container"
                   className="bg-white p-4 rounded-lg inline-block shadow-lg"
                 >
-                  {/* Only render the QR code when the logo data is ready */}
+                  {/*QR Kodu sadece logo verisi hazır olduğunda render edilecek aksi taktirde hata veriyor. Loading yapamadım :)*/}
                   {logoDataUrl && (
                     <QRCodeSVG
                       value={shortUrl}
@@ -241,7 +260,7 @@ export default function ShortenPage() {
                       level={"H"}
                       includeMargin={true}
                       imageSettings={{
-                        src: logoDataUrl, // Use the embedded Data URL
+                        src: logoDataUrl,
                         height: 48,
                         width: 48,
                         excavate: true,

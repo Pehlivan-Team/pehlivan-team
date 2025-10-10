@@ -1,4 +1,4 @@
-import cobanoglulogo from "@/assets/cobanoglu.jpg";
+import cobanoglulogo from "@/public/cobanoglu.jpg";
 
 interface Sponsor {
   name: string;
@@ -22,7 +22,7 @@ const Sponsors: Sponsor[] = [
   },
   {
     name: "UzunKöprü Ticaret ve Sanayi Odası",
-    logo: "https://www.utso.org.tr/assets/img/logo.png",
+    logo: "https://www.utso.org.tr/public/img/logo.png",
     url: "https://www.utso.org.tr/",
     logoWidth: 200,
     logoHeight: 200,

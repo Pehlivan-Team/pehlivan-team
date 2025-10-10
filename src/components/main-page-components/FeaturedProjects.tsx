@@ -19,12 +19,16 @@ import {
   Rocket as RocketIcon,
   Satellite,
 } from "lucide-react";
-import pehli1 from "@/assets/arabalar/pehli1.png";
-import börü from "@/assets/placeholder_BORU.jpg";
-import roket from "@/assets/placeholder_ROCKET.jpg";
+import pehli1 from "@/public/arabalar/pehli1.png";
+import börü from "@/public/placeholder_BORU.jpg";
+import roket from "@/public/placeholder_ROCKET.jpg";
 
-// --- UPDATED DATA ---
-// Each project now has a 'specifications' array.
+/*            --- UPDATED DATA ---
+ * Each project now has a 'specifications' array.
+ TODO : Replace placeholder images with actual project images.
+ TODO MAKE THEM EDİTABLE FROM PANEL
+ TODO : MAKE A PANEL AMK
+*/
 const featuredProjectsData = [
   {
     category: "GÜNCEL ELEKTRİKLİ ARAÇ PROJESİ",

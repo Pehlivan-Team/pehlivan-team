@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import Image from "next/image";
@@ -42,7 +43,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { departmentlist } from "./departments";
-import bg from "@/assets/bg.jpg";
+import bg from "@/public/bg.jpg";
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -67,6 +68,7 @@ const formSchema = z.object({
 type FormState = z.infer<typeof formSchema>;
 
 function AddMemberPage() {
+  // State variables and hooks
   const router = useRouter();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -82,7 +84,7 @@ function AddMemberPage() {
     Partial<Record<keyof FormState, string>>
   >({});
 
-  // Handlers remain the same
+  // Event handlers for form inputs and submission
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormState((prev) => ({ ...prev, [name]: value }));
@@ -92,6 +94,16 @@ function AddMemberPage() {
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
+  /*
+   * BUTONA BASILDIĞINDA ÇALIŞAN FONKSİYON
+   * Butonu birden fazla kez tıklanmasını engellemek için isLoading kontrolü yapar.
+   * Form verilerini doğrular ve hataları state'e kaydeder.
+   * Doğrulama başarılıysa, verileri API'ye gönderir.
+   * Başarılı yanıt alındığında kullanıcıyı ana sayfaya yönlendirir.
+   * Hata durumunda kullanıcıya bir uyarı gösterir. 
+   TODO: Hata yönetimini iyileştir
+   TODO: ALERT'i daha kullanıcı dostu bir modal ile değiştir
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isLoading) return;
@@ -128,7 +140,20 @@ function AddMemberPage() {
       router.push("/?welcome=true");
     } catch (error) {
       console.error("Error:", error);
-      alert("Form gönderilirken bir hata oluştu.");
+      toast.custom(
+        (t: any) => (
+          <div
+            className={cn(
+              "bg-red-600 text-white px-4 py-3  shadow-md flex items-center, rounded-md",
+              t.visible ? "animate-enter" : "animate-leave"
+            )}
+          >
+            Form gönderilirken bir hata oluştu. Lütfen daha sonra tekrar
+            deneyin.
+          </div>
+        ),
+        { duration: 5000, id: "error-toast", position: "top-center" }
+      );
     } finally {
       setIsLoading(false);
     }
@@ -256,7 +281,7 @@ function AddMemberPage() {
                     </button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80 max-w-none bg-gray-900">
-                    <Command >
+                    <Command>
                       <CommandInput
                         placeholder="Bölüm ara..."
                         className="text-gray-100 bg-gray-800 mb-3"
