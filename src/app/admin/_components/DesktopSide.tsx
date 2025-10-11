@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home } from "lucide-react";
-import { navLinks, settingsLink } from "./MobileSidebar";
+import { navLinks, settingsLink } from "./MobileSide";
 import DesktopAuth from "@/components/auth/DesktopAuth";
 import { cn } from "@/lib/utils";
 
