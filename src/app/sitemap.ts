@@ -1,21 +1,25 @@
-import { MetadataRoute } from "next";
-import { firestoreAdmin } from "@/lib/firebase-admin";
-import { cars } from "@/constants/cars";
-import { teamsData } from "@/constants/teams";
-import { Post } from "@/types/blog";
+import { MetadataRoute } from 'next';
+import { firestoreAdmin } from '@/lib/firebase-admin';
+import { cars } from '@/constants/cars';
+import { teamsData } from '@/constants/teams';
+
+// YENİ SATIR: Site haritasının en fazla 24 saatte bir güncellenmesini sağlar.
+export const revalidate = 60 * 60 * 24; // 86400 saniye = 24 saat
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://www.pehli1team.com"; // Sitenizin ana URL'ini buraya yazın
+  const baseUrl = 'https://www.pehli1team.com';
+
+  // ... (dosyanın geri kalanı aynı)
 
   // 1. Statik sayfaları listeye ekle
   const staticRoutes = [
-    "/",
-    "/teams",
-    "/timeline",
-    "/add_member",
-    "/shorten",
-    "/liste",
-    "/blog",
+    '/',
+    '/teams',
+    '/timeline',
+    '/add_member',
+    '/shorten',
+    '/liste',
+    '/blog',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
@@ -23,11 +27,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 2. Dinamik blog yazılarını Firestore'dan çek ve listeye ekle
   const postsSnapshot = await firestoreAdmin
-    .collection("posts")
-    .where("isPublished", "==", true)
+    .collection('posts')
+    .where('isPublished', '==', true)
     .get();
-
-  const blogPostRoutes = postsSnapshot.docs.map((doc) => {
+  
+  const blogPostRoutes = postsSnapshot.docs.map(doc => {
     const data = doc.data();
     return {
       url: `${baseUrl}/blog/${data.slug}`,
@@ -48,5 +52,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Tüm URL'leri birleştir ve geri döndür
-  return [...staticRoutes, ...blogPostRoutes, ...carRoutes, ...teamRoutes];
+  return [
+    ...staticRoutes,
+    ...blogPostRoutes,
+    ...carRoutes,
+    ...teamRoutes,
+  ];
 }
