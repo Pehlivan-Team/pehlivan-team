@@ -1,6 +1,6 @@
 import React from "react";
 import { MobileSidebar } from "./_components/MobileSidebar";
-import { DesktopSidebar } from "./_components/DesktopSideBar"; // 1. Yeni masaüstü bileşenini import et
+import { DesktopSidebar } from "./_components/DesktopSidebar"; // 1. Yeni masaüstü bileşenini import et
 
 export default function AdminLayout({
   children,
