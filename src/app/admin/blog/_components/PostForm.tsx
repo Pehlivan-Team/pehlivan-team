@@ -111,6 +111,7 @@ export function PostForm({ initialData }: PostFormProps) {
           <div className="flex items-center justify-between">
             <Label htmlFor="isPublished">Yayında</Label>
             <Switch
+              className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
               id="isPublished"
               checked={isPublished}
               onCheckedChange={setIsPublished}
