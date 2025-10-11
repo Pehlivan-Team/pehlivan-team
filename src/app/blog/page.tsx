@@ -7,7 +7,7 @@ import { tr } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 
 // Sunucu tarafında yayınlanmış tüm yazıları çeken fonksiyon
-export async function getPublishedPosts(): Promise<Post[]> {
+ async function getPublishedPosts(): Promise<Post[]> {
   const snapshot = await firestoreAdmin
     .collection("posts")
     .where("isPublished", "==", true)
