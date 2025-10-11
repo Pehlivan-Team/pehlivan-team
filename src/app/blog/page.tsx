@@ -6,8 +6,10 @@ import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 
+export const dynamic = "force-dynamic";
+
 // Sunucu tarafında yayınlanmış tüm yazıları çeken fonksiyon
- async function getPublishedPosts(): Promise<Post[]> {
+async function getPublishedPosts(): Promise<Post[]> {
   const snapshot = await firestoreAdmin
     .collection("posts")
     .where("isPublished", "==", true)

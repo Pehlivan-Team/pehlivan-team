@@ -9,6 +9,7 @@ import { EdgeStoreProviderClient } from "@/lib/edgestore-provider";
 import { NavbarWrapper } from "@/components/ui/navbar/navbar-wrapper";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import Head from "next/head";
 export const metadata: Metadata = {
   title: "Pehlivan Team",
   description: "Pehlivan Team",
@@ -21,9 +22,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="overflow-x-hidden" suppressHydrationWarning>
+      <Head>
+        <meta
+          name="google-site-verification"
+          content="5exvvxtam9b-z4dmsm9XkrJ68qOO4jLtD6IQIYyl_6I"
+        />
+      </Head>
       <body>
         <Analytics />
-        <GoogleAnalytics /> 
+        <GoogleAnalytics />
         <NextAuthProvider>
           <EdgeStoreProviderClient>
             <ThemeProvider
