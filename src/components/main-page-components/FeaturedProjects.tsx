@@ -19,8 +19,8 @@ import {
   Rocket as RocketIcon,
   Satellite,
 } from "lucide-react";
-import pehli1 from "@/public/arabalar/pehli1.png";
-import börü from "@/public/placeholder_BORU.jpg";
+import pehli1 from "@/app/public/Pehli1AI.png";
+import börü from "@/public/placeholder_BORU.png";
 import roket from "@/public/placeholder_ROCKET.jpg";
 
 /*            --- UPDATED DATA ---

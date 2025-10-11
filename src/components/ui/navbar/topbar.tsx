@@ -15,6 +15,7 @@ import {
   UserPlus,
   LinkIcon,
   GithubIcon,
+  FileText,
 } from "lucide-react";
 import { useActiveSection } from "@/hooks/use-active-section";
 import {
@@ -35,6 +36,7 @@ import { cn } from "@/lib/utils";
 import AuthButton from "@/components/auth/AuthButton"; // 1. AuthButton'ı import ediyoruz
 import { Separator } from "@/components/ui/separator"; // 2. Ayırıcı (Separator) import ediyoruz
 import MobileAuth from "@/components/auth/MobileAuthButton";
+import { usePathname } from "next/navigation";
 
 const socialLinks = [
   {
@@ -57,6 +59,7 @@ const socialLinks = [
 const internalLinks = [
   { href: "/teams", label: "Takımlar", Icon: Users },
   { href: "/timeline", label: "Tarihçe", Icon: Milestone },
+  { href: "blog", label: "Blog", Icon: FileText },
   { href: "/#achievements", label: "Başarılar", Icon: Trophy },
   { href: "/add_member", label: "Bize Katıl", Icon: UserPlus },
   { href: "/#contact", label: "İletişim", Icon: Mail },

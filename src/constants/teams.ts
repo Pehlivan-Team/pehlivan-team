@@ -1,7 +1,7 @@
 import { Rocket, Zap, Dna, Mic, Code } from "lucide-react";
 import placeHolderRocketImage from "@/public/placeholder_ROCKET.jpg";
 import placeHolderEvImage from "@/public/placeholder_EV.jpg";
-import placeHolderOtonomImage from "@/public/placeholder_BORU.jpg";
+import placeHolderOtonomImage from "@/public/placeholder_BORU.png";
 import placeHolderLinuxImage from "@/public/placeholder_Linux.jpg";
 import placeHolderPRImage from "@/public/placeholder_PR.jpg";
 

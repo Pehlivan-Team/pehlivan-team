@@ -1,0 +1,41 @@
+/* Bu dosya, blog içeriğini biçimlendirmek için kullanılacak */
+
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+  @apply font-bold mb-4 mt-8 first:mt-0;
+}
+
+.content h1 { @apply text-4xl lg:text-5xl; }
+.content h2 { @apply text-3xl lg:text-4xl text-red-500; }
+.content h3 { @apply text-2xl lg:text-3xl; }
+
+.content p {
+  @apply my-4 leading-relaxed text-lg text-gray-300;
+}
+
+.content a {
+  @apply text-red-400 underline hover:text-red-500 transition-colors;
+}
+
+.content ul, .content ol {
+  @apply list-inside my-5 space-y-2;
+}
+
+.content ul { @apply list-disc; }
+.content ol { @apply list-decimal; }
+
+.content li {
+  @apply pl-2 text-gray-300;
+}
+
+.content strong {
+  @apply text-white;
+}
+
+.content blockquote {
+  @apply border-l-4 border-slate-700 pl-4 italic text-muted-foreground my-6;
+}

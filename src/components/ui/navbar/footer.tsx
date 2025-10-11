@@ -1,18 +1,30 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Github, Instagram, Linkedin, LinkIcon, Mail, Milestone, Trophy, UserPlus, Users } from "lucide-react";
+import {
+  Github,
+  Instagram,
+  Linkedin,
+  LinkIcon,
+  Mail,
+  Milestone,
+  Trophy,
+  UserPlus,
+  Users,
+} from "lucide-react";
 import logo from "@/public/logo_png.png";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const quickLinks = [
-  { href: "/teams", label: "Takımlarımız", Icon: Users },
-  { href: "/timeline", label: "Tarihçe", Icon: Milestone },
-  { href: "/#achievements", label: "Başarılarımız", Icon: Trophy },
-  { href: "/add_member", label: "Topluluğa Katıl", Icon: UserPlus },
-  { href: "/#contact", label: "Bize Ulaşın", Icon: Mail },
-  { href: "/shortener", label: "Link Kısaltıcı", Icon: LinkIcon },
-];
+    { href: "/teams", label: "Takımlarımız", Icon: Users },
+    { href: "/timeline", label: "Tarihçe", Icon: Milestone },
+    { href: "/#achievements", label: "Başarılarımız", Icon: Trophy },
+    { href: "/add_member", label: "Topluluğa Katıl", Icon: UserPlus },
+    { href: "/#contact", label: "Bize Ulaşın", Icon: Mail },
+    { href: "/shortener", label: "Link Kısaltıcı", Icon: LinkIcon },
+  ];
 
   const socialLinks = [
     {
@@ -33,6 +45,15 @@ const Footer = () => {
   ];
 
   const currentYear = new Date().getFullYear();
+  const pathname = usePathname();
+
+  // Mevcut URL'nin "/admin" ile başlayıp başlamadığını kontrol et
+  const isAdminRoute = pathname.startsWith("/admin");
+
+  // Eğer bir admin sayfasındaysak, navigasyon barlarını gösterme (null döndür)
+  if (isAdminRoute) {
+    return null;
+  }
 
   return (
     <footer className="bg-gray-900 text-gray-300 border-t border-slate-800 pb-16 sm:pb-0 md:pb-0 lg:pb-0 xl:pb-0 print:hidden">

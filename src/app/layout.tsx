@@ -6,7 +6,9 @@ import { ThemeProvider } from "@/lib/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { NextAuthProvider } from "@/lib/session-provider";
 import { EdgeStoreProviderClient } from "@/lib/edgestore-provider";
-
+import { NavbarWrapper } from "@/components/ui/navbar/navbar-wrapper";
+import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 export const metadata: Metadata = {
   title: "Pehlivan Team",
   description: "Pehlivan Team",
@@ -20,6 +22,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="overflow-x-hidden" suppressHydrationWarning>
       <body>
+        <Analytics />
+        <GoogleAnalytics /> 
         <NextAuthProvider>
           <EdgeStoreProviderClient>
             <ThemeProvider
@@ -28,8 +32,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <Topbar />
-              <BottomBar />
+              <NavbarWrapper />
               <main>{children}</main>
               <Footer />
               <Toaster />
