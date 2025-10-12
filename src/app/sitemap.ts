@@ -1,19 +1,17 @@
 import { MetadataRoute } from 'next';
 import { firestoreAdmin } from '@/lib/firebase-admin';
-import { cars } from '@/constants/cars';
 import { teamsData } from '@/constants/teams';
 
-// YENİ SATIR: Site haritasının en fazla 24 saatte bir güncellenmesini sağlar.
-export const revalidate = 60 * 60 * 24; // 86400 saniye = 24 saat
+// Belirli bir süre sonra (örn: 24 saat) site haritasının yeniden oluşturulmasını sağlar
+export const revalidate = 60 * 60 * 24;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.pehli1team.com';
 
-  // ... (dosyanın geri kalanı aynı)
-
-  // 1. Statik sayfaları listeye ekle
+  // 1. Statik sayfaları listeye ekle (güncellenmiş hali)
   const staticRoutes = [
     '/',
+    '/projects', // '/cars' yerine '/projects'
     '/teams',
     '/timeline',
     '/add_member',
@@ -25,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date().toISOString(),
   }));
 
-  // 2. Dinamik blog yazılarını Firestore'dan çek ve listeye ekle
+  // 2. Dinamik blog yazılarını Firestore'dan çek
   const postsSnapshot = await firestoreAdmin
     .collection('posts')
     .where('isPublished', '==', true)
@@ -39,11 +37,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  // 3. Dinamik araç sayfalarını listeye ekle
-  const carRoutes = cars.map((car, index) => ({
-    url: `${baseUrl}/cars/${index}`,
-    lastModified: new Date().toISOString(),
-  }));
+  // 3. Dinamik proje sayfalarını Firestore'dan çek
+  const projectsSnapshot = await firestoreAdmin.collection('projects').get();
+  const projectRoutes = projectsSnapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+        url: `${baseUrl}/projects/${data.slug}`,
+        lastModified: new Date().toISOString(), // Geliştirme: Projeye 'updatedAt' alanı eklenirse bu kullanılabilir
+    };
+  });
 
   // 4. Dinamik takım sayfalarını listeye ekle
   const teamRoutes = teamsData.map((team) => ({
@@ -55,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticRoutes,
     ...blogPostRoutes,
-    ...carRoutes,
+    ...projectRoutes, // '/cars' yerine proje linklerini ekle
     ...teamRoutes,
   ];
 }
