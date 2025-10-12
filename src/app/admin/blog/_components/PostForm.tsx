@@ -15,6 +15,7 @@ import slugify from "slugify";
 // ReactQuill kütüphanesini sadece istemci tarafında yüklüyoruz
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css"; // Editörün stil dosyası
+import { Alert } from "@/components/ui/alert";
 
 type PostFormProps = {
   initialData?: Post; // Düzenleme modu için mevcut yazı verisi
@@ -73,6 +74,18 @@ export function PostForm({ initialData }: PostFormProps) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <Alert className="mt-4 col-span-9">
+        <h4 className="font-medium text-lg mb-2">Yazı Oluşturma Rehberi</h4>
+        <p>
+          Not: Yazı oluşturduktan sonra, yazınızı ana blog sayfasında
+          yayınlayabilir veya taslak olarak kaydedebilirsiniz.
+        </p>
+        <br />
+        <p>
+          İçerik alanı zengin metin formatını destekler. Görselleri sürükleyip
+          bırakabilirsiniz.
+        </p>
+      </Alert>
       {/* Sol Taraf: Ana Form Alanları */}
       <div className="lg:col-span-2 space-y-6">
         <div>

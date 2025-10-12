@@ -7,6 +7,7 @@ import { tr } from "date-fns/locale";
 import createDOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
 import he from "he";
+import { Metadata } from "next";
 
 export const revalidate = 60; // 60 saniyede bir ISR
 
@@ -46,16 +47,72 @@ async function getPublishedPosts(): Promise<Post[]> {
   return snapshot.docs.map((doc) => doc.data() as Post);
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const post = await getPostBySlug(params.slug);
+
+  if (!post) {
+    return {
+      title: "Yazı Bulunamadı",
+      description: "Aradığınız blog yazısı mevcut değil.",
+    };
+  }
+
+  // İçerikten ilk 155 karakteri alıp meta description olarak kullanıyoruz
+  // HTML etiketlerini temizliyoruz
+  const excerpt =
+    post.content.substring(0, 155).replace(/<[^>]*>?/gm, "") + "...";
+
+  return {
+    title: `${post.title} | Pehlivan Team Blog`,
+    description: excerpt,
+    openGraph: {
+      title: post.title,
+      description: excerpt,
+      url: `https://www.pehli1team.com/blog/${post.slug}`,
+      siteName: "Pehlivan Team",
+      images: [
+        {
+          url:
+            post.imageUrl || "https://www.pehli1team.com/default-og-image.png", // Varsayılan bir resim belirleyin
+          width: 1200,
+          height: 630,
+        },
+      ],
+      locale: "tr_TR",
+      type: "article",
+    },
+  };
+}
+
 export default async function BlogPostPage({
   params,
 }: {
   params: { slug: string };
 }) {
   const post = await getPostBySlug(params.slug);
-
   if (!post) {
     notFound();
   }
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    image: post.imageUrl,
+    datePublished: post.createdAt,
+    dateModified: post.updatedAt,
+    author: [
+      {
+        "@type": "Person",
+        name: post.author,
+      },
+    ],
+  };
+
   // Editörden gelen HTML içeriğini güvenlik için temizliyoruz
   //he.decode ile HTML entity'lerini decode ediyoruz yoksa &lt; olarak render ediliyor o da < olarak gözüküyor.
   //DOMPurify ile de XSS saldırılarına karşı temizliyoruz
@@ -104,8 +161,10 @@ export default async function BlogPostPage({
           />
         </article>
       </main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </div>
   );
 }
-
-

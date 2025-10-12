@@ -30,6 +30,8 @@ export function AnalyticsClientPage({
 }: {
   initialData: AnalyticsData;
 }) {
+
+  
   return (
     <div className="space-y-8">
       {/* KPI Kartları */}

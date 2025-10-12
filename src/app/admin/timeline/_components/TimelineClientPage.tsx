@@ -35,6 +35,8 @@ import { Label } from "@/components/ui/label";
 import { Trash2, Edit, PlusCircle } from "lucide-react";
 import { toast } from "sonner";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { useSession } from "next-auth/react";
+import NoPermError from "../../_components/NoPermError";
 
 // Form için tip tanımı
 type EventFormState = Omit<TimelineEvent, "id" | "awards"> & {
@@ -57,6 +59,9 @@ export function TimelineClientPage({
     image: "",
     awards: [],
   });
+  const { data: session } = useSession();
+
+  if (!session?.user?.permissions?.canManageTimeline) return <NoPermError />;
 
   const handleOpenDialog = (event: TimelineEvent | null) => {
     setEditingEvent(event);

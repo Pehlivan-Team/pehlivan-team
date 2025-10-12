@@ -13,6 +13,12 @@ export async function POST(request: NextRequest) {
         { status: 403 }
       );
     }
+    if (!session?.user?.permissions?.canManageAdmins) {
+      return NextResponse.json(
+        { success: false, error: "Admin ekleme yetkiniz yok." },
+        { status: 403 }
+      );
+    }
 
     const { email } = await request.json();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -47,6 +53,12 @@ export async function DELETE(request: NextRequest) {
         { status: 403 }
       );
     }
+    if (!session?.user?.permissions?.canManageAdmins) {
+      return NextResponse.json(
+        { success: false, error: "Admin silme yetkiniz yok." },
+        { status: 403 }
+      );
+    }
 
     const { email } = await request.json();
     if (!email) {
@@ -74,5 +86,36 @@ export async function DELETE(request: NextRequest) {
       { success: false, error: "Bilinmeyen bir hata oluştu." },
       { status: 500 }
     );
+  }
+}
+// ADMİN YETKİLERİNİ GÜNCELLEME (PUT)
+export async function PUT(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    // Sadece admin yönetme yetkisi olanlar bu işlemi yapabilir
+    if (!session?.user?.permissions?.canManageAdmins) {
+      return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 });
+    }
+
+    const { email, permissions } = await request.json();
+    if (!email || !permissions) {
+      return NextResponse.json({ success: false, error: 'Eksik bilgi.' }, { status: 400 });
+    }
+
+    // Kullanıcının kendi yetkilerini değiştirmesini engelle (güvenlik için)
+    if (session.user.email === email) {
+        return NextResponse.json({ success: false, error: 'Kendi yetkilerinizi değiştiremezsiniz.' }, { status: 400 });
+    }
+
+    // Firestore'da ilgili adminin permissions alanını güncelle
+    await firestoreAdmin.collection('admins').doc(email).update({
+      permissions: permissions,
+    });
+
+    return NextResponse.json({ success: true });
+
+  } catch (error) {
+    console.error("Admin Güncelleme Hatası:", error);
+    return NextResponse.json({ success: false, error: "Bilinmeyen bir hata oluştu." }, { status: 500 });
   }
 }

@@ -1,37 +1,50 @@
-import type { NextAuthOptions } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import { firestoreAdmin } from './firebase-admin';
+import type { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import { firestoreAdmin } from "./firebase-admin";
 
 export const authOptions: NextAuthOptions = {
-    providers: [
-        GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        }),
-    ],
-    secret: process.env.NEXTAUTH_SECRET,
-    callbacks: {
-        // This callback runs when a JSON Web Token is created (i.e., on sign in).
-        async jwt({ token }) {
-            if (token.email) {
-                try {
-                    const adminDoc = await firestoreAdmin.collection('admins').doc(token.email).get();
-                    // If user is in the admins collection, add isAdmin: true to the token.
-                    token.isAdmin = adminDoc.exists && adminDoc.data()?.isAdmin === true;
-                } catch (error) {
-                    console.error("JWT callback Firestore error:", error);
-                    token.isAdmin = false;
-                }
-            }
-            return token;
-        },
-        // This callback runs when a session is checked on the client.
-        async session({ session, token }) {
-            // Pass the isAdmin flag from the token to the client-side session object.
-            if (session.user) {
-                session.user.isAdmin = token.isAdmin as boolean;
-            }
-            return session;
-        },
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+  ],
+  secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    // Bu fonksiyon, kullanıcı giriş yaptığında bir kez çalışır.
+    async jwt({ token, user }) {
+      // İlk giriş anında (user nesnesi sadece bu anda mevcuttur)
+      if (user && user.email) {
+        try {
+          const adminDoc = await firestoreAdmin
+            .collection("admins")
+            .doc(user.email)
+            .get();
+          if (adminDoc.exists && adminDoc.data()?.isAdmin === true) {
+            token.isAdmin = true;
+            token.permissions = adminDoc.data()?.permissions || {"none": true};
+          } else {
+            token.isAdmin = false;
+            token.permissions = {};
+          }
+        } catch (error) {
+          console.error("JWT callback Firestore error:", error);
+          token.isAdmin = false;
+          token.permissions = {};
+        }
+      }
+      return token;
     },
+
+    // Bu fonksiyon, useSession() gibi istemci tarafı fonksiyonları her çalıştığında çağrılır.
+    // Token'daki (sunucudaki) verileri, istemci tarafına gönderilecek olan session nesnesine aktarır.
+    async session({ session, token }) {
+      if (session.user) {
+        // Token'daki isAdmin ve permissions bilgilerini session'a aktar.
+        session.user.isAdmin = token.isAdmin as boolean;
+        session.user.permissions = token.permissions;
+      }
+      return session;
+    },
+  },
 };
