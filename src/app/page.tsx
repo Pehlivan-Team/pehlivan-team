@@ -1,35 +1,49 @@
-"use client";
-import React from "react";
-import { useSearchParams } from "next/navigation";
-
-// Import all your main page components
+import { firestoreAdmin } from "@/lib/firebase-admin";
+import { Project } from "@/types/projects";
 import MainPageHeader from "@/components/main-page-components/MainPageHeader";
 import MainPageAboutCards from "@/components/main-page-components/MainPageAboutCards";
-import MainPageAchievements from "@/components/main-page-components/MainPageAchievements";
-import MainPageCars from "@/components/main-page-components/MainPageCars";
-import CurrentCar from "@/components/main-page-components/CurrentCar";
-import SponsorSlider from "@/components/main-page-components/SponsorSlider";
-import WelcomeModal from "@/components/main-page-components/WelcomeModal";
-import ContactSection from "@/components/main-page-components/ContactSection";
+import MainPageProjects from "@/components/main-page-components/MainPageProjects";
 import FeaturedProjects from "@/components/main-page-components/FeaturedProjects";
+import MainPageAchievements from "@/components/main-page-components/MainPageAchievements";
+import SponsorSlider from "@/components/main-page-components/SponsorSlider";
+import ContactSection from "@/components/main-page-components/ContactSection";
+import WelcomeModalWrapper from "@/components/main-page-components/WelcomeModalWrapper";
 
-export default function Home() {
-  const searchParams = useSearchParams();
-  const showModal = searchParams.has("welcome");
+// Sunucu tarafında rastgele 4 proje çeken fonksiyon
+async function getRandomProjects(): Promise<Project[]> {
+  const snapshot = await firestoreAdmin.collection("projects").get();
+  if (snapshot.empty) {
+    return [];
+  }
+  const allProjects = snapshot.docs.map(
+    (doc) => ({ id: doc.id, ...doc.data() } as Project)
+  );
+
+  // Fisher-Yates shuffle algoritması ile diziyi rastgele karıştır
+  for (let i = allProjects.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [allProjects[i], allProjects[j]] = [allProjects[j], allProjects[i]];
+  }
+
+  // İlk 4 tanesini al
+  return allProjects.slice(0, 4);
+}
+
+// Ana sayfa bileşenini 'async' olarak işaretliyoruz
+export default async function Home() {
+  const randomProjects = await getRandomProjects();
 
   return (
-    <div className="bg-gray-950 overflow-x-clip text-white">
-      <WelcomeModal show={showModal} />
+    <div className="bg-gray-950">
+      <WelcomeModalWrapper />
 
-      {/* --- SECTIONS --- */}
       <MainPageHeader />
-      <SponsorSlider />
       <MainPageAboutCards />
-      <MainPageAchievements />
-      <MainPageCars />
+      <MainPageProjects projects={randomProjects} />
       <FeaturedProjects />
+      <MainPageAchievements />
+      <SponsorSlider />
       <ContactSection />
-      {/* --- END OF SECTIONS ---*/}
     </div>
   );
 }

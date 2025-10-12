@@ -1,73 +1,85 @@
-"use client";
-
-import React from "react";
-import { cars } from "@/constants";
-import Image from "next/image";
 import { notFound } from "next/navigation";
-import { motion } from "framer-motion";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { User, Calendar, Trophy } from "lucide-react";
+import { firestoreAdmin } from "@/lib/firebase-admin";
+import { Project } from "@/types/projects";
 
-function CarDetailPage({ params }: { params: { car: string } }) {
-  const carIndex = Number(params.car);
+async function getProject(slug: string): Promise<Project | null> {
+  const snapshot = await firestoreAdmin
+    .collection("projects")
+    .where("slug", "==", slug)
+    .limit(1)
+    .get();
+  if (snapshot.empty) return null;
+  const doc = snapshot.docs[0];
+  return { id: doc.id, ...doc.data() } as Project;
+}
 
-  // Handle cases where the car ID is invalid
-  if (isNaN(carIndex) || carIndex < 0 || carIndex >= cars.length) {
+export default async function ProjectDetailPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const project: Project | null = await getProject(params.slug);
+
+  if (!project) {
     notFound();
   }
-  const selectedCar = cars[carIndex];
 
   return (
     <div className="bg-gray-950 text-white min-h-screen pt-24 lg:pt-32 pb-16">
-      <motion.div
-        className="container mx-auto px-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
-      >
+      <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Left Column: Car Info */}
           <div className="space-y-6">
-            <h1 className="text-4xl lg:text-5xl font-bold tracking-tighter text-red-500">{selectedCar.name}</h1>
-
+            <p className="font-semibold text-red-400">{project.category}</p>
+            <h1 className="text-4xl lg:text-5xl font-bold tracking-tighter">
+              {project.name}
+            </h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-lg border-y border-gray-700 py-4">
               <div className="flex items-center gap-3">
                 <Calendar className="h-6 w-6 text-gray-400" />
-                <span>{selectedCar.year}</span>
+                <span>{project.year}</span>
               </div>
               <div className="flex items-center gap-3">
                 <User className="h-6 w-6 text-gray-400" />
-                <span>Kaptan: <b>{selectedCar.teamLeader}</b></span>
+                <span>
+                  Kaptan: <b>{project.leader}</b>
+                </span>
               </div>
             </div>
-
-            <p className="text-gray-300 leading-relaxed text-lg">{selectedCar.carDesc}</p>
-
-            {selectedCar.awards?.length > 0 && (
+            <p className="text-gray-300 leading-relaxed text-lg">
+              {project.description}
+            </p>
+            {project.awards && project.awards.length > 0 && (
               <div className="pt-6">
                 <h3 className="text-2xl font-semibold mb-4 flex items-center gap-3">
-                  <Trophy className="h-7 w-7 text-yellow-400" />
-                  Kazanılan Ödüller
+                  <Trophy className="h-7 w-7 text-yellow-400" /> Kazanılan
+                  Ödüller
                 </h3>
                 <ul className="space-y-2 list-disc list-inside text-gray-300">
-                  {selectedCar.awards.map((award, index) => (
+                  {project.awards.map((award, index) => (
                     <li key={index}>{award}</li>
                   ))}
                 </ul>
               </div>
             )}
           </div>
-
-          {/* Right Column: Image Carousel */}
           <div className="sticky top-24">
             <Carousel className="w-full" opts={{ loop: true }}>
               <CarouselContent>
-                {selectedCar.photos.map((photo, index) => (
+                {(project.images || [project.image]).map((photo, index) => (
                   <CarouselItem key={index}>
                     <div className="relative aspect-video w-full overflow-hidden rounded-lg border-2 border-slate-700">
                       <Image
                         src={photo}
-                        alt={`${selectedCar.name} - Resim ${index + 1}`}
+                        alt={`${project.name} - Resim ${index + 1}`}
                         layout="fill"
                         objectFit="cover"
                         priority={index === 0}
@@ -80,10 +92,14 @@ function CarDetailPage({ params }: { params: { car: string } }) {
               <CarouselNext className="right-2 bg-black/50 text-white hover:bg-black/80 border-slate-600" />
             </Carousel>
           </div>
-          </div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default CarDetailPage;
+// SEO için statik sayfalar oluştur
+export async function generateStaticParams() {
+  const snapshot = await firestoreAdmin.collection("projects").get();
+  return snapshot.docs.map((doc) => ({ slug: doc.data().slug }));
+}

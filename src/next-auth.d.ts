@@ -8,8 +8,8 @@ interface AdminPermissions {
   canManageLinks?: boolean;
   canManageNeeds?: boolean;
   canManageTimeline?: boolean;
-  canManageSettings?: boolean; // Yeni izin türü
-  [key: string]: boolean | undefined; // Gelecekte eklenebilecek diğer izinler için esneklik
+  canManageSettings?: boolean;
+  canManageProjects?: boolean;
 }
 
 declare module "next-auth" {

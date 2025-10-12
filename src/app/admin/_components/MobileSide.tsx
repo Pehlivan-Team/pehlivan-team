@@ -16,18 +16,20 @@ import {
   LineChart,
   UserCheck,
   FileText,
+  FolderKanban,
 } from "lucide-react";
 import DesktopAuth from "@/components/auth/DesktopAuth";
 
 // Link verileri artık burada tanımlı ve export ediliyor
 export const navLinks = [
   { href: "/admin", label: "Dashboard", Icon: LayoutDashboard },
-  { href: "/admin/links", label: "Kısa Linkler", Icon: LinkIcon },
+  { href: "/admin/analytics", label: "Analitik", Icon: LineChart },
   { href: "/admin/blog", label: "Blog Yönetimi", Icon: FileText },
+  { href: "/admin/links", label: "Kısa Linkler", Icon: LinkIcon },
   { href: "/admin/needs", label: "İhtiyaç Listesi", Icon: ListTodo },
+  { href: "/admin/projects", label: "Proje Yönetimi", Icon: FolderKanban },
   { href: "/admin/timeline", label: "Tarihçe Yönetimi", Icon: Milestone },
   { href: "/admin/members", label: "Katılımcılar", Icon: Users2 },
-  { href: "/admin/analytics", label: "Analitik", Icon: LineChart },
   { href: "/admin/admins", label: "Yöneticiler", Icon: UserCheck },
 ];
 
