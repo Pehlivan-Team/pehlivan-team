@@ -25,8 +25,10 @@ async function getRandomProjects(): Promise<Project[]> {
     [allProjects[i], allProjects[j]] = [allProjects[j], allProjects[i]];
   }
 
+  const shuffledProjects = JSON.parse(JSON.stringify(allProjects));
   // İlk 4 tanesini al
-  return allProjects.slice(0, 4);
+  return shuffledProjects.slice(0, 4);
+
 }
 
 // Ana sayfa bileşenini 'async' olarak işaretliyoruz

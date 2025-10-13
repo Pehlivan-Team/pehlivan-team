@@ -16,17 +16,20 @@ export async function POST(request: NextRequest) {
       );
     }
     const body = await request.json();
-    const newProject = await firestoreAdmin.collection("projects").add({
-      ...body,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-    
+    const newProject = await firestoreAdmin
+      .collection("projects")
+      .doc(body.slug)
+      .set({
+        ...body,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
     revalidatePath("/projects");
     revalidatePath("/admin/projects");
-    revalidatePath(`/projects/${newProject.id}`);
-    revalidatePath(`/admin/projects/${newProject.id}`);
+    revalidatePath(`/projects/${body.slug}`);
+    revalidatePath(`/admin/projects/${body.slug}`);
 
-    return NextResponse.json({ success: true, id: newProject.id });
+    return NextResponse.json({ success: true, id: body.slug });
   } catch (error) {
     return NextResponse.json(
       { success: false, error: "Bilinmeyen bir hata oluştu." },
