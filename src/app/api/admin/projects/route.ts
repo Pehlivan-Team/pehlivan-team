@@ -3,6 +3,7 @@ import { firestoreAdmin } from "@/lib/firebase-admin";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import admin from "firebase-admin";
+import { revalidatePath } from "next/cache";
 
 // YENİ PROJE OLUŞTURMA (POST)
 export async function POST(request: NextRequest) {
@@ -19,6 +20,10 @@ export async function POST(request: NextRequest) {
       ...body,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
+    revalidatePath("/projects");
+    revalidatePath("/admin/projects");
+    revalidatePath(`/projects/${newProject.id}`);
+    revalidatePath(`/admin/projects/${newProject.id}`);
     return NextResponse.json({ success: true, id: newProject.id });
   } catch (error) {
     return NextResponse.json(

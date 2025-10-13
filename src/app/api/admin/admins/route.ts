@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { firestoreAdmin } from "@/lib/firebase-admin";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 
 // YENİ ADMİN EKLEME (POST)
 export async function POST(request: NextRequest) {
@@ -94,28 +95,39 @@ export async function PUT(request: NextRequest) {
     const session = await getServerSession(authOptions);
     // Sadece admin yönetme yetkisi olanlar bu işlemi yapabilir
     if (!session?.user?.permissions?.canManageAdmins) {
-      return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 });
+      return NextResponse.json(
+        { success: false, error: "Yetkiniz yok." },
+        { status: 403 }
+      );
     }
 
     const { email, permissions } = await request.json();
     if (!email || !permissions) {
-      return NextResponse.json({ success: false, error: 'Eksik bilgi.' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "Eksik bilgi." },
+        { status: 400 }
+      );
     }
 
     // Kullanıcının kendi yetkilerini değiştirmesini engelle (güvenlik için)
     if (session.user.email === email) {
-        return NextResponse.json({ success: false, error: 'Kendi yetkilerinizi değiştiremezsiniz.' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "Kendi yetkilerinizi değiştiremezsiniz." },
+        { status: 400 }
+      );
     }
 
     // Firestore'da ilgili adminin permissions alanını güncelle
-    await firestoreAdmin.collection('admins').doc(email).update({
+    await firestoreAdmin.collection("admins").doc(email).update({
       permissions: permissions,
     });
-
+    revalidatePath(`/admin/admins`);
     return NextResponse.json({ success: true });
-
   } catch (error) {
     console.error("Admin Güncelleme Hatası:", error);
-    return NextResponse.json({ success: false, error: "Bilinmeyen bir hata oluştu." }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Bilinmeyen bir hata oluştu." },
+      { status: 500 }
+    );
   }
 }

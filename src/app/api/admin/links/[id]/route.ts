@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { firestoreAdmin } from "@/lib/firebase-admin";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 
 export async function DELETE(
   request: Request,
@@ -28,6 +29,7 @@ export async function DELETE(
 
     // Delete the document from Firestore
     await firestoreAdmin.collection("links").doc(docId).delete();
+    revalidatePath(`/admin/links`);
 
     return NextResponse.json({ success: true });
   } catch (error) {
