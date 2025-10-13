@@ -20,10 +20,12 @@ export async function POST(request: NextRequest) {
       ...body,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
+    
     revalidatePath("/projects");
     revalidatePath("/admin/projects");
     revalidatePath(`/projects/${newProject.id}`);
     revalidatePath(`/admin/projects/${newProject.id}`);
+
     return NextResponse.json({ success: true, id: newProject.id });
   } catch (error) {
     return NextResponse.json(
