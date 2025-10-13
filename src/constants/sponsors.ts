@@ -22,7 +22,7 @@ const Sponsors: Sponsor[] = [
   },
   {
     name: "UzunKöprü Ticaret ve Sanayi Odası",
-    logo: "https://www.utso.org.tr/public/img/logo.png",
+    logo: "https://files.edgestore.dev/u5c5i1ppwo764wsv/publicFiles/_public/e3548991-de32-4b8f-bd66-522dd2c9dd51.webp",
     url: "https://www.utso.org.tr/",
     logoWidth: 200,
     logoHeight: 200,
