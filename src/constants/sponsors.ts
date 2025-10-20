@@ -49,8 +49,8 @@ const Sponsors: Sponsor[] = [
   },
   {
     name: "Bilişim Deposu",
-    logo: "https://pehli1team.com/_next/image?url=https%3A%2F%2Ffiles.edgestore.dev%2Fu5c5i1ppwo764wsv%2FpublicFiles%2F_public%2Fd563961a-e5b8-467a-b17b-50c2cf89961e.jpg&w=1920&q=75",
-    url: "https://www.bilisimdeposu.com/",  
+    logo: "https://i.ibb.co/CCN2n4m/IMG-20251011-WA0000.jpg",
+    url: "https://www.bilisimdeposu.com/",
     logoWidth: 200,
     logoHeight: 200,
     description: "Bilişim Deposu",
