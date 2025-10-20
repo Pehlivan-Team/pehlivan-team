@@ -10,6 +10,10 @@ import { NavbarWrapper } from "@/components/ui/navbar/navbar-wrapper";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import Head from "next/head";
+
+import GoogleOneTap from "@/components/auth/GoogleOneTap";
+import Script from "next/script";
+
 export const metadata: Metadata = {
   title: "Pehlivan Team",
   description: "Pehlivan Team",
@@ -29,16 +33,25 @@ export default function RootLayout({
         />
       </Head>
       <body>
+        {/* 3. Google'ın script'ini body'nin başına ekle */}
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="beforeInteractive"
+          async
+          defer
+        />
+
         <Analytics />
         <GoogleAnalytics />
         <NextAuthProvider>
           <EdgeStoreProviderClient>
             <ThemeProvider
               attribute="class"
-              defaultTheme="dark" // Varsayılan tema olarak karanlığı ayarladık
+              defaultTheme="dark"
               enableSystem
               disableTransitionOnChange
             >
+              <GoogleOneTap />
               <NavbarWrapper />
               <main>{children}</main>
               <Footer />

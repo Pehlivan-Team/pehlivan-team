@@ -11,61 +11,81 @@ import {
   Share2,
   QrCode,
   ChevronDown,
+  Loader2, // Yükleme ikonu için
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
-import logo from "@/public/logo_png.png";
+import logo from "@/app/public/logo_png.png"; //
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+// 'tasprologo.jpg' dosyasını import etmeniz gerekiyor.
+// Bu dosyanın 'src/app/public' altında olduğunu varsayıyorum.
+import communityLogo from "@/app/public/tasprologo.jpg"; // Bu yolu kendi dosya yapınıza göre düzeltin
 
 export default function ShortenPage() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Link oluşturma yüklemesi
   const [error, setError] = useState("");
   const [logoDataUrl, setLogoDataUrl] = useState<string>("");
+  const [selectedLogo, setSelectedLogo] = useState<string>(logo.src);
 
-  // Logo resmini Data URL formatına dönüştürme
-  // Bunu useEffect içinde yapıyoruz ki sadece bir kez çalışsın
+
+  const [isLogoLoading, setIsLogoLoading] = useState(false);
 
   useEffect(() => {
-    const img = new window.Image();
-    img.src = logo.src;
-    img.crossOrigin = "Anonymous";
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.drawImage(img, 0, 0);
-        setLogoDataUrl(canvas.toDataURL("image/png"));
-      }
-    };
-  }, []);
 
+    const convertLogoToDataUrl = (src: string) => {
+      if (src === "") {
+        setLogoDataUrl(""); 
+        setIsLogoLoading(false);
+        return;
+      }
+
+      const img = new window.Image();
+      img.src = src;
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          setLogoDataUrl(canvas.toDataURL("image/png"));
+        }
+        setIsLogoLoading(false); // Yükleme bitti
+      };
+      img.onerror = () => {
+        console.error("Logo yüklenemedi:", src);
+        setIsLogoLoading(false); 
+      };
+    };
+
+    setIsLogoLoading(true);
+    convertLogoToDataUrl(selectedLogo);
+  }, [selectedLogo]); 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
     setShortUrl("");
-    /* API ile iletişim kurarak kısa link oluşturma
-     * Başarılı olursa kısa linki state'e kaydet
-     * Hata olursa hata mesajını state'e kaydet
-     * İstek süresince butonu devre dışı bırak
-     */
+
     try {
       const response = await fetch("/api/shorten", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
       });
+
       const data = await response.json();
+
       if (!data.success) throw new Error(data.error || "Bir hata oluştu.");
+
       setShortUrl(data.shortUrl);
     } catch (err) {
       setError(
@@ -85,19 +105,24 @@ export default function ShortenPage() {
   const getSvgElement = (): SVGSVGElement | null => {
     return document.querySelector("#qr-code-container svg");
   };
-  /* SVG'yi Canvas'a dönüştürme (PNG veya JPEG için) */
+
   const convertSvgToImage = (format: "png" | "jpeg"): Promise<string> => {
     return new Promise((resolve, reject) => {
       const svg = getSvgElement();
       if (!svg) return reject(new Error("QR Code SVG not found."));
 
+      // Düzeltme: SVG'nin anlık olarak DOM'dan doğru alındığından emin ol
+      // Bazen React'in render gecikmesi sorun yaratabilir.
+      // Bu fonksiyon çağrıldığında DOM'un güncel olduğunu varsayıyoruz.
       const svgData = new XMLSerializer().serializeToString(svg);
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       const img = new Image();
 
-      canvas.width = svg.width.baseVal.value;
-      canvas.height = svg.height.baseVal.value;
+      // SVG'nin boyutlarını al
+      const svgRect = svg.getBoundingClientRect();
+      canvas.width = svgRect.width;
+      canvas.height = svgRect.height;
 
       img.onload = () => {
         if (ctx) {
@@ -105,7 +130,7 @@ export default function ShortenPage() {
             ctx.fillStyle = "white";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
-          ctx.drawImage(img, 0, 0);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           const url = canvas.toDataURL(`image/${format}`);
           resolve(url);
         } else {
@@ -119,15 +144,12 @@ export default function ShortenPage() {
     });
   };
 
-  /* QR Kodu İndirme
-   * SVG, PNG ve JPEG formatlarını destekler
-   * Eğer istek gelirse -ki sanmıyorum- WebP ve diğer formatlar da eklenebilir
-   TODO: LOGOSUZ OLMADAN DA İNDİRME SEÇENEĞİ EKLE!
-   TODO: KENDI LOGOMUZU YÜKLEME SEÇENEĞİ EKLE!
-   ! Safaride SVG indirme çalışmıyor, diğer tarayıcılarda test ettim sorun yok.
-   * PNG ve JPEG tüm modern tarayıcılarda sorunsuz çalışıyor.
-   */
   const handleDownload = async (format: "png" | "jpeg" | "svg") => {
+    if (isLogoLoading) {
+      alert("Logo yükleniyor, lütfen bekleyin.");
+      return;
+    }
+
     let url: string;
     try {
       if (format === "svg") {
@@ -154,15 +176,14 @@ export default function ShortenPage() {
       alert(`Hata: QR kodu ${format} olarak indirilemedi.`);
     }
   };
-  /*
-   * QR Kodu Paylaşma (Web Share API)
-   * Not: Bu özellik her tarayıcıda desteklenmeyebilir
-   * jpg formatında logo ile birlikte paylaşım yapar
-   * Kaynak: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
-   */
+
   const handleShare = async () => {
     if (!navigator.share) {
       alert("Tarayıcınız bu özelliği desteklemiyor.");
+      return;
+    }
+    if (isLogoLoading) {
+      alert("Logo yükleniyor, lütfen bekleyin.");
       return;
     }
 
@@ -212,9 +233,13 @@ export default function ShortenPage() {
           <Button
             type="submit"
             disabled={isLoading}
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-red-600 hover:bg-red-700 w-[140px]" // Butonun yeniden boyutlanmasını engelle
           >
-            {isLoading ? "Oluşturuluyor..." : "Oluştur"}
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Oluştur"
+            )}
           </Button>
         </form>
 
@@ -251,30 +276,45 @@ export default function ShortenPage() {
                 <div
                   id="qr-code-container"
                   className="bg-white p-4 rounded-lg inline-block shadow-lg"
+                  style={{ minHeight: 288, minWidth: 288 }} // Yüklenirken alanın kaymasını engelle
                 >
-                  {/*QR Kodu sadece logo verisi hazır olduğunda render edilecek aksi taktirde hata veriyor. Loading yapamadım :)*/}
-                  {logoDataUrl && (
+                  {/* YENİ YÜKLENME MANTIĞI */}
+                  {isLogoLoading ? (
+                    <div className="w-64 h-64 flex items-center justify-center text-black">
+                      <Loader2 className="h-8 w-8 animate-spin" />
+                    </div>
+                  ) : (
                     <QRCodeSVG
                       value={shortUrl}
                       size={256}
                       level={"H"}
                       includeMargin={true}
-                      imageSettings={{
-                        src: logoDataUrl,
-                        height: 48,
-                        width: 48,
-                        excavate: true,
-                      }}
+                      // DÜZELTİLMİŞ MANTIK: logoDataUrl boşsa 'undefined' gönder
+                      imageSettings={
+                        logoDataUrl
+                          ? {
+                              src: logoDataUrl,
+                              height: 48,
+                              width: 48,
+                              excavate: true,
+                            }
+                          : undefined
+                      }
                     />
                   )}
                 </div>
                 <div className="mt-6 flex justify-center gap-4">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button>
+                      {/* DÜZELTME: Logo yüklenirken butonu devre dışı bırak */}
+                      <Button disabled={isLogoLoading}>
                         <Download className="mr-2 h-4 w-4" />
                         <span>İndir</span>
-                        <ChevronDown className="ml-2 h-4 w-4" />
+                        {isLogoLoading ? (
+                          <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <ChevronDown className="ml-2 h-4 w-4" />
+                        )}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-slate-700 text-white border-slate-600">
@@ -290,8 +330,41 @@ export default function ShortenPage() {
                     </DropdownMenuContent>
                   </DropdownMenu>
 
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      {/* DÜZELTME: Logo yüklenirken butonu devre dışı bırak */}
+                      <Button disabled={isLogoLoading}>
+                        {/* Logo Seç yerine aktif logoyu göster */}
+                        <span>Logo Seç</span>
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-slate-700 text-white border-slate-600">
+                      <DropdownMenuItem
+                        onClick={() => setSelectedLogo(logo.src)}
+                      >
+                        Pehlivan Team Logolu
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSelectedLogo(communityLogo.src)}
+                      >
+                        Tasarım Proje Topluluğu Logosu
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        // DÜZELTME: Logosuz için boş string gönder
+                        onClick={() => setSelectedLogo("")}
+                      >
+                        Logosuz
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                   {typeof navigator !== "undefined" && (
-                    <Button variant="outline" onClick={handleShare}>
+                    <Button
+                      variant="outline"
+                      onClick={handleShare}
+                      disabled={isLogoLoading}
+                    >
                       <Share2 className="mr-2 h-4 w-4" /> Paylaş
                     </Button>
                   )}

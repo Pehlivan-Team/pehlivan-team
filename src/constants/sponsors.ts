@@ -49,7 +49,7 @@ const Sponsors: Sponsor[] = [
   },
   {
     name: "Bilişim Deposu",
-    logo: "https://haritane.com/yer/bilisim-deposu-672772.jpg",
+    logo: "https://pehli1team.com/_next/image?url=https%3A%2F%2Ffiles.edgestore.dev%2Fu5c5i1ppwo764wsv%2FpublicFiles%2F_public%2Fd563961a-e5b8-467a-b17b-50c2cf89961e.jpg&w=1920&q=75",
     url: "https://www.bilisimdeposu.com/",
     logoWidth: 200,
     logoHeight: 200,

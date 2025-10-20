@@ -76,7 +76,14 @@ const Logo = () => (
     href="/"
     className="bg-white rounded"
   >
-    <Image src={logo} alt="Logo" className="h-10 w-10" />
+    <Image
+      src={logo}
+      alt="Pehlivan Team Logo"
+      className="h-10 w-auto"
+      width={180}
+      height={40}
+      priority
+    />
   </motion.a>
 );
 
