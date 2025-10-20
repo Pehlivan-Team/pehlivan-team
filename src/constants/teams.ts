@@ -41,7 +41,7 @@ export const teamsData = [
   {
     slug: "boru-otonom",
     name: "Börü / Otonom Araç",
-    leader: "Sergen Zıvana",
+    leader: "Umut Güçlü",
     Icon: Dna,
     image: placeHolderOtonomImage, // Placeholder
     description:
