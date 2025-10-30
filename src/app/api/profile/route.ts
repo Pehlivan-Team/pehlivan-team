@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; ///route.ts"]
+import { authOptions } from "@/lib/auth";
 import { firestoreAdmin } from "@/lib/firebase-admin"; //
 import { UserProfile } from "@/types/profile";
 
