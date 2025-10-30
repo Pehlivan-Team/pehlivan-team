@@ -4,7 +4,7 @@ import GitHubProvider from "next-auth/providers/github";
 import LinkedInProvider from "next-auth/providers/linkedin";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { firestoreAdmin } from "./firebase-admin"; //
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
   // session: { strategy: "jwt" } // Zaten varsayılan, ama belirtmek iyidir
