@@ -1,31 +1,40 @@
 "use client";
-
+/* PC için kimlik doğrulama butonu componenti
+ *Kullanıcı oturum durumuna göre farklı butonlar gösterir
+  - Giriş yapmış kullanıcılar için profil bilgileri ve çıkış butonu
+  - Giriş yapmamış kullanıcılar için Google ile giriş butonu
+ */
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { LogIn, LogOut, LayoutDashboard } from "lucide-react"; // LayoutDashboard ikonunu import et
+import { LogIn, LogOut, LayoutDashboard } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link"; // Link bileşenini import et
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator, // Ayırıcı için import et
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 export default function AuthButton() {
   const { data: session } = useSession();
-
+  console.log("Kullanıcı oturumu:", session);
   if (session?.user) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+          <Button variant="ghost" className="relative h-10 w-20 rounded-full">
             <Image
               src={session.user.image ?? ""}
               alt={session.user.name ?? "Kullanıcı profili"}
-              fill
+              width={500}
+              height={500}
               className="rounded-full"
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+              }}
             />
           </Button>
         </DropdownMenuTrigger>
@@ -53,7 +62,13 @@ export default function AuthButton() {
               </Link>
             </DropdownMenuItem>
           )}
-
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href={"/profile/" + session.user.username}>
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              <span>Profil</span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => signOut()}>
             <LogOut className="mr-2 h-4 w-4" />
             <span>Çıkış Yap</span>
@@ -64,7 +79,7 @@ export default function AuthButton() {
   }
 
   return (
-    <Button onClick={() => signIn("google")} variant="outline">
+    <Button onClick={() => signIn()} variant="outline">
       <LogIn className="mr-2 h-4 w-4" />
       Giriş Yap
     </Button>

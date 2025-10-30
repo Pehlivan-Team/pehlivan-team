@@ -1,10 +1,10 @@
 import admin from "firebase-admin";
 
-// If the app is already initialized, return the existing app.
+// Uygulama zaten başlatıldıysa, mevcut uygulama kullanılır.
 if (admin.apps.length) {
-  // Do nothing, already initialized
+  // Hiçbir şey yapma, zaten başlatıldı
 } else {
-  // If not initialized, try to initialize.
+  // Başlatılmamışsa, başlatmayı dene.
   try {
     const serviceAccount = {
       projectId: process.env.FIREBASE_PROJECT_ID!,
@@ -12,7 +12,7 @@ if (admin.apps.length) {
       privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
     };
 
-    // Check if the required environment variables are present
+    // Gerekli ortam değişkenlerinin mevcut olup olmadığını kontrol et
     if (
       !serviceAccount.projectId ||
       !serviceAccount.clientEmail ||
@@ -27,11 +27,12 @@ if (admin.apps.length) {
       credential: admin.credential.cert(serviceAccount),
     });
   } catch (error: any) {
-    // This will now cause a crash with a clear error message if initialization fails,
-    // which is better than failing silently.
+    // Hata olursa, ayrıntılı bir hata mesajı at
+    // Normalde bu hata oluşmamalıdır çünkü ortam değişkenleri kontrol edilir ancak hata olursa ve error mesajı atılmazsa
+    // ne olduğunu anlamak zor olabilir. Inan böylesi daha iyi.
     throw new Error(`Firebase Admin Initialization Error: ${error.message}`);
   }
 }
 
-// Export the initialized firestore instance
+// Başlatılmış firestore örneğini dışa aktar
 export const firestoreAdmin = admin.firestore();

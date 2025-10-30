@@ -80,10 +80,12 @@ export default async function ProjectDetailPage({
                       <Image
                         src={photo}
                         alt={`${project.name} - Resim ${index + 1}`}
-                        layout="fill"
-                        objectFit="cover"
                         priority={index === 0}
-                      />
+                        
+                        sizes="100vw"
+                        style={{
+                          objectFit: "cover"
+                        }} />
                     </div>
                   </CarouselItem>
                 ))}

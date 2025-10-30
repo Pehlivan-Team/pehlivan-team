@@ -1,5 +1,9 @@
 "use client";
-
+/* PC için kimlik doğrulama butonu componenti
+ *Kullanıcı oturum durumuna göre farklı butonlar gösterir
+  - Giriş yapmış kullanıcılar için profil bilgileri ve çıkış butonu
+  - Giriş yapmamış kullanıcılar için Google ile giriş butonu
+ */
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
@@ -31,7 +35,10 @@ export default function DesktopAuth() {
               width={40}
               height={40}
               className="rounded-full"
-            />
+              style={{
+                maxWidth: "100%",
+                height: "auto"
+              }} />
             <div>
               <CardTitle className="text-sm font-medium leading-none">
                 {session.user.name}

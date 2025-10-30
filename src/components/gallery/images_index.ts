@@ -1,0 +1,1 @@
+//Bunu silmek garip bir şekilde vercel'de deploy hatasına sebep oluyor.

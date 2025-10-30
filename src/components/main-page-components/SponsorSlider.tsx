@@ -28,10 +28,13 @@ function SponsorSlider() {
                   <Image
                     src={sponsor.logo}
                     alt={`${sponsor.name} logo`}
-                    layout="fill"
-                    objectFit="contain"
                     className="p-3"
-                  />
+                    height={150}
+                    width={300}
+                    sizes="100vw"
+                    style={{
+                      objectFit: "contain"
+                    }} />
                 </div>
               </Link>
             ))}

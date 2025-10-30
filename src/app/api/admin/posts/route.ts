@@ -25,7 +25,19 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
+    /*
+      createdAt: admin.firestore.FieldValue.serverTimestamp(), ve
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      kısmı önemli.
+      Bu, Firestore'da olayın oluşturulma zamanını doğru bir şekilde kaydetmek için kullanılır.
+      Klasik JS Date objesi ile de timestamp oluşturulabilir ancak bu durumda istemci ve sunucu saat dilimi farklılıkları
+      nedeniyle tutarsızlıklar yaşanabilir. Bu yüzden Firestore'un kendi timestamp'ini kullanmak en iyisidir.
+      Peki zaten firestore'da createdAt alanı var, neden bir de biz ekliyoruz?
+      Çünkü firestore'un kendi timestamp'i, veritabanına veri eklenirken otomatik olarak oluşturulur.
+      Ancak biz API üzerinden yeni bir olay eklerken, bu timestamp'in doğru ve tutarlı olmasını sağlamak için
+      manuel olarak eklememiz gerekiyor.
+      Ayrıca bunu eklememek firestore'un kendi timestamp'ini render ederken sorunlara yol açıyor.
+      */
     const newPost = await firestoreAdmin.collection("posts").add({
       ...body,
       author: session.user.name,
@@ -33,6 +45,8 @@ export async function POST(request: NextRequest) {
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
+
+    // İçerik oluşturulduktan sonra ilgili sayfaları önbellekten temizle
     revalidatePath("/blog");
     revalidatePath(`/blog/${slug}`);
     revalidatePath(`/admin/blog`);

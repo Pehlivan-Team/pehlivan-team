@@ -47,7 +47,6 @@ export default async function BlogPage() {
           </p>
         </div>
       </header>
-
       <main className="container mx-auto py-16 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
@@ -55,12 +54,15 @@ export default async function BlogPage() {
               <div className="bg-slate-800 rounded-lg overflow-hidden h-full flex flex-col border border-slate-700 hover:border-red-500 transition-colors">
                 <div className="relative w-full h-48">
                   <Image
-                    src={post.imageUrl || "/placeholder.jpg"} // Eğer kapak resmi yoksa bir varsayılan resim göster
+                    // Eğer kapak resmi yoksa bir varsayılan resim göster
+                    src={post.imageUrl || "/placeholder.jpg"}
                     alt={post.title}
-                    layout="fill"
-                    objectFit="cover"
                     className="group-hover:scale-105 transition-transform duration-300"
-                  />
+                    
+                    sizes="100vw"
+                    style={{
+                      objectFit: "cover"
+                    }} />
                 </div>
                 <div className="p-6 flex-grow flex flex-col">
                   <h2 className="text-xl font-bold group-hover:text-red-400 transition-colors">
@@ -79,7 +81,10 @@ export default async function BlogPage() {
                       width={24}
                       height={24}
                       className="rounded-full"
-                    />
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto"
+                      }} />
                     <span className="text-sm text-gray-300">{post.author}</span>
                   </div>
                 </div>

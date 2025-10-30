@@ -54,7 +54,10 @@ const page = ({ params }: { params: { member: any } }) => {
                 alt="member"
                 width={400}
                 height={400}
-              />
+                style={{
+                  maxWidth: "100%",
+                  height: "auto"
+                }} />
             </motion.div>
           </div>
           <div className="lg:px-5 px-0 gap-10 lg:py-5">

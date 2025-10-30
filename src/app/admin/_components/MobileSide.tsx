@@ -31,6 +31,7 @@ export const navLinks = [
   { href: "/admin/timeline", label: "Tarihçe Yönetimi", Icon: Milestone },
   { href: "/admin/members", label: "Katılımcılar", Icon: Users2 },
   { href: "/admin/admins", label: "Yöneticiler", Icon: UserCheck },
+  { href: "/admin/community", label: "Topluluk", Icon: UserCheck },
 ];
 
 export const settingsLink = {

@@ -16,6 +16,8 @@ const nextConfig = {
       "haritane.com",
       "encrypted-tbn0.gstatic.com",
       "files.edgestore.dev",
+      "i.ibb.co",
+      "avatars.githubusercontent.com",
     ],
   },
   experimental: {

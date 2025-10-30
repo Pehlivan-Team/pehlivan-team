@@ -37,6 +37,6 @@ Animasyon: Framer Motion
 
 Form Yönetimi ve Doğrulama: React Hook Form & Zod
 
-API Entegrasyonu: Google Sheets API
+API Entegrasyonu: Google Sheets API / Firestore
 
 İkonlar: Lucide React

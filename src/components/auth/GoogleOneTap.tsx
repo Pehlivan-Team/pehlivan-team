@@ -1,5 +1,6 @@
 "use client";
-
+// Google One Tap ile NextAuth.js entegrasyonu için bir React componenti
+//! Düzgün çalışmıyor. Kontrol edip düzeltmek lazım.
 import { useEffect, useRef } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { toast } from "sonner";

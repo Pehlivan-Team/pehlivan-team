@@ -5,8 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/public/logo_png.png";
-import bg from "@/public/bg.jpg";
+import logo from "@/app/public/tasprologo.jpg";
+import bg from "@/app/public/bg.png";
 
 // Animation variants for staggering the entrance of elements
 const containerVariants = {
@@ -44,15 +44,16 @@ export default function MainPageHeader() {
       <div className="absolute inset-0 z-0">
         <Image
           src={bg}
-          layout="fill"
-          objectFit="cover"
-          alt="Pehlivan Team background"
+          alt="Tas-Pro background"
           className="opacity-30"
           priority
-        />
+          
+          sizes="100vw"
+          style={{
+            objectFit: "cover"
+          }} />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-black/70 to-transparent" />
       </div>
-
       <motion.div
         className="relative z-10 flex flex-col items-center justify-center p-4"
         variants={containerVariants}
@@ -73,8 +74,12 @@ export default function MainPageHeader() {
             src={logo}
             width={200}
             height={200}
-            alt="Pehlivan Team Logo"
-          />
+            className="h-200 w-200 rounded-full"
+            alt="Tas-Pro Logo"
+            style={{
+              maxWidth: "100%",
+              height: "auto"
+            }} />
         </motion.div>
 
         {/* Headline */}
@@ -82,7 +87,7 @@ export default function MainPageHeader() {
           className="mt-8 text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-7xl"
           variants={itemVariants}
         >
-          Pehlivan Team
+          Tasarım Proje Trakya
         </motion.h1>
 
         {/* Subtitle */}
@@ -116,7 +121,6 @@ export default function MainPageHeader() {
           </Button>
         </motion.div>
       </motion.div>
-
       {/* Scroll Down Indicator */}
       <motion.div
         className="absolute bottom-10"

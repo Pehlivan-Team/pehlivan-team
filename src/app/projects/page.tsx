@@ -23,7 +23,6 @@ export default async function ProjectsPage() {
           </p>
         </div>
       </header>
-
       <main className="container mx-auto py-16 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projectsData.map((project) => (
@@ -36,10 +35,12 @@ export default async function ProjectsPage() {
                 <Image
                   src={project.image}
                   alt={`${project.name} photo`}
-                  layout="fill"
-                  objectFit="cover"
                   className="z-0 transition-transform duration-300 group-hover:scale-110"
-                />
+                  
+                  sizes="100vw"
+                  style={{
+                    objectFit: "cover"
+                  }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10" />
                 <div className="relative z-20 flex flex-col justify-end h-full p-6">
                   <h3 className="text-2xl font-bold">{project.name}</h3>

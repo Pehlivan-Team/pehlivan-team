@@ -13,7 +13,7 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
-import logo from "@/public/logo_png.png";
+import logo from "@/app/public/tasprologo.jpg";
 import { usePathname } from "next/navigation";
 
 const Footer = () => {
@@ -28,7 +28,7 @@ const Footer = () => {
 
   const socialLinks = [
     {
-      href: "https://www.instagram.com/pehlivanteam",
+      href: "https://www.instagram.com/tasprotrakya",
       label: "Instagram",
       Icon: Instagram,
     },
@@ -65,13 +65,16 @@ const Footer = () => {
               <div className="bg-white p-1 rounded">
                 <Image
                   src={logo}
-                  alt="Pehlivan Team Logo"
+                  alt="Tas-Pro Logo"
                   width={40}
                   height={40}
-                />
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto"
+                  }} />
               </div>
               <span className="font-bold text-xl text-white">
-                Pehlivan Team
+                Tasarım Proje Trakya
               </span>
             </Link>
             <p className="text-sm max-w-xs">
@@ -121,11 +124,10 @@ const Footer = () => {
           </div>
         </div>
       </div>
-
       {/* Bottom Bar for Copyright */}
       <div className="bg-black/50 py-4">
         <div className="container mx-auto px-6 text-center text-sm text-gray-400">
-          &copy; {currentYear} Pehlivan Team. Tüm hakları saklıdır. Designed by{" "}
+          &copy; {currentYear} Tasarım Proje Trakya. Tüm hakları saklıdır. Designed by{" "}
           <Link href="https://github.com/anshinx">anshinx</Link>
         </div>
       </div>

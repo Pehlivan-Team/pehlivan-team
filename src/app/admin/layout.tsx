@@ -8,7 +8,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen w-full bg-muted/40">
+    <div className="flex min-h-screen w-full bg-gradient-to-br from-gray-900 via-gray-950 to-gray-700/80 text-white">
       {/* 2. Eski <aside> kodunu yeni bileşen ile değiştir */}
       <DesktopSidebar />
 

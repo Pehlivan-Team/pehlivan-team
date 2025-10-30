@@ -15,8 +15,8 @@ import GoogleOneTap from "@/components/auth/GoogleOneTap";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Pehlivan Team",
-  description: "Pehlivan Team",
+  title: "Tasarım Proje Topluluğu",
+  description: "Tasarım Proje Topluluğu",
 };
 
 export default function RootLayout({
@@ -31,6 +31,7 @@ export default function RootLayout({
           name="google-site-verification"
           content="5exvvxtam9b-z4dmsm9XkrJ68qOO4jLtD6IQIYyl_6I"
         />
+        <meta name="apple-mobile-web-app-title" content="TAS-PRO" />
       </Head>
       <body>
         {/* 3. Google'ın script'ini body'nin başına ekle */}
@@ -53,7 +54,7 @@ export default function RootLayout({
             >
               <GoogleOneTap />
               <NavbarWrapper />
-              <main>{children}</main>
+              <main className="lg:">{children}</main>
               <Footer />
               <Toaster />
             </ThemeProvider>

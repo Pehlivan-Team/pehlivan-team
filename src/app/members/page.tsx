@@ -26,7 +26,10 @@ const Members = () => {
                         className="w-full h-full object-cover rounded-full"
                         width={400}
                         height={400}
-                      />
+                        style={{
+                          maxWidth: "100%",
+                          height: "auto"
+                        }} />
                     </div>
                     <h3 className="text-lg font-semibold">{member.name}</h3>
                     <p className="text-sm text-gray-600 text-center">

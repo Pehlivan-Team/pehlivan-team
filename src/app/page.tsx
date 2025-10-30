@@ -28,7 +28,6 @@ async function getRandomProjects(): Promise<Project[]> {
   const shuffledProjects = JSON.parse(JSON.stringify(allProjects));
   // İlk 4 tanesini al
   return shuffledProjects.slice(0, 4);
-
 }
 
 // Ana sayfa bileşenini 'async' olarak işaretliyoruz
@@ -40,7 +39,6 @@ export default async function Home() {
       <WelcomeModalWrapper />
 
       <MainPageHeader />
-      <MainPageAboutCards />
       <MainPageProjects projects={randomProjects} />
       <FeaturedProjects />
       <MainPageAchievements />

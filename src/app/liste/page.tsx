@@ -91,7 +91,10 @@ export default async function ListePage() {
                 alt="Pehlivan Team Logo"
                 width={50}
                 height={50}
-              />
+                style={{
+                  maxWidth: "100%",
+                  height: "auto"
+                }} />
               <h1 className="text-2xl font-bold">
                 Pehlivan Team İhtiyaç Listesi
               </h1>

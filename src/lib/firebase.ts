@@ -3,7 +3,8 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration that you copied
+// Güncel Firebase yapılandırma nesnesi
+// pehli1team.com bunu kullanıyor. 
 const firebaseConfig = {
   apiKey: "AIzaSyBhHG36_tSDJxvTzNX6LkazVYxu_RmQnYg",
   authDomain: "pehli1team-com.firebaseapp.com",

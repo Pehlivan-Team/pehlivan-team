@@ -39,9 +39,11 @@ export default function TeamDetailPage({
             <Image
               src={team.image}
               alt={team.name}
-              layout="fill"
-              objectFit="cover"
-            />
+              
+              sizes="100vw"
+              style={{
+                objectFit: "cover"
+              }} />
             <div className="absolute inset-0 bg-black/30" />
           </div>
 

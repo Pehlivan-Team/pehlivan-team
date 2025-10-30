@@ -50,7 +50,14 @@ export const TimelineClientPage = ({ events }: { events: TimelineEvent[] }) => {
 const TimelineCard = (event: TimelineEvent) => (
   <div className="bg-slate-800/60 p-6 rounded-xl border border-slate-700 shadow-lg">
     <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden">
-      <Image src={event.image} alt={event.title} layout="fill" objectFit="cover" />
+      <Image
+        src={event.image}
+        alt={event.title}
+        
+        sizes="100vw"
+        style={{
+          objectFit: "cover"
+        }} />
     </div>
     <p className="text-red-400 font-semibold mb-1 flex items-center gap-2"><Calendar size={18} /> {event.year}</p>
     <h3 className="text-2xl font-bold mb-2">{event.title}</h3>

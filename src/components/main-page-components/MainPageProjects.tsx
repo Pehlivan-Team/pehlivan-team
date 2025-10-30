@@ -17,7 +17,7 @@ export default function MainPageProjects({
   return (
     <section
       id="projects"
-      className="bg-[#13439c] w-full py-16 md:py-24 lg:py-32"
+      className="bg-[#020f29] w-full py-16 md:py-24 lg:py-32"
     >
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-3xl text-white font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">

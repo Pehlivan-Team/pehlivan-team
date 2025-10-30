@@ -48,7 +48,15 @@ function WelcomeModal({ show }: { show: boolean }) {
                     ease: "easeInOut",
                   }}
                 >
-                  <Image src={logo} alt="Pehlivan Team Logo" width={100} height={100} />
+                  <Image
+                    src={logo}
+                    alt="Tasarım Proje Topluluğu Logo"
+                    width={100}
+                    height={100}
+                    style={{
+                      maxWidth: "100%",
+                      height: "auto"
+                    }} />
                 </motion.div>
                 <DialogTitle className="text-3xl font-bold">
                   Aramıza Hoş Geldin!
@@ -56,7 +64,7 @@ function WelcomeModal({ show }: { show: boolean }) {
               </DialogHeader>
               <DialogDescription className="text-base leading-relaxed text-gray-300 mt-4 px-2 max-h-[60vh] overflow-y-auto">
                 <p>
-                  Tasarım ve Proje Topluluğu (Pehlivan Team) ailesine katıldığın için çok heyecanlıyız! Başvuru formunu doldurarak, köklü bir geçmişe ve büyük hedeflere sahip bu ekibin bir parçası olmak için ilk adımı attın. Bu cesaretin ve tutkun için seni gönülden tebrik ederiz.
+                  Tasarım ve Proje Topluluğu (Tasarım Proje Topluluğu) ailesine katıldığın için çok heyecanlıyız! Başvuru formunu doldurarak, köklü bir geçmişe ve büyük hedeflere sahip bu ekibin bir parçası olmak için ilk adımı attın. Bu cesaretin ve tutkun için seni gönülden tebrik ederiz.
                 </p>
                 <br />
                 <p>
@@ -77,7 +85,7 @@ function WelcomeModal({ show }: { show: boolean }) {
                 <p className="text-sm text-center">
                   Saygı ve sevgilerimizle,
                   <br />
-                  <span className="font-semibold">Tasarım ve Proje Topluluğu | Pehlivan Team Yönetimi</span>
+                  <span className="font-semibold">Tasarım ve Proje Topluluğu | Tasarım Proje Topluluğu Yönetimi</span>
                 </p>
               </DialogDescription>
 

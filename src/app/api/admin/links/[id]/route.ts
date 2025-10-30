@@ -11,7 +11,7 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions);
 
-    // Check if the user is an admin
+    // Kullanıcının admin olup olmadığını kontrol et
     if (!session || !session.user?.isAdmin) {
       return NextResponse.json(
         { success: false, error: "Yetkiniz yok." },
@@ -27,7 +27,7 @@ export async function DELETE(
       );
     }
 
-    // Delete the document from Firestore
+    // Dökümanı Firestore'dan sil
     await firestoreAdmin.collection("links").doc(docId).delete();
     revalidatePath(`/admin/links`);
 

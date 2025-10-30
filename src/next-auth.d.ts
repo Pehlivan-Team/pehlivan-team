@@ -15,8 +15,9 @@ interface AdminPermissions {
 declare module "next-auth" {
   interface Session {
     user: {
+      username: string;
       isAdmin?: boolean;
-      permissions?: AdminPermissions; // Session'a permissions ekle
+      permissions?: AdminPermissions;
     } & DefaultSession["user"];
   }
 }
@@ -24,6 +25,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     isAdmin?: boolean;
-    permissions?: AdminPermissions; // Token'a permissions ekle
+    permissions?: AdminPermissions;
+    username?: string;
   }
 }

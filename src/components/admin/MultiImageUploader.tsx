@@ -88,9 +88,11 @@ export function MultiImageUploader({
               <Image
                 src={url}
                 alt="Yüklenen resim"
-                layout="fill"
-                objectFit="cover"
-              />
+                
+                sizes="100vw"
+                style={{
+                  objectFit: "cover"
+                }} />
               <button
                 type="button"
                 onClick={() => handleRemoveImage(url)}
@@ -102,7 +104,6 @@ export function MultiImageUploader({
           ))}
         </div>
       )}
-
       {/* Yükleme alanı */}
       <div className="w-full h-auto border-2 border-dashed rounded-lg flex flex-col items-center justify-center p-4 text-center">
         <UploadCloud className="h-8 w-8 text-gray-400 mb-2" />

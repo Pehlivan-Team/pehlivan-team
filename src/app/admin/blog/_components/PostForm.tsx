@@ -122,7 +122,7 @@ export function PostForm({ initialData }: PostFormProps) {
         <div className="p-4 border rounded-lg bg-slate-900/50 border-slate-800">
           <h3 className="font-semibold mb-4">Ayarlar</h3>
           <div className="flex items-center justify-between">
-            <Label htmlFor="isPublished">Yayında</Label>
+            <Label htmlFor="isPublished">{isPublished ? "Yayında" : "Taslak"}</Label>
             <Switch
               className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
               id="isPublished"

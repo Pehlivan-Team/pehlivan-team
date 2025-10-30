@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import logo from "@/public/logo_png.png";
+import logo from "@/app/public/tasprologo.jpg";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -78,11 +78,15 @@ const Logo = () => (
   >
     <Image
       src={logo}
-      alt="Pehlivan Team Logo"
-      className="h-10 w-auto"
+      alt="Tasarım Proje Topluluğu Logo"
+      className="h-10 w-10 rounded"
       width={180}
       height={40}
       priority
+      style={{
+        maxWidth: "100%",
+        height: "auto",
+      }}
     />
   </motion.a>
 );

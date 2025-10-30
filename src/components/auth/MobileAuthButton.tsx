@@ -1,5 +1,9 @@
 "use client";
-
+/* Mobil cihazlar için kimlik doğrulama butonu componenti
+ *Kullanıcı oturum durumuna göre farklı butonlar gösterir
+  - Giriş yapmış kullanıcılar için profil bilgileri ve çıkış butonu
+  - Giriş yapmamış kullanıcılar için Google ile giriş butonu
+ */
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { LogIn, LogOut, LayoutDashboard } from "lucide-react";
@@ -33,7 +37,10 @@ export default function MobileAuth() {
             width={40}
             height={40}
             className="rounded-full"
-          />
+            style={{
+              maxWidth: "100%",
+              height: "auto"
+            }} />
           <div>
             <p className="text-sm font-medium text-white">
               {session.user.name}
@@ -43,7 +50,6 @@ export default function MobileAuth() {
             </p>
           </div>
         </div>
-
         {session.user.isAdmin && (
           <Button asChild variant="secondary" className="w-full justify-start">
             <Link href="/admin">

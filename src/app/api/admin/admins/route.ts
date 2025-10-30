@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
         { status: 403 }
       );
     }
-
+    //Admin olarak eklenmek istenen e-posta adresini al. Eğer geçerli değilse hata döndür.
     const { email } = await request.json();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json(

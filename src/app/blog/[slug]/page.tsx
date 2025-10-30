@@ -133,6 +133,10 @@ export default async function BlogPostPage({
                 width={40}
                 height={40}
                 className="rounded-full"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                }}
               />
               <span>{post.author}</span>
               <span>•</span>
@@ -145,12 +149,13 @@ export default async function BlogPostPage({
           </header>
 
           {post.imageUrl && (
-            <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-12">
+            <div className="relative aspect-auto w-max rounded-lg overflow-hidden mb-12">
               <Image
                 src={post.imageUrl}
                 alt={post.title}
-                layout="fill"
-                objectFit="cover"
+                width={800}
+                height={450}
+                sizes="100vw"
               />
             </div>
           )}

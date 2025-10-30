@@ -170,14 +170,15 @@ function AddMemberPage() {
       {/* Background Image with Overlay */}
       <Image
         src={bg}
-        alt="Pehlivan Team Background"
-        layout="fill"
-        objectFit="cover"
+        alt="Tasarım Proje Topluluğu Background"
         className="absolute inset-0 z-0 opacity-20"
         priority
-      />
+        
+        sizes="100vw"
+        style={{
+          objectFit: "cover"
+        }} />
       <div className="absolute inset-0 z-5 bg-black/60" />
-
       {/* Form Card */}
       <Card className="relative z-6 w-full max-w-2xl bg-slate-900/80 backdrop-blur-sm border-slate-700 text-white shadow-2xl">
         <CardHeader className="text-center">
@@ -185,7 +186,7 @@ function AddMemberPage() {
             Topluluğumuza Katılın
           </CardTitle>
           <CardDescription className="text-gray-300 pt-2">
-            Aşağıdaki formu doldurarak Pehlivan Team ailesinin bir parçası olmak
+            Aşağıdaki formu doldurarak Tasarım Proje Topluluğu ailesinin bir parçası olmak
             için ilk adımı atın. Başvurunuzu heyecanla bekliyoruz!
           </CardDescription>
         </CardHeader>
@@ -335,7 +336,7 @@ function AddMemberPage() {
                   </SelectTrigger>
                   <SelectContent className="max-h-60 overflow-y-auto bg-gray-700 text-white scrollbar-hide">
                     <SelectItem value="Pehli1">
-                      Pehlivan Team / Elektrikli Araç
+                      Tasarım Proje Topluluğu / Elektrikli Araç
                     </SelectItem>
                     <SelectItem value="Roket">Pehlivan Team / Roket</SelectItem>
                     <SelectItem value="Linux">

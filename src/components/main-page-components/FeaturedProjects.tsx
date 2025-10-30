@@ -36,7 +36,7 @@ const featuredProjectsData = [
     description:
       "TÜBİTAK Efficiency Challenge için geliştirdiğimiz son elektrikli aracımız. Yerli motor sürücü, batarya yönetim sistemi ve kompozit gövde teknolojileriyle maksimum verimlilik hedefliyoruz.",
     image: pehli1,
-    leader: "Fatih Coşar",
+    leader: "Fatih Coşar - Eşref Kaan Kurtoğlu",
     specifications: [
       {
         Icon: BatteryCharging,
@@ -58,7 +58,7 @@ const featuredProjectsData = [
     description:
       "Yapay zeka ve sensör füzyonu ile kendi kendine sürüş kabiliyeti kazandırdığımız otonom aracımız. Teknofest Robotaksi yarışmasına katılım için geliştirilmektedir.",
     image: börü,
-    leader: "Sergen Zıvana",
+    leader: "Umut Güçlü",
     specifications: [
       { Icon: ScanLine, label: "Sensörler", value: "LIDAR, Kamera, IMU" },
       { Icon: Cpu, label: "İşlemci", value: "Yüksek Performanslı Gömülü GPU" },
@@ -192,7 +192,10 @@ const FeaturedProjects = () => {
                       width={800}
                       height={600}
                       className="rounded-lg border-4 border-white shadow-2xl shadow-black/50 object-cover"
-                    />
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto"
+                      }} />
                   </div>
                 </div>
               </CarouselItem>
