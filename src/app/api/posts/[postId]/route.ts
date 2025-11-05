@@ -8,7 +8,7 @@ export async function DELETE(
   { params }: { params: { postId: string } }
 ): Promise<NextResponse> {
   try {
-    const session = await getServerSession(authOptions as any);
+    const session = await getServerSession(authOptions);
     if (!session || !session.user || !session.user.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -29,6 +29,3 @@ export async function DELETE(
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
-
-
-
