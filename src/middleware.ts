@@ -1,19 +1,32 @@
-import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export default withAuth(
-  // The middleware function is not needed, the callbacks handle everything.
-  {
-    callbacks: {
-      authorized: ({ token }) => {
-        // The middleware now only needs to check for the isAdmin flag on the token.
-        // It will allow access if a token exists AND token.isAdmin is true.
-        return !!token && token.isAdmin === true;
-      },
-    },
+export default async function middleware(req: Request & { nextUrl: any; headers: any }) {
+  const host = (req.headers.get("host") || "").toLowerCase();
+  const url = req.nextUrl;
+
+  // If visiting sosyal.<domain> root, rewrite to /feed (public)
+  if (host.startsWith("sosyal.")) {
+    if (url.pathname === "/" || url.pathname === "") {
+      const rewriteUrl = new URL("/feed", url);
+      return NextResponse.rewrite(rewriteUrl);
+    }
   }
-);
+
+  // Protect /admin with NextAuth token (require isAdmin)
+  if (url.pathname.startsWith("/admin")) {
+    const token: any = await getToken({ req: req as any, secret: process.env.NEXTAUTH_SECRET });
+    if (!token || token.isAdmin !== true) {
+      const signInUrl = new URL("/auth/login", url);
+      signInUrl.searchParams.set("callbackUrl", url.pathname);
+      return NextResponse.redirect(signInUrl);
+    }
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
-  // This middleware still protects all routes starting with /admin.
-  matcher: ["/admin/:path*"],
+  // Run on /admin for auth, and on root path for subdomain routing
+  matcher: ["/", "/admin/:path*"],
 };

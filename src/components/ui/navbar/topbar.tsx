@@ -59,7 +59,7 @@ const socialLinks = [
 const internalLinks = [
   { href: "/teams", label: "Takımlar", Icon: Users },
   { href: "/timeline", label: "Tarihçe", Icon: Milestone },
-  { href: "blog", label: "Blog", Icon: FileText },
+  { href: "/blog", label: "Blog", Icon: FileText },
   { href: "/#achievements", label: "Başarılar", Icon: Trophy },
   { href: "/add_member", label: "Bize Katıl", Icon: UserPlus },
   { href: "/#contact", label: "İletişim", Icon: Mail },

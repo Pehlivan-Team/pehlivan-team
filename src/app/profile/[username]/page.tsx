@@ -8,6 +8,10 @@ import { Github, Linkedin, Twitter, ExternalLink, Edit } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import EditProfileButton from "./_components/EditProfileButton";
+import admin from "firebase-admin";
+import { format } from "date-fns";
+import { tr } from "date-fns/locale";
+import FloatingPostButton from "@/components/post/FloatingPostButton";
 
 // Sunucu tarafında veriyi çek
 async function getProfile(username: string): Promise<UserProfile | null> {
@@ -42,6 +46,37 @@ async function getProfile(username: string): Promise<UserProfile | null> {
   }
 }
 
+async function getLatestPosts(username: string) {
+  try {
+    const q = firestoreAdmin
+      .collection("posts")
+      .where("authorUsername", "==", username)
+      .orderBy("createdAt", "desc")
+      .limit(3);
+    const snap = await q.get();
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  } catch (e) {
+    console.error("Son postlar getirilemedi", e);
+    return [] as any[];
+  }
+}
+
+async function getLatestBlogsByAuthor(authorName: string) {
+  try {
+    const q = firestoreAdmin
+      .collection("posts")
+      .where("author", "==", authorName)
+      .where("isPublished", "==", true)
+      .orderBy("createdAt", "desc")
+      .limit(3);
+    const snap = await q.get();
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  } catch (e) {
+    console.error("Son bloglar getirilemedi", e);
+    return [] as any[];
+  }
+}
+
 export default async function PublicProfilePage({
   params,
 }: {
@@ -51,6 +86,9 @@ export default async function PublicProfilePage({
   if (!profile) {
     notFound(); // Kullanıcı bulunamazsa 404 sayfası
   }
+
+  const latestPosts = await getLatestPosts(profile.username);
+  const latestBlogs = await getLatestBlogsByAuthor(profile.name);
 
   const socials = [
     {
@@ -108,9 +146,84 @@ export default async function PublicProfilePage({
             </div>
           )}
 
+          {/* Posts Section */}
+          <section className="w-full mt-12 text-left">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-white">Posts</h2>
+              <Link
+                className="text-sm text-emerald-300 hover:underline"
+                href={`/profile/${profile.username}/posts`}
+              >
+                See all
+              </Link>
+            </div>
+
+            {latestPosts.length === 0 ? (
+              <p className="text-slate-300 mt-4">No posts yet.</p>
+            ) : (
+              <ul className="mt-4 space-y-4">
+                {latestPosts.map((p: any) => (
+                  <li key={p.id} className="rounded-lg border border-slate-700 bg-slate-800 p-4">
+                    <p className="text-slate-100 whitespace-pre-wrap">{p.content}</p>
+                    {p.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={p.imageUrl}
+                        alt="post image"
+                        className="mt-3 max-h-72 w-full object-cover rounded"
+                      />
+                    ) : null}
+                    <div className="text-sm text-slate-400 mt-2">
+                      <span>{p.likeCount || 0} likes</span>
+                      <span className="mx-2">•</span>
+                      <span>{p.commentCount || 0} comments</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          {/* Blog Posts Section */}
+          <section className="w-full mt-12 text-left">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-white">Blog Posts</h2>
+              <Link
+                className="text-sm text-emerald-300 hover:underline"
+                href={`/blog`}
+              >
+                See all
+              </Link>
+            </div>
+
+            {latestBlogs.length === 0 ? (
+              <p className="text-slate-300 mt-4">No blog posts yet.</p>
+            ) : (
+              <ul className="mt-4 space-y-3">
+                {latestBlogs.map((b: any) => (
+                  <li key={b.slug} className="flex items-start justify-between">
+                    <div>
+                      <Link href={`/blog/${b.slug}`} className="text-slate-100 hover:underline">
+                        {b.title}
+                      </Link>
+                      <div className="text-xs text-slate-400">
+                        {(() => {
+                          const v = b.createdAt;
+                          const d = v?.toDate ? v.toDate() : (v ? new Date(v) : null);
+                          return d && !isNaN(d as any) ? format(d as Date, "dd MMM yyyy", { locale: tr }) : "";
+                        })()}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
           <br />
         </main>
       </div>
+      <FloatingPostButton />
     </div>
   );
 }
