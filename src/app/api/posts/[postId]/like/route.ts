@@ -8,7 +8,7 @@ export async function POST(
   { params }: { params: { postId: string } }
 ): Promise<NextResponse> {
   try {
-    const session = await getServerSession(authOptions as any);
+    const session: any = await getServerSession(authOptions as any);
     if (!session || !session.user || !session.user.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

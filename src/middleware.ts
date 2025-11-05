@@ -27,6 +27,12 @@ export default async function middleware(req: Request & { nextUrl: any; headers:
 }
 
 export const config = {
-  // Run on /admin for auth, and on root path for subdomain routing
-  matcher: ["/", "/admin/:path*"],
+  /*
+   * Match all request paths except for the ones starting with:
+   * - api (API routes)
+   * - _next/static (static files)
+   * - _next/image (image optimization files)
+   * - favicon.ico (favicon file)
+   */
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
