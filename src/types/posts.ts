@@ -52,6 +52,3 @@ export interface ListCommentsResponse {
 export interface CreateCommentRequest {
   content: string;
 }
-
-
-

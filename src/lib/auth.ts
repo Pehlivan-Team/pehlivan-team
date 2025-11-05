@@ -88,8 +88,8 @@ export const authOptions: NextAuthOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   useSecureCookies: process.env.NODE_ENV === "production",
-  cookies: {
-    // Share session across subdomains like sosyal.domain.com
+  //Tokenin sosyal.pehli1team.com'da da çalışması için gerekli ancak düzgün çalıştıramadım.
+  /* cookies: {
     sessionToken: {
       name:
         process.env.NODE_ENV === "production"
@@ -100,19 +100,19 @@ export const authOptions: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         secure: process.env.NODE_ENV === "production",
-        domain: process.env.COOKIE_DOMAIN || undefined, // e.g. .pehli1team.com
+        domain: process.env.COOKIE_DOMAIN || ".pehli1team.com",
       },
     },
     callbackUrl: {
       name:
         process.env.NODE_ENV === "production"
-          ? "__Secure-next-auth.callback-url"
-          : "next-auth.callback-url",
+          ? "__Secure-next-auth.csrf-token" 
+          : "next-auth.csrf-token",
       options: {
         sameSite: "lax",
         path: "/",
         secure: process.env.NODE_ENV === "production",
-        domain: process.env.COOKIE_DOMAIN || undefined,
+        domain: process.env.COOKIE_DOMAIN || ".pehli1team.com",
       },
     },
     csrfToken: {
@@ -125,10 +125,10 @@ export const authOptions: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         secure: process.env.NODE_ENV === "production",
-        domain: process.env.COOKIE_DOMAIN || undefined,
+        domain: process.env.COOKIE_DOMAIN || ".pehli1team.com",
       },
     },
-  },
+  }, */
   callbacks: {
     // Bu callback, TÜM giriş türlerinden (OAuth veya Credentials) sonra çalışır.
     async jwt({ token, user }) {
