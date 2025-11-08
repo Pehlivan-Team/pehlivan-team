@@ -31,7 +31,6 @@ export default function FeedProfileSidebar() {
                 </h3>
                 <p className="text-sm text-slate-400">Hızlı erişimler ve profiliniz</p>
             </div>
-
             {session?.user ? (
                 <div className="space-y-3">
 
@@ -79,7 +78,11 @@ export default function FeedProfileSidebar() {
                                 </div>
                             )}
 
-                            <Button className="rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-sm flex items-center gap-2" onClick={() => signOut()}>
+                            <Button
+                                type="button"
+                                className="rounded px-3 py-2 bg-red-600 hover:bg-red-700 text-sm flex items-center gap-2"
+                                onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+                            >
                                 <ArrowRight className="w-4 h-4 rotate-180" /> Çıkış Yap
                             </Button>
 
@@ -88,7 +91,7 @@ export default function FeedProfileSidebar() {
                                 <Settings className="w-4 h-4" /> Feed Ayarları
                             </Button >
 
-                            <Button disabled className=" disabled rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-sm flex items-center gap-2">
+                            <Button disabled className="rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-sm flex items-center gap-2">
 
                                 <Users className="w-4 h-4" /> Takipçiler
                             </Button >

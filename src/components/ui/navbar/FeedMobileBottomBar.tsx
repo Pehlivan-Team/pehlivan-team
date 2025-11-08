@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useSession, signIn } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -92,6 +92,21 @@ export default function FeedMobileBottomBar() {
                       <Link href="/teams" className="py-2">Takımlar</Link>
                       <Link href="/timeline" className="py-2">Tarihçe</Link>
                       <Link href="/blog" className="py-2">Blog</Link>
+                    </div>
+                    <div className="mt-4 px-4">
+                      {session?.user ? (
+                        <Button
+                          type="button"
+                          onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+                          className="w-full bg-red-600 hover:bg-red-700"
+                        >
+                          Çıkış Yap
+                        </Button>
+                      ) : (
+                        <Button type="button" onClick={() => signIn()} className="w-full">
+                          Giriş Yap
+                        </Button>
+                      )}
                     </div>
                     <div className="mt-auto px-4 py-4">
                       <div className="flex items-center justify-between">
