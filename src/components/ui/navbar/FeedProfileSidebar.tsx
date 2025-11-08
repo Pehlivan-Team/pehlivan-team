@@ -86,10 +86,9 @@ export default function FeedProfileSidebar() {
                                 <ArrowRight className="w-4 h-4 rotate-180" /> Çıkış Yap
                             </Button>
 
-                            <Button disabled className="rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-sm flex items-center gap-2">
-
+                            <Link href="/feed/settings" className="rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-sm flex items-center gap-2">
                                 <Settings className="w-4 h-4" /> Feed Ayarları
-                            </Button >
+                            </Link>
 
                             <Button disabled className="rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-sm flex items-center gap-2">
 

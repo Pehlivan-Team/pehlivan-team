@@ -40,7 +40,7 @@ export function MultiImageUploader({
     await Promise.all(
       files.map(async (file) => {
         try {
-          const res = await edgestore.publicFiles.upload({
+          const res = await edgestore.postImages.upload({
             file,
             onProgressChange: (progress) => {
               setUploadProgress((prev) => {

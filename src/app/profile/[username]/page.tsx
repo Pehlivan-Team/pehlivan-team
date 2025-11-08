@@ -8,12 +8,14 @@ import { Github, Linkedin, Twitter, ExternalLink, Edit } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import EditProfileButton from "./_components/EditProfileButton";
+import FollowButton from "./_components/FollowButton";
 import admin from "firebase-admin";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 import FloatingPostButton from "@/components/post/FloatingPostButton";
 import FeedProfileSidebar from "@/components/ui/navbar/FeedProfileSidebar";
 import { Card } from "@/components/ui/card";
+import FollowStats from "@/app/profile/[username]/_components/FollowStats"; // absolute path to resolve module resolution
 
 // Sunucu tarafında veriyi çek
 async function getProfile(username: string): Promise<UserProfile | null> {
@@ -133,12 +135,16 @@ export default async function PublicProfilePage({
                       profilePicture={profile.profilePictureUrl || "/default-avatar.png"}
                     />
                   </div>
-                  <div>
+                  <div className="w-full">
                     <h1 className="text-3xl font-bold text-white">{profile.name}</h1>
                     <p className="text-sm text-slate-400 mt-1">@{profile.username}</p>
-                    {profile.team ? (
-                      <Badge className="mt-2 bg-red-600 hover:bg-red-700 text-white">{profile.team}</Badge>
-                    ) : null}
+                      <div className="mt-2 flex items-center gap-3 flex-wrap">
+                      {profile.team ? (
+                        <Badge className="bg-red-600 hover:bg-red-700 text-white">{profile.team}</Badge>
+                      ) : null}
+                      <FollowButton targetUsername={profile.username} />
+                        <FollowStats username={profile.username} />
+                    </div>
                   </div>
                 </div>
               </Card>

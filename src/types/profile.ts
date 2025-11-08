@@ -10,6 +10,8 @@ export interface UserProfile {
     website?: string;
     other?: Record<string, string>;
   };
+  followersCount?: number; // Takipçi sayısı (opsiyonel - API ile doldurulur)
+  followingCount?: number; // Takip edilenler sayısı
   // Next-Auth'dan gelen ve değiştirilemeyen veriler
   email: string;
   name: string;

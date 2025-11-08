@@ -14,16 +14,41 @@ const es = initEdgeStore.create();
 
 
 const edgeStoreRouter = es.router({
+  // Admin-only general public files bucket (unchanged policy)
   publicFiles: es
     .imageBucket()
-    // Burası en önemli kısım: Sadece adminlerin dosya yüklemesine izin veriyoruz.
     .beforeUpload(async () => {
       const session = await getServerSession(authOptions);
       if (!session?.user?.isAdmin) {
-        // Eğer kullanıcı admin değilse, yüklemeyi engelle.
         return false;
       }
-      return true; // Kullanıcı admin ise devam et.
+      return true;
+    }),
+
+  // New bucket for profile images: allow any authenticated user
+  profileImages: es
+    .imageBucket()
+    .beforeUpload(async () => {
+      const session = await getServerSession(authOptions);
+      if (!session?.user) {
+        console.log('[EdgeStore] DENY profileImages upload: no session');
+        return false;
+      }
+      console.log('[EdgeStore] ALLOW profileImages upload for', session.user.email);
+      return true;
+    }),
+
+  // New bucket for post images: allow any authenticated user
+  postImages: es
+    .imageBucket()
+    .beforeUpload(async () => {
+      const session = await getServerSession(authOptions);
+      if (!session?.user) {
+        console.log('[EdgeStore] DENY postImages upload: no session');
+        return false;
+      }
+      console.log('[EdgeStore] ALLOW postImages upload for', session.user.email);
+      return true;
     }),
 });
 

@@ -103,6 +103,7 @@ export default function FeedMobileBottomBar() {
                       <Link href="/teams" className="py-2">Takımlar</Link>
                       <Link href="/timeline" className="py-2">Tarihçe</Link>
                       <Link href="/blog" className="py-2">Blog</Link>
+                      <Link href="/feed/settings" className="py-2">Feed Ayarları</Link>
                     </div>
                     <div className="mt-4 px-4">
                       {session?.user ? (

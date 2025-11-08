@@ -74,7 +74,7 @@ export default function EditPostModal({
       if (file) {
         // TODO: Eski resmi EdgeStore'dan silmek (post.imageUrl varsa)
 
-        const res = await edgestore.publicFiles.upload({
+        const res = await edgestore.postImages.upload({
           file,
           onProgressChange: (progress) => {
             setProgress(progress);

@@ -23,14 +23,14 @@ export function ImageUploader({
 
   const handleUpload = async () => {
     if (file) {
-      const res = await edgestore.publicFiles.upload({
+  const res = await edgestore.profileImages.upload({
         file,
         onProgressChange: (progress) => {
           setProgress(progress);
         },
       });
       setImageUrl(res.url);
-      onUploadComplete(res.url);
+    onUploadComplete(res.url);
       toast.success("Resim başarıyla yüklendi!");
     }
   };
