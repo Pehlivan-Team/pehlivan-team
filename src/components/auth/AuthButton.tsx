@@ -69,7 +69,7 @@ export default function AuthButton() {
               <span>Profil</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => signOut()}>
+          <DropdownMenuItem onClick={() => signOut({ redirect: true, callbackUrl: "/" })}>
             <LogOut className="mr-2 h-4 w-4" />
             <span>Çıkış Yap</span>
           </DropdownMenuItem>

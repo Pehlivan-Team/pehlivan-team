@@ -18,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/shorten',
     '/liste',
     '/blog',
+    '/feed'
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
@@ -28,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .collection('posts')
     .where('isPublished', '==', true)
     .get();
-  
+
   const blogPostRoutes = postsSnapshot.docs.map(doc => {
     const data = doc.data();
     return {
@@ -42,8 +43,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projectRoutes = projectsSnapshot.docs.map(doc => {
     const data = doc.data();
     return {
-        url: `${baseUrl}/projects/${data.slug}`,
-        lastModified: new Date().toISOString(), // Geliştirme: Projeye 'updatedAt' alanı eklenirse bu kullanılabilir
+      url: `${baseUrl}/projects/${data.slug}`,
+      lastModified: new Date().toISOString(), // Geliştirme: Projeye 'updatedAt' alanı eklenirse bu kullanılabilir
     };
   });
 

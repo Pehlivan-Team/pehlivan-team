@@ -59,7 +59,8 @@ export default function MobileAuth() {
           </Button>
         )}
         <Button
-          onClick={() => signOut()}
+          type="button"
+          onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
           variant="outline"
           className="w-full justify-start"
         >

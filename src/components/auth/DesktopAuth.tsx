@@ -50,7 +50,12 @@ export default function DesktopAuth() {
           </div>
         </CardHeader>
         <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-          <Button size="sm" className="w-full" onClick={() => signOut()}>
+          <Button
+            type="button"
+            size="sm"
+            className="w-full"
+            onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+          >
             <LogOut className="mr-2 h-4 w-4" />
             Çıkış Yap
           </Button>

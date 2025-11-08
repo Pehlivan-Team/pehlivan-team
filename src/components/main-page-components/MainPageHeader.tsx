@@ -112,12 +112,12 @@ export default function MainPageHeader() {
             <Link href="/add_member">Topluluğa Katıl</Link>
           </Button>
           <Button
+            asChild
             size="lg"
             variant="outline"
             className="border-white text-white hover:bg-white hover:text-black transition-transform hover:scale-105 shadow-lg"
-            onClick={scrollToNextSection}
           >
-            Daha Fazlasını Keşfet
+            <Link href="/feed">Sosyalleş</Link>
           </Button>
         </motion.div>
       </motion.div>
