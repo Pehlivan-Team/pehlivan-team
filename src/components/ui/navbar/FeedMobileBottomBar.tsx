@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Plus, User, Menu as MenuIcon } from "lucide-react";
+import { MessageSquare, Plus, User, Menu as MenuIcon, Search as SearchIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import PostComposer from "@/app/profile/[username]/_components/PostComposer";
 import { cn } from "@/lib/utils";
@@ -23,12 +23,23 @@ export default function FeedMobileBottomBar() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href="/feed" className={cn("p-2 rounded-full", pathname?.startsWith("/feed") ? "bg-emerald-700 text-white" : "text-gray-300 hover:bg-white/10") }>
+                <Link href="/feed" className={cn("p-2 rounded-full", pathname?.startsWith("/feed") ? "bg-emerald-700 text-white" : "text-gray-300 hover:bg-white/10")}>
                   <MessageSquare className="w-6 h-6" />
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Feed</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href="/search" className={cn("p-2 rounded-full", pathname?.startsWith("/search") ? "bg-emerald-700 text-white" : "text-gray-300 hover:bg-white/10")}>
+                  <SearchIcon className="w-6 h-6" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Arama</p>
               </TooltipContent>
             </Tooltip>
 

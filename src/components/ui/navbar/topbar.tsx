@@ -17,6 +17,7 @@ import {
   GithubIcon,
   FileText,
   MessageSquare,
+  Search as SearchIcon,
 } from "lucide-react";
 import { useActiveSection } from "@/hooks/use-active-section";
 import {
@@ -59,6 +60,7 @@ const socialLinks = [
 
 const internalLinks = [
   { href: "/feed", label: "Sosyalleş", Icon: MessageSquare },
+  { href: "/search", label: "Ara", Icon: SearchIcon },
   { href: "/teams", label: "Takımlar", Icon: Users },
   { href: "/timeline", label: "Tarihçe", Icon: Milestone },
   { href: "/blog", label: "Blog", Icon: FileText },
