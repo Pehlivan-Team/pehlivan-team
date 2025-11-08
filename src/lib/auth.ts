@@ -178,13 +178,16 @@ export const authOptions: NextAuthOptions = {
             };
             await userRef.set(defaultProfile);
             token.username = defaultUsername;
+            token.profilePictureUrl = defaultProfile.profilePictureUrl || "";
           } else {
             // Mevcut kullanıcı (OAuth veya Credentials)
             token.username = userDoc.data()?.username || defaultUsername;
+            token.profilePictureUrl = userDoc.data()?.profilePictureUrl || user.image || "";
           }
         } catch (error) {
           console.error("JWT user profile error:", error);
           token.username = userEmail.split("@")[0];
+          token.profilePictureUrl = "";
         }
       }
       return token;
@@ -196,6 +199,10 @@ export const authOptions: NextAuthOptions = {
         session.user.isAdmin = token.isAdmin as boolean;
         session.user.permissions = token.permissions;
         session.user.username = token.username as string;
+        // Prefer profilePictureUrl stored in token (from users collection), fallback to existing image
+        (session.user as any).profilePictureUrl = token.profilePictureUrl as string;
+        // Also set the canonical `session.user.image` so existing UI that reads `image` shows the stored picture
+        session.user.image = (token.profilePictureUrl as string) || session.user.image;
       }
       return session;
     },

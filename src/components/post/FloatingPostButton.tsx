@@ -9,7 +9,7 @@ export default function FloatingPostButton() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-50 hidden lg:block">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button className="rounded-full h-14 w-14 p-0 text-xl bg-gray-800/80" aria-label="Create post">

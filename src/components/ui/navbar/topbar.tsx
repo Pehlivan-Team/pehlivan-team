@@ -16,6 +16,7 @@ import {
   LinkIcon,
   GithubIcon,
   FileText,
+  MessageSquare,
 } from "lucide-react";
 import { useActiveSection } from "@/hooks/use-active-section";
 import {
@@ -57,6 +58,7 @@ const socialLinks = [
 ];
 
 const internalLinks = [
+  { href: "/feed", label: "Sosyalleş", Icon: MessageSquare },
   { href: "/teams", label: "Takımlar", Icon: Users },
   { href: "/timeline", label: "Tarihçe", Icon: Milestone },
   { href: "/blog", label: "Blog", Icon: FileText },
@@ -93,9 +95,15 @@ const Logo = () => (
 
 const Topbar = () => {
   const activeSection = useActiveSection(internalLinkIds);
+  const pathname = usePathname();
   return (
     <header className="fixed top-0 z-50 hidden w-full px-12 lg:block">
-      <nav className="flex items-center justify-between h-16 px-8 bg-black/30 backdrop-blur-lg border-b border-white/10 rounded-b-3xl">
+      <nav
+        className={cn(
+          "flex items-center justify-between h-16 px-8 bg-black/30 backdrop-blur-lg border-b border-white/10 rounded-b-3xl",
+          pathname?.startsWith("/feed") && "bg-emerald-900/40"
+        )}
+      >
         <Logo />
         <div className="flex items-center space-x-6">
           {socialLinks.map(({ href, Icon, label }) => (
