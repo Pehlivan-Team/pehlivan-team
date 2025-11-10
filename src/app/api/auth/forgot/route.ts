@@ -38,8 +38,8 @@ export async function POST(req: Request) {
     // Try to send email if SMTP configured, otherwise log the link
     try {
       if (process.env.SMTP_HOST && process.env.SMTP_USER) {
-        // nodemailer may not be installed in every environment; keep import dynamic and ignore TS compile-time check
-        // @ts-ignore
+  // nodemailer may not be installed in every environment; keep import dynamic and ignore TS compile-time check
+  // @ts-expect-error - dynamic import may not be present in all environments
         const nodemailer = await import('nodemailer')
         const transporter = nodemailer.createTransport({
           host: process.env.SMTP_HOST,

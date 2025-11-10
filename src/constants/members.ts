@@ -1,4 +1,4 @@
-const logo = require('../public/logo_png.png')
+// logo asset previously required here; not used — removed invalid require to avoid build error
 
 const description_cols = {
   'fatih-cosar': [

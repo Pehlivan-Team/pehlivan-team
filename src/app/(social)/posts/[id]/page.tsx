@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 
 import { firestoreAdmin } from '@/lib/firebase-admin'
 
-import PostDetailClient from '@/app/posts/[id]/PostDetailClient'
+import PostDetailClient from '@/components/post/PostDetailClient'
 
 type PostDetail = {
   id: string
