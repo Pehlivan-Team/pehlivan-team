@@ -1,9 +1,10 @@
-"use client";
+'use client'
 
-import React from "react";
-import Sponsors from "@/constants/sponsors";
-import Link from "next/link";
-import Image from "next/image";
+import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
+
+import Sponsors from '@/constants/sponsors'
 
 function SponsorSlider() {
   return (
@@ -33,8 +34,9 @@ function SponsorSlider() {
                     width={300}
                     sizes="100vw"
                     style={{
-                      objectFit: "contain"
-                    }} />
+                      objectFit: 'contain',
+                    }}
+                  />
                 </div>
               </Link>
             ))}
@@ -42,7 +44,7 @@ function SponsorSlider() {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default SponsorSlider;
+export default SponsorSlider

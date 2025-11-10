@@ -1,7 +1,4 @@
-"use client";
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
+'use client'
 import {
   Github,
   Instagram,
@@ -12,51 +9,57 @@ import {
   Trophy,
   UserPlus,
   Users,
-} from "lucide-react";
-import logo from "@/app/public/tasprologo.jpg";
-import { usePathname } from "next/navigation";
+} from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import React from 'react'
+
+import logo from '@public/tasprologo.jpg'
 
 const Footer = () => {
   const quickLinks = [
-    { href: "/teams", label: "Takımlarımız", Icon: Users },
-    { href: "/timeline", label: "Tarihçe", Icon: Milestone },
-    { href: "/#achievements", label: "Başarılarımız", Icon: Trophy },
-    { href: "/add_member", label: "Topluluğa Katıl", Icon: UserPlus },
-    { href: "/#contact", label: "Bize Ulaşın", Icon: Mail },
-    { href: "/shortener", label: "Link Kısaltıcı", Icon: LinkIcon },
-  ];
+    { href: '/teams', label: 'Takımlarımız', Icon: Users },
+    { href: '/timeline', label: 'Tarihçe', Icon: Milestone },
+    { href: '/#achievements', label: 'Başarılarımız', Icon: Trophy },
+    { href: '/add_member', label: 'Topluluğa Katıl', Icon: UserPlus },
+    { href: '/#contact', label: 'Bize Ulaşın', Icon: Mail },
+    { href: '/shortener', label: 'Link Kısaltıcı', Icon: LinkIcon },
+  ]
 
   const socialLinks = [
     {
-      href: "https://www.instagram.com/tasprotrakya",
-      label: "Instagram",
+      href: 'https://www.instagram.com/tasprotrakya',
+      label: 'Instagram',
       Icon: Instagram,
     },
     {
-      href: "https://www.linkedin.com/company/pehlivan-team/",
-      label: "LinkedIn",
+      href: 'https://www.linkedin.com/company/pehlivan-team/',
+      label: 'LinkedIn',
       Icon: Linkedin,
     },
     {
-      href: "https://github.com/Pehlivan-Team",
-      label: "GitHub",
+      href: 'https://github.com/Pehlivan-Team',
+      label: 'GitHub',
       Icon: Github,
     },
-  ];
+  ]
 
-  const currentYear = new Date().getFullYear();
-  const pathname = usePathname();
+  const currentYear = new Date().getFullYear()
+  const pathname = usePathname()
 
   // Mevcut URL'nin "/admin" ile başlayıp başlamadığını kontrol et
-  const isAdminRoute = pathname.startsWith("/admin");
+  const isAdminRoute = pathname.startsWith('/admin')
 
   // Eğer bir admin sayfasındaysak, navigasyon barlarını gösterme (null döndür)
   if (isAdminRoute) {
-    return null;
+    return null
   }
 
+  const withSidebarOffset = pathname.startsWith('/feed') || pathname.startsWith('/profile')
+
   return (
-    <footer className="bg-gray-900 text-gray-300 border-t border-slate-800 pb-16 sm:pb-0 md:pb-0 lg:pb-0 xl:pb-0 print:hidden">
+    <footer className={`bg-gray-900 text-gray-300 border-t border-slate-800 pb-16 sm:pb-0 md:pb-0 lg:pb-0 xl:pb-0 print:hidden${withSidebarOffset ? ' lg:pl-72' : ''}`}>
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
           {/* Column 1: Logo and About */}
@@ -69,32 +72,26 @@ const Footer = () => {
                   width={40}
                   height={40}
                   style={{
-                    maxWidth: "100%",
-                    height: "auto"
-                  }} />
+                    maxWidth: '100%',
+                    height: 'auto',
+                  }}
+                />
               </div>
-              <span className="font-bold text-xl text-white">
-                Tasarım Proje Trakya
-              </span>
+              <span className="font-bold text-xl text-white">Tasarım Proje Trakya</span>
             </Link>
             <p className="text-sm max-w-xs">
-              Trakya Üniversitesi Tasarım ve Proje Topluluğu. Sürdürülebilir
-              teknoloji ve yenilikçi mühendislik.
+              Trakya Üniversitesi Tasarım ve Proje Topluluğu. Sürdürülebilir teknoloji ve yenilikçi
+              mühendislik.
             </p>
           </div>
 
           {/* Column 2: Quick Links */}
           <div>
-            <h3 className="font-semibold text-white tracking-wider uppercase">
-              Hızlı Erişim
-            </h3>
+            <h3 className="font-semibold text-white tracking-wider uppercase">Hızlı Erişim</h3>
             <ul className="mt-4 space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="hover:text-red-400 transition-colors"
-                  >
+                  <Link href={link.href} className="hover:text-red-400 transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -104,9 +101,7 @@ const Footer = () => {
 
           {/* Column 3: Social Media */}
           <div>
-            <h3 className="font-semibold text-white tracking-wider uppercase">
-              Bizi Takip Edin
-            </h3>
+            <h3 className="font-semibold text-white tracking-wider uppercase">Bizi Takip Edin</h3>
             <div className="mt-4 flex justify-center md:justify-start space-x-6">
               {socialLinks.map(({ href, label, Icon }) => (
                 <a
@@ -127,12 +122,12 @@ const Footer = () => {
       {/* Bottom Bar for Copyright */}
       <div className="bg-black/50 py-4">
         <div className="container mx-auto px-6 text-center text-sm text-gray-400">
-          &copy; {currentYear} Tasarım Proje Trakya. Tüm hakları saklıdır. Designed by{" "}
+          &copy; {currentYear} Tasarım Proje Trakya. Tüm hakları saklıdır. Designed by{' '}
           <Link href="https://github.com/anshinx">anshinx</Link>
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

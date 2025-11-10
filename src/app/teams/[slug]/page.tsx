@@ -1,22 +1,19 @@
-import { notFound } from "next/navigation";
-import Image from "next/image";
-import { teamsData } from "@/constants/teams";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle } from 'lucide-react'
+import Image from 'next/image'
+import { notFound } from 'next/navigation'
+
+import { teamsData } from '@/constants/teams'
 
 // Function to find the correct team data based on the URL slug
 const getTeam = (slug: string) => {
-  return teamsData.find((team) => team.slug === slug);
-};
+  return teamsData.find((team) => team.slug === slug)
+}
 
-export default function TeamDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const team = getTeam(params.slug);
+export default function TeamDetailPage({ params }: { params: { slug: string } }) {
+  const team = getTeam(params.slug)
 
   if (!team) {
-    notFound();
+    notFound()
   }
 
   return (
@@ -30,36 +27,28 @@ export default function TeamDetailPage({
             <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
               {team.name}
             </h1>
-            <p className="mt-4 text-lg text-gray-400">
-              Takım Lideri: {team.leader}
-            </p>
+            <p className="mt-4 text-lg text-gray-400">Takım Lideri: {team.leader}</p>
           </header>
 
           <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-12 shadow-lg">
             <Image
               src={team.image}
               alt={team.name}
-              
               sizes="100vw"
               style={{
-                objectFit: "cover"
-              }} />
+                objectFit: 'cover',
+              }}
+            />
             <div className="absolute inset-0 bg-black/30" />
           </div>
 
           <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <h2 className="text-3xl font-bold mb-4 text-red-400">
-                Takım Hakkında
-              </h2>
-              <p className="text-lg text-gray-300 leading-relaxed">
-                {team.description}
-              </p>
+              <h2 className="text-3xl font-bold mb-4 text-red-400">Takım Hakkında</h2>
+              <p className="text-lg text-gray-300 leading-relaxed">{team.description}</p>
             </div>
             <div>
-              <h2 className="text-3xl font-bold mb-4 text-red-400">
-                Sorumluluk Alanları
-              </h2>
+              <h2 className="text-3xl font-bold mb-4 text-red-400">Sorumluluk Alanları</h2>
               <ul className="space-y-3">
                 {team.responsibilities.map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
@@ -73,12 +62,12 @@ export default function TeamDetailPage({
         </article>
       </main>
     </div>
-  );
+  )
 }
 
 // Optional: Generate static pages for each team for better performance
 export async function generateStaticParams() {
   return teamsData.map((team) => ({
     slug: team.slug,
-  }));
+  }))
 }

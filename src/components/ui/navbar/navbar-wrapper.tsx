@@ -1,21 +1,23 @@
-"use client";
+'use client'
 
-import { usePathname } from "next/navigation";
-import { Topbar, BottomBar } from "./topbar";
-import FeedMobileBottomBar from "./FeedMobileBottomBar";
+import { usePathname } from 'next/navigation'
+
+import FeedMobileBottomBar from './FeedMobileBottomBar'
+import { Topbar, BottomBar } from './topbar'
 
 export function NavbarWrapper() {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   // Hide navigation for admin routes
-  const isAdminRoute = pathname.startsWith("/admin");
-  if (isAdminRoute) return null;
+  const isAdminRoute = pathname.startsWith('/admin')
+  if (isAdminRoute) return null
 
-  const isFeedOrProfile = pathname.startsWith("/feed") || pathname.startsWith("/profile");
+  const isMinimalNav =
+    pathname.startsWith('/feed') || pathname.startsWith('/profile') || pathname.startsWith('/search') || pathname.startsWith('/posts/')
 
-  // On feed/profile pages we don't show the Topbar — render a feed/profile-specific mobile bottom bar
-  if (isFeedOrProfile) {
-    return <FeedMobileBottomBar />;
+  // On feed/profile/search pages we don't show the Topbar — render mobile bottom bar only
+  if (isMinimalNav) {
+    return <FeedMobileBottomBar />
   }
 
   // Default: show full top + bottom bars
@@ -24,5 +26,5 @@ export function NavbarWrapper() {
       <Topbar />
       <BottomBar />
     </>
-  );
+  )
 }

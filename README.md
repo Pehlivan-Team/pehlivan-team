@@ -1,4 +1,5 @@
 ## Promotional Website of PEHLİVAN Team of Trakya Üniversitesi.
+
 Pehlivan Team - Resmi Web Sitesi
 Trakya Üniversitesi Tasarım ve Proje Topluluğu olan Pehlivan Team'in resmi web sitesine hoş geldiniz! Bu proje, takımımızın başarılarını, tarihçesini, araçlarını ve hedeflerini dünyaya en modern ve etkileşimli şekilde sunmak amacıyla geliştirilmiştir.
 

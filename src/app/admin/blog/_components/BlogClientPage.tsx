@@ -1,18 +1,14 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Post } from "@/types/blog";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { format } from 'date-fns'
+import { tr } from 'date-fns/locale'
+import { Trash2, Edit, PlusCircle } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import React, { useState } from 'react'
+import { toast } from 'sonner'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,41 +19,43 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Trash2, Edit, PlusCircle } from "lucide-react";
-import { format } from "date-fns";
-import { tr } from "date-fns/locale";
-import { toast } from "sonner";
-import { useSession } from "next-auth/react";
-import NoPermError from "../../_components/NoPermError";
+} from '@/components/ui/alert-dialog'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Post } from '@/types/blog'
+
+import NoPermError from '../../_components/NoPermError'
 
 export function BlogClientPage({ initialPosts }: { initialPosts: Post[] }) {
-  const { data: session } = useSession();
+  const { data: session } = useSession()
 
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
-  const router = useRouter();
+  const [posts, setPosts] = useState<Post[]>(initialPosts)
+  const router = useRouter()
 
   const handleDelete = async (postId: string) => {
     try {
       const response = await fetch(`/api/admin/posts/${postId}`, {
-        method: "DELETE",
-      });
-      const result = await response.json();
-      if (!result.success) throw new Error(result.error);
+        method: 'DELETE',
+      })
+      const result = await response.json()
+      if (!result.success) throw new Error(result.error)
 
-      setPosts((currentPosts) =>
-        currentPosts.filter((post) => post.id !== postId)
-      );
-      toast.success("Yazı başarıyla silindi!");
+      setPosts((currentPosts) => currentPosts.filter((post) => post.id !== postId))
+      toast.success('Yazı başarıyla silindi!')
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Silme işlemi başarısız oldu."
-      );
+      toast.error(error instanceof Error ? error.message : 'Silme işlemi başarısız oldu.')
     }
-  };
+  }
 
-  if (!session?.user?.permissions?.canManageBlog) return <NoPermError />;
+  if (!session?.user?.permissions?.canManageBlog) return <NoPermError />
 
   return (
     <>
@@ -84,12 +82,12 @@ export function BlogClientPage({ initialPosts }: { initialPosts: Post[] }) {
               <TableRow key={post.id}>
                 <TableCell className="font-medium">{post.title}</TableCell>
                 <TableCell>
-                  <Badge variant={post.isPublished ? "default" : "secondary"}>
-                    {post.isPublished ? "Yayınlandı" : "Taslak"}
+                  <Badge variant={post.isPublished ? 'default' : 'secondary'}>
+                    {post.isPublished ? 'Yayınlandı' : 'Taslak'}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {format(new Date(post.createdAt), "dd MMMM yyyy", {
+                  {format(new Date(post.createdAt), 'dd MMMM yyyy', {
                     locale: tr,
                   })}
                 </TableCell>
@@ -115,8 +113,8 @@ export function BlogClientPage({ initialPosts }: { initialPosts: Post[] }) {
                       <AlertDialogHeader>
                         <AlertDialogTitle>Emin misiniz?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          "{post.title}" başlıklı yazıyı kalıcı olarak silmek
-                          istediğinizden emin misiniz?
+                          "{post.title}" başlıklı yazıyı kalıcı olarak silmek istediğinizden emin
+                          misiniz?
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -136,11 +134,9 @@ export function BlogClientPage({ initialPosts }: { initialPosts: Post[] }) {
           </TableBody>
         </Table>
         {posts.length === 0 && (
-          <p className="text-center text-gray-400 p-8">
-            Henüz hiç blog yazısı oluşturulmamış.
-          </p>
+          <p className="text-center text-gray-400 p-8">Henüz hiç blog yazısı oluşturulmamış.</p>
         )}
       </div>
     </>
-  );
+  )
 }

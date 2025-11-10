@@ -1,70 +1,54 @@
-"use client"; // Adminin adını session'dan almak için
+'use client' // Adminin adını session'dan almak için
 
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Newspaper,
-  Briefcase,
-  Milestone,
-  ListChecks,
-  PlusCircle,
-  ArrowRight,
-} from "lucide-react";
+import { Newspaper, Briefcase, Milestone, ListChecks, PlusCircle, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 // Hızlı Erişim Kartları için veri
 const quickLinks = [
   {
-    title: "Blog",
-    description: "Yeni bir blog yazısı oluşturun veya mevcutları düzenleyin.",
-    href: "/admin/blog",
-    newHref: "/admin/blog/new",
+    title: 'Blog',
+    description: 'Yeni bir blog yazısı oluşturun veya mevcutları düzenleyin.',
+    href: '/admin/blog',
+    newHref: '/admin/blog/new',
     Icon: Newspaper,
   },
   {
-    title: "Projeler",
-    description: "Yeni bir proje ekleyin veya mevcutları yönetin.",
-    href: "/admin/projects",
-    newHref: "/admin/projects/new", // (Bu sayfayı oluşturmanız gerekecek)
+    title: 'Projeler',
+    description: 'Yeni bir proje ekleyin veya mevcutları yönetin.',
+    href: '/admin/projects',
+    newHref: '/admin/projects/new', // (Bu sayfayı oluşturmanız gerekecek)
     Icon: Briefcase,
   },
   {
-    title: "Tarihçe",
-    description: "Takım tarihçesine yeni bir olay ekleyin.",
-    href: "/admin/timeline",
-    newHref: "/admin/timeline", // (Timeline genelde tek sayfadır)
+    title: 'Tarihçe',
+    description: 'Takım tarihçesine yeni bir olay ekleyin.',
+    href: '/admin/timeline',
+    newHref: '/admin/timeline', // (Timeline genelde tek sayfadır)
     Icon: Milestone,
   },
   {
-    title: "İhtiyaç Listesi",
-    description: "Departman ihtiyaç listelerini güncelleyin.",
-    href: "/admin/needs",
-    newHref: "/admin/needs",
+    title: 'İhtiyaç Listesi',
+    description: 'Departman ihtiyaç listelerini güncelleyin.',
+    href: '/admin/needs',
+    newHref: '/admin/needs',
     Icon: ListChecks,
   },
-];
+]
 
 export default function AdminDashboardPage() {
-  const { data: session } = useSession();
-  const adminName = session?.user?.name?.split(" ")[0] || "Admin";
+  const { data: session } = useSession()
+  const adminName = session?.user?.name?.split(' ')[0] || 'Admin'
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
       {/* 1. Hoş Geldiniz Başlığı */}
       <div className="flex items-center justify-between space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Hoş geldin, {adminName}!
-        </h1>
-        <p className="text-muted-foreground">
-          Kontrol panelinden hızlıca içeriklerini yönet.
-        </p>
+        <h1 className="text-3xl font-bold tracking-tight">Hoş geldin, {adminName}!</h1>
+        <p className="text-muted-foreground">Kontrol panelinden hızlıca içeriklerini yönet.</p>
       </div>
 
       {/* 2. Hızlı Eylem Kartları */}
@@ -75,15 +59,11 @@ export default function AdminDashboardPage() {
             className="flex flex-col justify-between shadow-lg hover:shadow-primary/20 transition-shadow"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-2xl font-bold">
-                {link.title}
-              </CardTitle>
+              <CardTitle className="text-2xl font-bold">{link.title}</CardTitle>
               <link.Icon className="h-6 w-6 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                {link.description}
-              </p>
+              <p className="text-sm text-muted-foreground">{link.description}</p>
             </CardContent>
             <div className="flex items-center p-4 pt-0 justify-between">
               <Button asChild variant="outline">
@@ -112,17 +92,13 @@ export default function AdminDashboardPage() {
           </CardHeader>
           <CardContent>
             {/* ... Buraya veri çekilerek bir liste eklenebilir ... */}
-            <p className="text-sm text-muted-foreground">
-              Bu özellik yakında eklenecek.
-            </p>
+            <p className="text-sm text-muted-foreground">Bu özellik yakında eklenecek.</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
             <CardTitle>Hızlı Linkler</CardTitle>
-            <CardDescription>
-              Sık kullanılan diğer admin bölümleri.
-            </CardDescription>
+            <CardDescription>Sık kullanılan diğer admin bölümleri.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-2">
             <Button asChild variant="secondary">
@@ -138,5 +114,5 @@ export default function AdminDashboardPage() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

@@ -7,12 +7,12 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: [],
     coverage: {
-      provider: 'v8'
-    }
+      provider: 'v8',
+    },
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src')
-    }
-  }
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
 })

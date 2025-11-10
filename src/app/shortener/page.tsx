@@ -1,9 +1,6 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Copy,
   Link as LinkIcon,
@@ -12,204 +9,202 @@ import {
   QrCode,
   ChevronDown,
   Loader2, // Yükleme ikonu için
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { QRCodeSVG } from "qrcode.react";
-import logo from "@/app/public/logo_png.png"; //
+} from 'lucide-react'
+import Link from 'next/link'
+import { QRCodeSVG } from 'qrcode.react'
+import React, { useState, useEffect } from 'react'
+
+// 'tasprologo.jpg' dosyasını import etmeniz gerekiyor.
+// Bu dosyanın 'src/app/public' altında olduğunu varsayıyorum.
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-// 'tasprologo.jpg' dosyasını import etmeniz gerekiyor.
-// Bu dosyanın 'src/app/public' altında olduğunu varsayıyorum.
-import communityLogo from "@/app/public/tasprologo.jpg"; // Bu yolu kendi dosya yapınıza göre düzeltin
+} from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
+import logo from '@public/logo_png.png' //
+import communityLogo from '@public/tasprologo.jpg' // Bu yolu kendi dosya yapınıza göre düzeltin
 
 export default function ShortenPage() {
-  const [url, setUrl] = useState("");
-  const [shortUrl, setShortUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Link oluşturma yüklemesi
-  const [error, setError] = useState("");
-  const [logoDataUrl, setLogoDataUrl] = useState<string>("");
-  const [selectedLogo, setSelectedLogo] = useState<string>(logo.src);
+  const [url, setUrl] = useState('')
+  const [shortUrl, setShortUrl] = useState('')
+  const [isLoading, setIsLoading] = useState(false) // Link oluşturma yüklemesi
+  const [error, setError] = useState('')
+  const [logoDataUrl, setLogoDataUrl] = useState<string>('')
+  const [selectedLogo, setSelectedLogo] = useState<string>(logo.src)
 
-
-  const [isLogoLoading, setIsLogoLoading] = useState(false);
+  const [isLogoLoading, setIsLogoLoading] = useState(false)
 
   useEffect(() => {
-
     const convertLogoToDataUrl = (src: string) => {
-      if (src === "") {
-        setLogoDataUrl(""); 
-        setIsLogoLoading(false);
-        return;
+      if (src === '') {
+        setLogoDataUrl('')
+        setIsLogoLoading(false)
+        return
       }
 
-      const img = new window.Image();
-      img.src = src;
-      img.crossOrigin = "Anonymous";
+      const img = new window.Image()
+      img.src = src
+      img.crossOrigin = 'Anonymous'
       img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d");
+        const canvas = document.createElement('canvas')
+        canvas.width = img.width
+        canvas.height = img.height
+        const ctx = canvas.getContext('2d')
         if (ctx) {
-          ctx.drawImage(img, 0, 0);
-          setLogoDataUrl(canvas.toDataURL("image/png"));
+          ctx.drawImage(img, 0, 0)
+          setLogoDataUrl(canvas.toDataURL('image/png'))
         }
-        setIsLogoLoading(false); // Yükleme bitti
-      };
+        setIsLogoLoading(false) // Yükleme bitti
+      }
       img.onerror = () => {
-        console.error("Logo yüklenemedi:", src);
-        setIsLogoLoading(false); 
-      };
-    };
+        console.error('Logo yüklenemedi:', src)
+        setIsLogoLoading(false)
+      }
+    }
 
-    setIsLogoLoading(true);
-    convertLogoToDataUrl(selectedLogo);
-  }, [selectedLogo]); 
+    setIsLogoLoading(true)
+    convertLogoToDataUrl(selectedLogo)
+  }, [selectedLogo])
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-    setShortUrl("");
+    e.preventDefault()
+    setIsLoading(true)
+    setError('')
+    setShortUrl('')
 
     try {
-      const response = await fetch("/api/shorten", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/shorten', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
-      if (!data.success) throw new Error(data.error || "Bir hata oluştu.");
+      if (!data.success) throw new Error(data.error || 'Bir hata oluştu.')
 
-      setShortUrl(data.shortUrl);
+      setShortUrl(data.shortUrl)
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Bilinmeyen bir hata oluştu."
-      );
+      setError(err instanceof Error ? err.message : 'Bilinmeyen bir hata oluştu.')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const copyToClipboard = () => {
-    if (!shortUrl) return;
-    navigator.clipboard.writeText(shortUrl);
-    alert("Kısa link kopyalandı!");
-  };
+    if (!shortUrl) return
+    navigator.clipboard.writeText(shortUrl)
+    alert('Kısa link kopyalandı!')
+  }
 
   const getSvgElement = (): SVGSVGElement | null => {
-    return document.querySelector("#qr-code-container svg");
-  };
+    return document.querySelector('#qr-code-container svg')
+  }
 
-  const convertSvgToImage = (format: "png" | "jpeg"): Promise<string> => {
+  const convertSvgToImage = (format: 'png' | 'jpeg'): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const svg = getSvgElement();
-      if (!svg) return reject(new Error("QR Code SVG not found."));
+      const svg = getSvgElement()
+      if (!svg) return reject(new Error('QR Code SVG not found.'))
 
       // Düzeltme: SVG'nin anlık olarak DOM'dan doğru alındığından emin ol
       // Bazen React'in render gecikmesi sorun yaratabilir.
       // Bu fonksiyon çağrıldığında DOM'un güncel olduğunu varsayıyoruz.
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const img = new Image();
+      const svgData = new XMLSerializer().serializeToString(svg)
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      const img = new Image()
 
       // SVG'nin boyutlarını al
-      const svgRect = svg.getBoundingClientRect();
-      canvas.width = svgRect.width;
-      canvas.height = svgRect.height;
+      const svgRect = svg.getBoundingClientRect()
+      canvas.width = svgRect.width
+      canvas.height = svgRect.height
 
       img.onload = () => {
         if (ctx) {
-          if (format === "jpeg") {
-            ctx.fillStyle = "white";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          if (format === 'jpeg') {
+            ctx.fillStyle = 'white'
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
           }
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const url = canvas.toDataURL(`image/${format}`);
-          resolve(url);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+          const url = canvas.toDataURL(`image/${format}`)
+          resolve(url)
         } else {
-          reject(new Error("Canvas context could not be created."));
+          reject(new Error('Canvas context could not be created.'))
         }
-      };
-      img.onerror = reject;
-      img.src =
-        "data:image/svg+xml;base64," +
-        btoa(unescape(encodeURIComponent(svgData)));
-    });
-  };
+      }
+      img.onerror = reject
+      img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)))
+    })
+  }
 
-  const handleDownload = async (format: "png" | "jpeg" | "svg") => {
+  const handleDownload = async (format: 'png' | 'jpeg' | 'svg') => {
     if (isLogoLoading) {
-      alert("Logo yükleniyor, lütfen bekleyin.");
-      return;
+      alert('Logo yükleniyor, lütfen bekleyin.')
+      return
     }
 
-    let url: string;
+    let url: string
     try {
-      if (format === "svg") {
-        const svg = getSvgElement();
-        if (!svg) throw new Error("QR Code not found.");
-        const svgData = new XMLSerializer().serializeToString(svg);
+      if (format === 'svg') {
+        const svg = getSvgElement()
+        if (!svg) throw new Error('QR Code not found.')
+        const svgData = new XMLSerializer().serializeToString(svg)
         const blob = new Blob([svgData], {
-          type: "image/svg+xml;charset=utf-8",
-        });
-        url = URL.createObjectURL(blob);
+          type: 'image/svg+xml;charset=utf-8',
+        })
+        url = URL.createObjectURL(blob)
       } else {
-        url = await convertSvgToImage(format);
+        url = await convertSvgToImage(format)
       }
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `pehlivan-team-qrcode.${format}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      if (format === "svg") URL.revokeObjectURL(url);
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `pehlivan-team-qrcode.${format}`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      if (format === 'svg') URL.revokeObjectURL(url)
     } catch (error) {
-      console.error("Download error:", error);
-      alert(`Hata: QR kodu ${format} olarak indirilemedi.`);
+      console.error('Download error:', error)
+      alert(`Hata: QR kodu ${format} olarak indirilemedi.`)
     }
-  };
+  }
 
   const handleShare = async () => {
     if (!navigator.share) {
-      alert("Tarayıcınız bu özelliği desteklemiyor.");
-      return;
+      alert('Tarayıcınız bu özelliği desteklemiyor.')
+      return
     }
     if (isLogoLoading) {
-      alert("Logo yükleniyor, lütfen bekleyin.");
-      return;
+      alert('Logo yükleniyor, lütfen bekleyin.')
+      return
     }
 
     try {
-      const dataUrl = await convertSvgToImage("jpeg");
-      const blob = await (await fetch(dataUrl)).blob();
-      const file = new File([blob], "pehlivan-team-qrcode.jpg", {
-        type: "image/jpeg",
-      });
+      const dataUrl = await convertSvgToImage('jpeg')
+      const blob = await (await fetch(dataUrl)).blob()
+      const file = new File([blob], 'pehlivan-team-qrcode.jpg', {
+        type: 'image/jpeg',
+      })
 
       const shareData = {
-        title: "Pehlivan Team Kısaltılmış Link",
+        title: 'Pehlivan Team Kısaltılmış Link',
         text: `Oluşturulan kısa link: ${shortUrl}`,
         files: [file],
-      };
+      }
 
       if (navigator.canShare && navigator.canShare(shareData)) {
-        await navigator.share(shareData);
+        await navigator.share(shareData)
       } else {
-        alert("Tarayıcınız bu dosyayı paylaşmayı desteklemiyor.");
+        alert('Tarayıcınız bu dosyayı paylaşmayı desteklemiyor.')
       }
     } catch (error) {
-      console.error("Share error:", error);
-      alert("Hata: QR kodu paylaşılamadı.");
+      console.error('Share error:', error)
+      alert('Hata: QR kodu paylaşılamadı.')
     }
-  };
+  }
 
   return (
     <div className="bg-gray-950 min-h-screen text-white flex items-center justify-center py-12">
@@ -217,8 +212,7 @@ export default function ShortenPage() {
         <QrCode className="h-16 w-16 mx-auto text-red-500 mb-4" />
         <h1 className="text-4xl font-bold mb-4">Link Kısaltıcı & QR Kod</h1>
         <p className="text-gray-400 mb-8">
-          Uzun linklerinizi Pehlivan Team markalı kısa linklere ve logolu QR
-          kodlara dönüştürün.
+          Uzun linklerinizi Pehlivan Team markalı kısa linklere ve logolu QR kodlara dönüştürün.
         </p>
 
         <form onSubmit={handleSubmit} className="flex gap-2">
@@ -235,11 +229,7 @@ export default function ShortenPage() {
             disabled={isLoading}
             className="bg-red-600 hover:bg-red-700 w-[140px]" // Butonun yeniden boyutlanmasını engelle
           >
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              "Oluştur"
-            )}
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Oluştur'}
           </Button>
         </form>
 
@@ -263,12 +253,7 @@ export default function ShortenPage() {
                 >
                   {shortUrl}
                 </a>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={copyToClipboard}
-                  className="ml-4"
-                >
+                <Button variant="ghost" size="icon" onClick={copyToClipboard} className="ml-4">
                   <Copy className="h-5 w-5" />
                 </Button>
               </div>
@@ -287,7 +272,7 @@ export default function ShortenPage() {
                     <QRCodeSVG
                       value={shortUrl}
                       size={256}
-                      level={"H"}
+                      level={'H'}
                       includeMargin={true}
                       // DÜZELTİLMİŞ MANTIK: logoDataUrl boşsa 'undefined' gönder
                       imageSettings={
@@ -318,13 +303,13 @@ export default function ShortenPage() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-slate-700 text-white border-slate-600">
-                      <DropdownMenuItem onClick={() => handleDownload("png")}>
+                      <DropdownMenuItem onClick={() => handleDownload('png')}>
                         PNG olarak indir
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleDownload("jpeg")}>
+                      <DropdownMenuItem onClick={() => handleDownload('jpeg')}>
                         JPG olarak indir
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleDownload("svg")}>
+                      <DropdownMenuItem onClick={() => handleDownload('svg')}>
                         SVG olarak indir
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -340,31 +325,23 @@ export default function ShortenPage() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-slate-700 text-white border-slate-600">
-                      <DropdownMenuItem
-                        onClick={() => setSelectedLogo(logo.src)}
-                      >
+                      <DropdownMenuItem onClick={() => setSelectedLogo(logo.src)}>
                         Pehlivan Team Logolu
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => setSelectedLogo(communityLogo.src)}
-                      >
+                      <DropdownMenuItem onClick={() => setSelectedLogo(communityLogo.src)}>
                         Tasarım Proje Topluluğu Logosu
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         // DÜZELTME: Logosuz için boş string gönder
-                        onClick={() => setSelectedLogo("")}
+                        onClick={() => setSelectedLogo('')}
                       >
                         Logosuz
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  {typeof navigator !== "undefined" && (
-                    <Button
-                      variant="outline"
-                      onClick={handleShare}
-                      disabled={isLogoLoading}
-                    >
+                  {typeof navigator !== 'undefined' && (
+                    <Button variant="outline" onClick={handleShare} disabled={isLogoLoading}>
                       <Share2 className="mr-2 h-4 w-4" /> Paylaş
                     </Button>
                   )}
@@ -375,5 +352,5 @@ export default function ShortenPage() {
         </AnimatePresence>
       </div>
     </div>
-  );
+  )
 }

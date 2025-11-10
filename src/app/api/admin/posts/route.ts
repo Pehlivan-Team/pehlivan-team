@@ -1,29 +1,27 @@
-import { NextRequest, NextResponse } from "next/server";
-import { firestoreAdmin } from "@/lib/firebase-admin";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import admin from "firebase-admin";
-import { revalidatePath } from "next/cache";
+import admin from 'firebase-admin'
+import { revalidatePath } from 'next/cache'
+import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+
+import { authOptions } from '@/lib/auth'
+import { firestoreAdmin } from '@/lib/firebase-admin'
 
 // YENİ YAZI OLUŞTURMA (POST)
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
     if (!session?.user?.isAdmin) {
-      return NextResponse.json(
-        { success: false, error: "Yetkiniz yok." },
-        { status: 403 }
-      );
+      return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 })
     }
 
-    const body = await request.json();
-    const { title, content, isPublished, imageUrl, slug } = body;
+    const body = await request.json()
+    const { title, content, isPublished, imageUrl, slug } = body
 
     if (!title || !content || !slug) {
       return NextResponse.json(
-        { success: false, error: "Başlık, içerik ve slug zorunludur." },
+        { success: false, error: 'Başlık, içerik ve slug zorunludur.' },
         { status: 400 }
-      );
+      )
     }
     /*
       createdAt: admin.firestore.FieldValue.serverTimestamp(), ve
@@ -38,26 +36,26 @@ export async function POST(request: NextRequest) {
       manuel olarak eklememiz gerekiyor.
       Ayrıca bunu eklememek firestore'un kendi timestamp'ini render ederken sorunlara yol açıyor.
       */
-    const newPost = await firestoreAdmin.collection("posts").add({
+    const newPost = await firestoreAdmin.collection('posts').add({
       ...body,
       author: session.user.name,
       authorImage: session.user.image,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
+    })
 
     // İçerik oluşturulduktan sonra ilgili sayfaları önbellekten temizle
-    revalidatePath("/blog");
-    revalidatePath(`/blog/${slug}`);
-    revalidatePath(`/admin/blog`);
-    revalidatePath(`/admin/blog/${newPost.id}`);
+    revalidatePath('/blog')
+    revalidatePath(`/blog/${slug}`)
+    revalidatePath(`/admin/blog`)
+    revalidatePath(`/admin/blog/${newPost.id}`)
 
-    return NextResponse.json({ success: true, id: newPost.id });
+    return NextResponse.json({ success: true, id: newPost.id })
   } catch (error) {
-    console.error("Post Create Error:", error);
+    console.error('Post Create Error:', error)
     return NextResponse.json(
-      { success: false, error: "Bilinmeyen bir hata oluştu." },
+      { success: false, error: 'Bilinmeyen bir hata oluştu.' },
       { status: 500 }
-    );
+    )
   }
 }

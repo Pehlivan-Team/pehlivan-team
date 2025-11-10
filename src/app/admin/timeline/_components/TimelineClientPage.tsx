@@ -1,16 +1,12 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
-import { TimelineEvent } from "../page";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Trash2, Edit, PlusCircle } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import React, { useState } from 'react'
+import { toast } from 'sonner'
+
+import { ImageUploader } from '@/components/admin/ImageUploader'
+import ImageWrapper from '@/components/admin/ImageWrapper'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,144 +17,136 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Trash2, Edit, PlusCircle } from "lucide-react";
-import { toast } from "sonner";
-import { ImageUploader } from "@/components/admin/ImageUploader";
-import { useSession } from "next-auth/react";
-import NoPermError from "../../_components/NoPermError";
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Textarea } from '@/components/ui/textarea'
+
+import NoPermError from '../../_components/NoPermError'
+import { TimelineEvent } from '../page'
 
 // Form için tip tanımı
-type EventFormState = Omit<TimelineEvent, "id" | "awards"> & {
-  awards: string | string[];
-};
+type EventFormState = Omit<TimelineEvent, 'id' | 'awards'> & {
+  awards: string | string[]
+}
 
-export function TimelineClientPage({
-  initialEvents,
-}: {
-  initialEvents: TimelineEvent[];
-}) {
-  const [events, setEvents] = useState<TimelineEvent[]>(initialEvents);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingEvent, setEditingEvent] = useState<TimelineEvent | null>(null);
+export function TimelineClientPage({ initialEvents }: { initialEvents: TimelineEvent[] }) {
+  const [events, setEvents] = useState<TimelineEvent[]>(initialEvents)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingEvent, setEditingEvent] = useState<TimelineEvent | null>(null)
   const [formData, setFormData] = useState<EventFormState>({
     order: 0,
-    year: "",
-    title: "",
-    description: "",
-    image: "",
+    year: '',
+    title: '',
+    description: '',
+    image: '',
     awards: [],
-  });
-  const { data: session } = useSession();
+  })
+  const { data: session } = useSession()
 
-  if (!session?.user?.permissions?.canManageTimeline) return <NoPermError />;
+  if (!session?.user?.permissions?.canManageTimeline) return <NoPermError />
 
   const handleOpenDialog = (event: TimelineEvent | null) => {
-    setEditingEvent(event);
+    setEditingEvent(event)
     if (event) {
       // Düzenleme: Formu mevcut verilerle doldur
-      setFormData({ ...event, awards: event.awards.join(", ") } as any);
+      setFormData({ ...event, awards: event.awards.join(', ') } as any)
     } else {
       // Ekleme: Formu sıfırla ve yeni sıra numarasını hesapla
-      const nextOrder =
-        events.length > 0 ? Math.max(...events.map((e) => e.order)) + 1 : 1;
+      const nextOrder = events.length > 0 ? Math.max(...events.map((e) => e.order)) + 1 : 1
       setFormData({
         order: nextOrder,
-        year: "",
-        title: "",
-        description: "",
-        image: "",
+        year: '',
+        title: '',
+        description: '',
+        image: '',
         awards: [],
-      });
+      })
     }
-    setIsDialogOpen(true);
-  };
+    setIsDialogOpen(true)
+  }
 
-  const handleFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "order" ? parseInt(value) || 0 : value,
-    }));
-  };
+      [name]: name === 'order' ? parseInt(value) || 0 : value,
+    }))
+  }
 
   const handleImageUpload = (url: string) => {
-    setFormData((prev) => ({ ...prev, image: url }));
-  };
+    setFormData((prev) => ({ ...prev, image: url }))
+  }
 
   const handleSubmit = async () => {
     const awardsArray =
-      typeof formData.awards === "string"
+      typeof formData.awards === 'string'
         ? formData.awards
-            .split(",")
+            .split(',')
             .map((s) => s.trim())
             .filter(Boolean)
-        : [];
+        : []
 
-    const payload = { ...formData, awards: awardsArray };
+    const payload = { ...formData, awards: awardsArray }
 
-    const isEditing = !!editingEvent;
-    const url = isEditing
-      ? `/api/admin/timeline/${editingEvent.id}`
-      : "/api/admin/timeline";
-    const method = isEditing ? "PUT" : "POST";
+    const isEditing = !!editingEvent
+    const url = isEditing ? `/api/admin/timeline/${editingEvent.id}` : '/api/admin/timeline'
+    const method = isEditing ? 'PUT' : 'POST'
 
     try {
       const response = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-      });
-      const result = await response.json();
-      if (!result.success) throw new Error(result.error);
+      })
+      const result = await response.json()
+      if (!result.success) throw new Error(result.error)
 
       if (isEditing) {
         setEvents(
-          events.map((e) =>
-            e.id === editingEvent.id ? { ...payload, id: editingEvent.id } : e
-          )
-        );
-        toast.success("Tarihçe olayı başarıyla güncellendi!");
+          events.map((e) => (e.id === editingEvent.id ? { ...payload, id: editingEvent.id } : e))
+        )
+        toast.success('Tarihçe olayı başarıyla güncellendi!')
       } else {
-        setEvents([...events, { ...payload, id: result.id }]);
-        toast.success("Yeni tarihçe olayı başarıyla eklendi!");
+        setEvents([...events, { ...payload, id: result.id }])
+        toast.success('Yeni tarihçe olayı başarıyla eklendi!')
       }
-      setIsDialogOpen(false);
+      setIsDialogOpen(false)
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "İşlem başarısız oldu."
-      );
+      toast.error(error instanceof Error ? error.message : 'İşlem başarısız oldu.')
     }
-  };
+  }
 
   const handleDelete = async (eventId: string) => {
     try {
       const response = await fetch(`/api/admin/timeline/${eventId}`, {
-        method: "DELETE",
-      });
-      const result = await response.json();
-      if (!result.success) throw new Error(result.error);
+        method: 'DELETE',
+      })
+      const result = await response.json()
+      if (!result.success) throw new Error(result.error)
 
-      setEvents(events.filter((e) => e.id !== eventId));
-      toast.success("Olay başarıyla silindi!");
+      setEvents(events.filter((e) => e.id !== eventId))
+      toast.success('Olay başarıyla silindi!')
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Silme işlemi başarısız oldu."
-      );
+      toast.error(error instanceof Error ? error.message : 'Silme işlemi başarısız oldu.')
     }
-  };
+  }
 
   return (
     <>
@@ -187,11 +175,7 @@ export function TimelineClientPage({
                   <TableCell>{event.year}</TableCell>
                   <TableCell className="font-medium">{event.title}</TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleOpenDialog(event)}
-                    >
+                    <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(event)}>
                       <Edit className="h-4 w-4" />
                     </Button>
                     <AlertDialog>
@@ -208,8 +192,8 @@ export function TimelineClientPage({
                         <AlertDialogHeader>
                           <AlertDialogTitle>Emin misiniz?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            "{event.title}" adlı olayı kalıcı olarak silmek
-                            istediğinizden emin misiniz?
+                            "{event.title}" adlı olayı kalıcı olarak silmek istediğinizden emin
+                            misiniz?
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -233,9 +217,7 @@ export function TimelineClientPage({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>
-              {editingEvent ? "Olayı Düzenle" : "Yeni Olay Ekle"}
-            </DialogTitle>
+            <DialogTitle>{editingEvent ? 'Olayı Düzenle' : 'Yeni Olay Ekle'}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -289,10 +271,15 @@ export function TimelineClientPage({
             </div>
             <div className="grid grid-cols-4 items-start gap-4">
               <Label className="text-right pt-2">Resim</Label>
-              <ImageUploader
-                initialImageUrl={formData.image}
-                onUploadComplete={handleImageUpload}
-              />
+              <div className="col-span-3 flex items-start gap-4">
+                <div className="w-48 h-28 rounded overflow-hidden bg-slate-800">
+                  <ImageWrapper src={formData.image as string | undefined} alt={formData.title as string | undefined} fill={false} className="w-full h-full" />
+                </div>
+                <ImageUploader
+                  initialImageUrl={formData.image}
+                  onUploadComplete={handleImageUpload}
+                />
+              </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="awards" className="text-right">
@@ -317,5 +304,5 @@ export function TimelineClientPage({
         </DialogContent>
       </Dialog>
     </>
-  );
+  )
 }

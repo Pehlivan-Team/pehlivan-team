@@ -1,44 +1,32 @@
-import { NextResponse } from "next/server";
-import { firestoreAdmin } from "@/lib/firebase-admin";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache'
+import { NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+import { authOptions } from '@/lib/auth'
+import { firestoreAdmin } from '@/lib/firebase-admin'
+
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
 
     // Kullanıcının admin olup olmadığını kontrol et
     if (!session || !session.user?.isAdmin) {
-      return NextResponse.json(
-        { success: false, error: "Yetkiniz yok." },
-        { status: 403 }
-      );
+      return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 })
     }
 
-    const docId = params.id;
+    const docId = params.id
     if (!docId) {
-      return NextResponse.json(
-        { success: false, error: "Link ID eksik." },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: 'Link ID eksik.' }, { status: 400 })
     }
 
     // Dökümanı Firestore'dan sil
-    await firestoreAdmin.collection("links").doc(docId).delete();
-    revalidatePath(`/admin/links`);
+    await firestoreAdmin.collection('links').doc(docId).delete()
+    revalidatePath(`/admin/links`)
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Delete API Error:", error);
-    const errorMessage =
-      error instanceof Error ? error.message : "Bilinmeyen bir hata oluştu.";
-    return NextResponse.json(
-      { success: false, error: errorMessage },
-      { status: 500 }
-    );
+    console.error('Delete API Error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Bilinmeyen bir hata oluştu.'
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 })
   }
 }

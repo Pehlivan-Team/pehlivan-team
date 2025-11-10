@@ -1,10 +1,11 @@
-"use client";
+'use client'
 
-import React from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import { Calendar, Trophy } from "lucide-react";
-import { TimelineEvent } from "../page";
+import { motion } from 'framer-motion'
+import { Calendar, Trophy } from 'lucide-react'
+import Image from 'next/image'
+import React from 'react'
+
+import { TimelineEvent } from '../page'
 
 // Bu bileşen, önceki page.tsx dosyasındaki istemci taraflı mantığı içerir.
 export const TimelineClientPage = ({ events }: { events: TimelineEvent[] }) => {
@@ -13,9 +14,9 @@ export const TimelineClientPage = ({ events }: { events: TimelineEvent[] }) => {
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.6, ease: 'easeOut' },
     },
-  };
+  }
 
   return (
     <main className="container mx-auto py-16 px-4">
@@ -44,8 +45,8 @@ export const TimelineClientPage = ({ events }: { events: TimelineEvent[] }) => {
         ))}
       </div>
     </main>
-  );
-};
+  )
+}
 
 const TimelineCard = (event: TimelineEvent) => (
   <div className="bg-slate-800/60 p-6 rounded-xl border border-slate-700 shadow-lg">
@@ -53,22 +54,27 @@ const TimelineCard = (event: TimelineEvent) => (
       <Image
         src={event.image}
         alt={event.title}
-        
+        fill
         sizes="100vw"
-        style={{
-          objectFit: "cover"
-        }} />
+        className="object-cover"
+      />
     </div>
-    <p className="text-red-400 font-semibold mb-1 flex items-center gap-2"><Calendar size={18} /> {event.year}</p>
+    <p className="text-red-400 font-semibold mb-1 flex items-center gap-2">
+      <Calendar size={18} /> {event.year}
+    </p>
     <h3 className="text-2xl font-bold mb-2">{event.title}</h3>
     <p className="text-gray-300 mb-4">{event.description}</p>
     {event.awards && (
       <div>
-        <h4 className="font-semibold flex items-center gap-2"><Trophy size={18} className="text-yellow-400"/> Başarılar</h4>
+        <h4 className="font-semibold flex items-center gap-2">
+          <Trophy size={18} className="text-yellow-400" /> Başarılar
+        </h4>
         <ul className="list-disc list-inside text-gray-400 mt-1">
-          {event.awards.map((award, i) => <li key={i}>{award}</li>)}
+          {event.awards.map((award, i) => (
+            <li key={i}>{award}</li>
+          ))}
         </ul>
       </div>
     )}
   </div>
-);
+)

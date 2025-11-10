@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write .",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage"
@@ -72,10 +74,12 @@
     "next": "14.2.15",
     "next-auth": "^4.24.11",
     "next-themes": "^0.3.0",
+    "nodemailer": "^7.0.10",
     "qrcode.react": "^4.2.0",
     "react": "^18",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
+    "react-easy-crop": "^5.5.3",
     "react-hook-form": "^7.53.0",
     "react-quill": "^2.0.0",
     "react-resizable-panels": "^2.1.4",
@@ -91,24 +95,27 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
     "@types/bcrypt": "^6.0.0",
     "@types/bcryptjs": "^3.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "dotenv": "^17.2.3",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
+    "eslint-plugin-import": "^2.29.1",
     "node-fetch": "^2.7.0",
     "postcss": "^8",
+    "prettier": "^3.2.5",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-    ,
-    "vitest": "^1.1.5",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/jest-dom": "^6.0.0",
-    "@testing-library/user-event": "^14.4.3",
-    "vite": "^5.0.0"
+    "typescript": "^5",
+    "vite": "^5.0.0",
+    "vitest": "^1.1.5"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

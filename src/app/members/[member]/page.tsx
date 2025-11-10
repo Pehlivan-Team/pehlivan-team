@@ -1,30 +1,31 @@
-"use client";
-import React from "react";
-import { members as membersArray } from "@/constants/members";
-import Image from "next/image";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
-import { motion } from "framer-motion";
+'use client'
+import { InstagramLogoIcon, LinkedInLogoIcon } from '@radix-ui/react-icons'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
+
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { members as membersArray } from '@/constants/members'
 
 const page = ({ params }: { params: { member: any } }) => {
-  const members = JSON.parse(JSON.stringify(membersArray));
+  const members = JSON.parse(JSON.stringify(membersArray))
   const select_member = () => {
-    return members.find((member: any) => member.id === params.member);
-  };
+    return members.find((member: any) => member.id === params.member)
+  }
 
   const getRandomTransformOrigin = () => {
-    const value = (16 + 40 * Math.random()) / 100;
-    const value2 = (15 + 36 * Math.random()) / 100;
+    const value = (16 + 40 * Math.random()) / 100
+    const value2 = (15 + 36 * Math.random()) / 100
     return {
       originX: value,
       originY: value2,
-    };
-  };
+    }
+  }
 
-  const getRandomDelay = () => -(Math.random() * 0.7 + 0.05);
+  const getRandomDelay = () => -(Math.random() * 0.7 + 0.05)
 
-  const randomDuration = () => Math.random() * 0.07 + 0.23;
+  const randomDuration = () => Math.random() * 0.07 + 0.23
 
   const variants = {
     start: (i: number) => ({
@@ -38,7 +39,7 @@ const page = ({ params }: { params: { member: any } }) => {
     reset: {
       rotate: 0,
     },
-  };
+  }
 
   return (
     <div className="py-16">
@@ -47,7 +48,7 @@ const page = ({ params }: { params: { member: any } }) => {
           <div>
             <h1 className="font-bold text-3xl">{select_member().name}</h1>
             <p>{select_member().role}</p>
-            <motion.div variants={variants} whileHover={"start"}>
+            <motion.div variants={variants} whileHover={'start'}>
               <Image
                 className="rounded-3xl"
                 src={select_member().img}
@@ -55,9 +56,10 @@ const page = ({ params }: { params: { member: any } }) => {
                 width={400}
                 height={400}
                 style={{
-                  maxWidth: "100%",
-                  height: "auto"
-                }} />
+                  maxWidth: '100%',
+                  height: 'auto',
+                }}
+              />
             </motion.div>
           </div>
           <div className="lg:px-5 px-0 gap-10 lg:py-5">
@@ -81,7 +83,7 @@ const page = ({ params }: { params: { member: any } }) => {
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default page;
+export default page

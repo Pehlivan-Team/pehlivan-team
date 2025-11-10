@@ -1,15 +1,16 @@
-import { cn } from "@/lib/utils";
-import * as motion from "framer-motion/client";
-import { ReactNode } from "react";
+import * as motion from 'framer-motion/client'
+import { ReactNode } from 'react'
+
+import { cn } from '@/lib/utils'
 
 const DragOnLoad = ({
   children,
   className,
-  motionDirection = "left",
+  motionDirection = 'left',
 }: {
-  children: ReactNode;
-  className: string;
-  motionDirection?: "left" | "right" | "up" | "down";
+  children: ReactNode
+  className: string
+  motionDirection?: 'left' | 'right' | 'up' | 'down'
 }) => {
   const motionDirectionMap = {
     left: {
@@ -32,7 +33,7 @@ const DragOnLoad = ({
       animate: { opacity: 1, y: 0 },
       exit: { opacity: 0, y: -200 },
     },
-  };
+  }
 
   return (
     <motion.div
@@ -47,7 +48,7 @@ const DragOnLoad = ({
     >
       {children}
     </motion.div>
-  );
-};
+  )
+}
 
-export default DragOnLoad;
+export default DragOnLoad

@@ -1,36 +1,38 @@
-import { firestoreAdmin } from "@/lib/firebase-admin";
-import { notFound } from "next/navigation";
-import { PostForm } from "../../_components/PostForm";
-import { Post } from "@/types/blog";
+import { notFound } from 'next/navigation'
+
+import { firestoreAdmin } from '@/lib/firebase-admin'
+import { Post } from '@/types/blog'
+
+import { PostForm } from '../../_components/PostForm'
 
 async function getPost(id: string): Promise<Post | null> {
-  const docRef = firestoreAdmin.collection("posts").doc(id);
-  const docSnap = await docRef.get();
+  const docRef = firestoreAdmin.collection('posts').doc(id)
+  const docSnap = await docRef.get()
 
   if (!docSnap.exists) {
-    return null;
+    return null
   }
 
-  const data = docSnap.data()!;
+  const data = docSnap.data()!
   return {
     id: docSnap.id,
     title: data.title,
     slug: data.slug,
     content: data.content,
-    imageUrl: data.imageUrl || "",
+    imageUrl: data.imageUrl || '',
     isPublished: data.isPublished,
     author: data.author,
-    authorImage: data.authorImage || "",
+    authorImage: data.authorImage || '',
     createdAt: data.createdAt.toDate().toISOString(),
     updatedAt: data.updatedAt.toDate().toISOString(),
-  };
+  }
 }
 
 export default async function EditPostPage({ params }: { params: { id: string } }) {
-  const post = await getPost(params.id);
+  const post = await getPost(params.id)
 
   if (!post) {
-    return notFound();
+    return notFound()
   }
 
   return (
@@ -38,5 +40,5 @@ export default async function EditPostPage({ params }: { params: { id: string } 
       <h1 className="text-3xl font-bold mb-6">Yazıyı Düzenle</h1>
       <PostForm initialData={post} />
     </div>
-  );
+  )
 }

@@ -1,12 +1,13 @@
-'use client';
+'use client'
 
-import { EdgeStoreProvider } from '@/lib/edgestore'; // <-- Import from our new lib file
-import React from 'react';
+import React from 'react'
+
+import { EdgeStoreProvider } from '@/lib/edgestore' // <-- Import from our new lib file
 
 type Props = {
-  children?: React.ReactNode;
-};
+  children?: React.ReactNode
+}
 
 export const EdgeStoreProviderClient = ({ children }: Props) => {
-  return <EdgeStoreProvider>{children}</EdgeStoreProvider>;
-};
+  return <EdgeStoreProvider>{children}</EdgeStoreProvider>
+}

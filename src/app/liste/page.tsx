@@ -1,79 +1,64 @@
-import Link from "next/link";
-import { firestoreAdmin } from "@/lib/firebase-admin";
-import { Printer, PlusCircle } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
-import Image from "next/image";
-import logo from "@/public/logo_png.png";
-import { Button } from "@/components/ui/button";
-import { PrintButton } from "./_components/PrintButton";
+import { Printer, PlusCircle } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { QRCodeSVG } from 'qrcode.react'
+
+import { Button } from '@/components/ui/button'
+import { firestoreAdmin } from '@/lib/firebase-admin'
+import logo from '@public/logo_png.png'
+
+import { PrintButton } from './_components/PrintButton'
 
 // --- Veri Tipleri ---
 interface IhtiyacItem {
-  part_name: string;
-  quantity: number;
-  price: number;
-  link: string;
+  part_name: string
+  quantity: number
+  price: number
+  link: string
 }
 
 interface TeamData {
-  name: string;
-  items: IhtiyacItem[];
-  total: number;
+  name: string
+  items: IhtiyacItem[]
+  total: number
 }
 
 // --- Sunucu Tarafında Veri Çekme Fonksiyonu (Düzeltilmiş Hali) ---
 async function getAllNeeds(): Promise<TeamData[]> {
   // 1. Departman listesini artık Firestore'dan dinamik olarak çekiyoruz.
-  const configDoc = await firestoreAdmin
-    .collection("config")
-    .doc("needsList")
-    .get();
+  const configDoc = await firestoreAdmin.collection('config').doc('needsList').get()
 
   // Eğer config dokümanı yoksa veya boşsa, varsayılan bir liste kullan.
-  const departments: string[] = configDoc.data()?.departments || [
-    "Mekanik",
-    "Gövde",
-    "Elektrik",
-  ];
+  const departments: string[] = configDoc.data()?.departments || ['Mekanik', 'Gövde', 'Elektrik']
 
-  const allTeamData: TeamData[] = [];
+  const allTeamData: TeamData[] = []
 
   // 2. Sabit liste yerine, Firestore'dan gelen dinamik listeyi döngüye alıyoruz.
   for (const deptId of departments) {
-    const snapshot = await firestoreAdmin
-      .collection(deptId)
-      .orderBy("part_name")
-      .get();
+    const snapshot = await firestoreAdmin.collection(deptId).orderBy('part_name').get()
 
-    const items: IhtiyacItem[] = snapshot.docs.map(
-      (doc) => doc.data() as IhtiyacItem
-    );
+    const items: IhtiyacItem[] = snapshot.docs.map((doc) => doc.data() as IhtiyacItem)
 
-    const total = items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
     // Görünen isim için "Departmanı" ekini ekliyoruz.
-    allTeamData.push({ name: `${deptId} Departmanı`, items, total });
+    allTeamData.push({ name: `${deptId} Departmanı`, items, total })
   }
 
-  return allTeamData;
+  return allTeamData
 }
 
 // --- Ana Sayfa Bileşeni (Değişiklik yok) ---
 export default async function ListePage() {
-  const teams = await getAllNeeds();
-  const grandTotal = teams.reduce((sum, team) => sum + team.total, 0);
+  const teams = await getAllNeeds()
+  const grandTotal = teams.reduce((sum, team) => sum + team.total, 0)
 
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="container mx-auto p-4 md:p-8">
         <header className="mb-8">
           <div className="flex justify-between items-center print:hidden">
-            <h1 className="text-3xl font-bold text-gray-800">
-              İhtiyaç Listesi
-            </h1>
+            <h1 className="text-3xl font-bold text-gray-800">İhtiyaç Listesi</h1>
             <div className="flex gap-2">
               <Link href="/liste/ekle">
                 <Button variant="outline">
@@ -92,14 +77,13 @@ export default async function ListePage() {
                 width={50}
                 height={50}
                 style={{
-                  maxWidth: "100%",
-                  height: "auto"
-                }} />
-              <h1 className="text-2xl font-bold">
-                Pehlivan Team İhtiyaç Listesi
-              </h1>
+                  maxWidth: '100%',
+                  height: 'auto',
+                }}
+              />
+              <h1 className="text-2xl font-bold">Pehlivan Team İhtiyaç Listesi</h1>
             </div>
-            <p className="text-lg">{new Date().toLocaleDateString("tr-TR")}</p>
+            <p className="text-lg">{new Date().toLocaleDateString('tr-TR')}</p>
           </div>
         </header>
 
@@ -115,7 +99,7 @@ export default async function ListePage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // --- Yeniden Kullanılabilir Alt Bileşenler (Değişiklik yok) ---
@@ -127,16 +111,14 @@ const TeamSection = ({ name, items, total }: TeamData) => (
       {items.length > 0 ? (
         items.map((item, index) => <ItemCard key={index} {...item} />)
       ) : (
-        <p className="text-gray-500">
-          Bu departman için henüz bir ihtiyaç eklenmemiş.
-        </p>
+        <p className="text-gray-500">Bu departman için henüz bir ihtiyaç eklenmemiş.</p>
       )}
     </div>
     <p className="text-right font-bold text-lg mt-4 text-gray-700">
       Departman Toplamı: {total.toFixed(2)} ₺
     </p>
   </div>
-);
+)
 
 const ItemCard = (item: IhtiyacItem) => (
   <div className="bg-white p-4 rounded-lg border border-gray-200 flex flex-col md:flex-row gap-4 items-start break-inside-avoid">
@@ -157,4 +139,4 @@ const ItemCard = (item: IhtiyacItem) => (
       <QRCodeSVG value={item.link} size={80} />
     </div>
   </div>
-);
+)

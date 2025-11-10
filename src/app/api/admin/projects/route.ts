@@ -1,21 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
-import { firestoreAdmin } from "@/lib/firebase-admin";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import admin from "firebase-admin";
-import { revalidatePath } from "next/cache";
+import admin from 'firebase-admin'
+import { revalidatePath } from 'next/cache'
+import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+
+import { authOptions } from '@/lib/auth'
+import { firestoreAdmin } from '@/lib/firebase-admin'
 
 // YENİ PROJE OLUŞTURMA (POST)
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
     if (!session?.user?.permissions?.canManageProjects) {
-      return NextResponse.json(
-        { success: false, error: "Yetkiniz yok." },
-        { status: 403 }
-      );
+      return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 })
     }
-    const body = await request.json();
+    const body = await request.json()
     /*
       createdAt: admin.firestore.FieldValue.serverTimestamp(), kısmı önemli.
       Bu, Firestore'da olayın oluşturulma zamanını doğru bir şekilde kaydetmek için kullanılır.
@@ -28,23 +26,23 @@ export async function POST(request: NextRequest) {
       Ayrıca bunu eklememek firestore'un kendi timestamp'ini render ederken sorunlara yol açıyor.
       */
     const newProject = await firestoreAdmin
-      .collection("projects")
+      .collection('projects')
       .doc(body.slug)
       .set({
         ...body,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+      })
     // Proje oluşturulduktan sonra ilgili sayfaları önbellekten temizle
-    revalidatePath("/projects");
-    revalidatePath("/admin/projects");
-    revalidatePath(`/projects/${body.slug}`);
-    revalidatePath(`/admin/projects/${body.slug}`);
+    revalidatePath('/projects')
+    revalidatePath('/admin/projects')
+    revalidatePath(`/projects/${body.slug}`)
+    revalidatePath(`/admin/projects/${body.slug}`)
 
-    return NextResponse.json({ success: true, id: body.slug });
+    return NextResponse.json({ success: true, id: body.slug })
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: "Bilinmeyen bir hata oluştu." },
+      { success: false, error: 'Bilinmeyen bir hata oluştu.' },
       { status: 500 }
-    );
+    )
   }
 }

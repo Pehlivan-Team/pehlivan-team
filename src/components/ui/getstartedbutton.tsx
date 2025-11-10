@@ -1,13 +1,13 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react'
+import styled from 'styled-components'
 
 const GetStartedButton = () => {
   return (
     <StyledWrapper>
       <button>GET STARTED</button>
     </StyledWrapper>
-  );
-};
+  )
+}
 
 const StyledWrapper = styled.div`
   button {
@@ -54,6 +54,6 @@ const StyledWrapper = styled.div`
     padding-right: 30px;
     padding-left: 30px;
   }
-`;
+`
 
-export default GetStartedButton;
+export default GetStartedButton

@@ -1,12 +1,13 @@
-import { MetadataRoute } from 'next';
-import { firestoreAdmin } from '@/lib/firebase-admin';
-import { teamsData } from '@/constants/teams';
+import { MetadataRoute } from 'next'
+
+import { teamsData } from '@/constants/teams'
+import { firestoreAdmin } from '@/lib/firebase-admin'
 
 // Belirli bir süre sonra (örn: 24 saat) site haritasının yeniden oluşturulmasını sağlar
-export const revalidate = 60 * 60 * 24;
+export const revalidate = 60 * 60 * 24
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.pehli1team.com';
+  const baseUrl = 'https://www.pehli1team.com'
 
   // 1. Statik sayfaları listeye ekle (güncellenmiş hali)
   const staticRoutes = [
@@ -18,41 +19,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/shorten',
     '/liste',
     '/blog',
-    '/feed'
+    '/feed',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
-  }));
+  }))
 
   // 2. Dinamik blog yazılarını Firestore'dan çek
   const postsSnapshot = await firestoreAdmin
     .collection('posts')
     .where('isPublished', '==', true)
-    .get();
+    .get()
 
-  const blogPostRoutes = postsSnapshot.docs.map(doc => {
-    const data = doc.data();
+  const blogPostRoutes = postsSnapshot.docs.map((doc) => {
+    const data = doc.data()
     return {
       url: `${baseUrl}/blog/${data.slug}`,
       lastModified: data.updatedAt.toDate().toISOString(),
-    };
-  });
+    }
+  })
 
   // 3. Dinamik proje sayfalarını Firestore'dan çek
-  const projectsSnapshot = await firestoreAdmin.collection('projects').get();
-  const projectRoutes = projectsSnapshot.docs.map(doc => {
-    const data = doc.data();
+  const projectsSnapshot = await firestoreAdmin.collection('projects').get()
+  const projectRoutes = projectsSnapshot.docs.map((doc) => {
+    const data = doc.data()
     return {
       url: `${baseUrl}/projects/${data.slug}`,
       lastModified: new Date().toISOString(), // Geliştirme: Projeye 'updatedAt' alanı eklenirse bu kullanılabilir
-    };
-  });
+    }
+  })
 
   // 4. Dinamik takım sayfalarını listeye ekle
   const teamRoutes = teamsData.map((team) => ({
     url: `${baseUrl}/teams/${team.slug}`,
     lastModified: new Date().toISOString(),
-  }));
+  }))
 
   // Tüm URL'leri birleştir ve geri döndür
   return [
@@ -60,5 +61,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...blogPostRoutes,
     ...projectRoutes, // '/cars' yerine proje linklerini ekle
     ...teamRoutes,
-  ];
+  ]
 }

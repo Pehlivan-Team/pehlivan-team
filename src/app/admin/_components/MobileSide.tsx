@@ -1,9 +1,5 @@
-"use client";
+'use client'
 
-import React from "react";
-import Link from "next/link";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import {
   Menu,
   Home,
@@ -17,28 +13,33 @@ import {
   UserCheck,
   FileText,
   FolderKanban,
-} from "lucide-react";
-import DesktopAuth from "@/components/auth/DesktopAuth";
+} from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
+
+import DesktopAuth from '@/components/auth/DesktopAuth'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 // Link verileri artık burada tanımlı ve export ediliyor
 export const navLinks = [
-  { href: "/admin", label: "Dashboard", Icon: LayoutDashboard },
-  { href: "/admin/analytics", label: "Analitik", Icon: LineChart },
-  { href: "/admin/blog", label: "Blog Yönetimi", Icon: FileText },
-  { href: "/admin/links", label: "Kısa Linkler", Icon: LinkIcon },
-  { href: "/admin/needs", label: "İhtiyaç Listesi", Icon: ListTodo },
-  { href: "/admin/projects", label: "Proje Yönetimi", Icon: FolderKanban },
-  { href: "/admin/timeline", label: "Tarihçe Yönetimi", Icon: Milestone },
-  { href: "/admin/members", label: "Katılımcılar", Icon: Users2 },
-  { href: "/admin/admins", label: "Yöneticiler", Icon: UserCheck },
-  { href: "/admin/community", label: "Topluluk", Icon: UserCheck },
-];
+  { href: '/admin', label: 'Dashboard', Icon: LayoutDashboard },
+  { href: '/admin/analytics', label: 'Analitik', Icon: LineChart },
+  { href: '/admin/blog', label: 'Blog Yönetimi', Icon: FileText },
+  { href: '/admin/links', label: 'Kısa Linkler', Icon: LinkIcon },
+  { href: '/admin/needs', label: 'İhtiyaç Listesi', Icon: ListTodo },
+  { href: '/admin/projects', label: 'Proje Yönetimi', Icon: FolderKanban },
+  { href: '/admin/timeline', label: 'Tarihçe Yönetimi', Icon: Milestone },
+  { href: '/admin/members', label: 'Katılımcılar', Icon: Users2 },
+  { href: '/admin/admins', label: 'Yöneticiler', Icon: UserCheck },
+  { href: '/admin/community', label: 'Topluluk', Icon: UserCheck },
+]
 
 export const settingsLink = {
-  href: "/admin/settings",
-  label: "Ayarlar",
+  href: '/admin/settings',
+  label: 'Ayarlar',
   Icon: Settings,
-};
+}
 
 // Bileşen artık prop almıyor
 export function MobileSidebar() {
@@ -84,5 +85,5 @@ export function MobileSidebar() {
         </SheetContent>
       </Sheet>
     </header>
-  );
+  )
 }

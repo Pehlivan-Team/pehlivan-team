@@ -1,24 +1,18 @@
-"use client";
+'use client'
 
-import React from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Project } from "@/types/projects"; // Proje tipini import ediyoruz
+import { motion } from 'framer-motion'
+import { ArrowRight } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
+
+import { Button } from '@/components/ui/button'
+import { Project } from '@/types/projects' // Proje tipini import ediyoruz
 
 // Bileşen artık 'projects' adında bir prop alıyor
-export default function MainPageProjects({
-  projects,
-}: {
-  projects: Project[];
-}) {
+export default function MainPageProjects({ projects }: { projects: Project[] }) {
   return (
-    <section
-      id="projects"
-      className="bg-[#020f29] w-full py-16 md:py-24 lg:py-32"
-    >
+    <section id="projects" className="bg-[#020f29] w-full py-16 md:py-24 lg:py-32">
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-3xl text-white font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
           Projelerimiz
@@ -26,16 +20,12 @@ export default function MainPageProjects({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Prop olarak gelen projeleri listeliyoruz */}
           {projects.map((project) => (
-            <motion.div
-              key={project.slug}
-              whileHover={{ y: -10 }}
-              className="group"
-            >
+            <motion.div key={project.slug} whileHover={{ y: -10 }} className="group">
               <Link href={`/projects/${project.slug}`}>
                 <div className="relative h-96 w-full rounded-2xl overflow-hidden shadow-lg border-2 border-transparent hover:border-red-500 transition-all duration-300">
                   <Image
                     src={project.image}
-                    alt={project.name + " photo"}
+                    alt={project.name + ' photo'}
                     className="z-0 transition-transform duration-300 group-hover:scale-110"
                     priority
                     fill
@@ -67,5 +57,5 @@ export default function MainPageProjects({
         </div>
       </div>
     </section>
-  );
+  )
 }

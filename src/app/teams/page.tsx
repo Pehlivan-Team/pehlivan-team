@@ -1,17 +1,16 @@
-import Link from "next/link";
-import { teamsData } from "@/constants/teams";
+import Link from 'next/link'
+
+import { teamsData } from '@/constants/teams'
 
 export default function TeamsPage() {
   return (
     <div className="bg-gray-950 min-h-screen text-white">
       <header className="pt-32 pb-16 bg-[#101b40]">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold tracking-tighter">
-            Takımlarımız
-          </h1>
+          <h1 className="text-4xl lg:text-5xl font-bold tracking-tighter">Takımlarımız</h1>
           <p className="mt-4 max-w-2xl mx-auto text-gray-300">
-            Farklı disiplinlerde uzmanlaşmış ekiplerimizle tanışın. Her takım,
-            yenilikçi projelerle geleceğin teknolojisini şekillendiriyor.
+            Farklı disiplinlerde uzmanlaşmış ekiplerimizle tanışın. Her takım, yenilikçi projelerle
+            geleceğin teknolojisini şekillendiriyor.
           </p>
         </div>
       </header>
@@ -41,5 +40,5 @@ export default function TeamsPage() {
         </div>
       </main>
     </div>
-  );
+  )
 }

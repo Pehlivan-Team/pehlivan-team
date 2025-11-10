@@ -1,12 +1,13 @@
-"use client";
-import React from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import logo from "@/app/public/tasprologo.jpg";
-import bg from "@/app/public/bg.png";
+'use client'
+import { motion } from 'framer-motion'
+import { ArrowDown } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
+
+import { Button } from '@/components/ui/button'
+import bg from '@public/bg.png'
+import logo from '@public/tasprologo.jpg'
 
 // Animation variants for staggering the entrance of elements
 const containerVariants = {
@@ -18,25 +19,25 @@ const containerVariants = {
       delayChildren: 0.3,
     },
   },
-};
+}
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    transition: { duration: 0.6, ease: "easeInOut" },
+    transition: { duration: 0.6, ease: 'easeInOut' },
   },
-};
+}
 
 export default function MainPageHeader() {
   const scrollToNextSection = () => {
     // Scrolls the user to the first section after the hero
-    const firstSection = document.querySelector("section");
+    const firstSection = document.querySelector('section')
     if (firstSection) {
-      firstSection.scrollIntoView({ behavior: "smooth" });
+      firstSection.scrollIntoView({ behavior: 'smooth' })
     }
-  };
+  }
 
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden">
@@ -47,11 +48,11 @@ export default function MainPageHeader() {
           alt="Tas-Pro background"
           className="opacity-30"
           priority
-          
           sizes="100vw"
           style={{
-            objectFit: "cover"
-          }} />
+            objectFit: 'cover',
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-black/70 to-transparent" />
       </div>
       <motion.div
@@ -77,9 +78,10 @@ export default function MainPageHeader() {
             className="h-200 w-200 rounded-full"
             alt="Tas-Pro Logo"
             style={{
-              maxWidth: "100%",
-              height: "auto"
-            }} />
+              maxWidth: '100%',
+              height: 'auto',
+            }}
+          />
         </motion.div>
 
         {/* Headline */}
@@ -95,15 +97,11 @@ export default function MainPageHeader() {
           className="mt-4 max-w-2xl text-lg text-gray-300 md:text-xl"
           variants={itemVariants}
         >
-          Sürdürülebilir teknoloji ve yenilikçi mühendislik ile geleceğin
-          sınırlarını zorluyoruz.
+          Sürdürülebilir teknoloji ve yenilikçi mühendislik ile geleceğin sınırlarını zorluyoruz.
         </motion.p>
 
         {/* Call to Action Buttons */}
-        <motion.div
-          className="mt-10 flex flex-wrap justify-center gap-4"
-          variants={itemVariants}
-        >
+        <motion.div className="mt-10 flex flex-wrap justify-center gap-4" variants={itemVariants}>
           <Button
             asChild
             size="lg"
@@ -130,12 +128,12 @@ export default function MainPageHeader() {
           delay: 2.5,
           duration: 1.5,
           repeat: Infinity,
-          repeatType: "reverse",
-          ease: "easeInOut",
+          repeatType: 'reverse',
+          ease: 'easeInOut',
         }}
       >
         <ArrowDown className="h-8 w-8 text-white" />
       </motion.div>
     </div>
-  );
+  )
 }

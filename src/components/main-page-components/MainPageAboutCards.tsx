@@ -1,28 +1,31 @@
-"use client";
+'use client'
 
-import React from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent } from "../ui/card";
-import { Award, BatteryChargingIcon, ZapIcon } from "lucide-react";
+import { motion } from 'framer-motion'
+import { Award, BatteryChargingIcon, ZapIcon } from 'lucide-react'
+import React from 'react'
+
+import { Card, CardContent } from '../ui/card'
 
 // Card data is kept in an array for easy maintenance
 const cardsData = [
   {
     icon: Award,
-    title: "Ödüllü Tasarım",
-    description: "Form ve işlevi birleştiren şık, aerodinamik araçlar yaratıyoruz.",
+    title: 'Ödüllü Tasarım',
+    description: 'Form ve işlevi birleştiren şık, aerodinamik araçlar yaratıyoruz.',
   },
   {
     icon: BatteryChargingIcon,
-    title: "Yenilikçi Batarya Teknolojisi",
-    description: "Uzun menzil ve daha hızlı şarj için ileri teknoloji batarya çözümleri geliştiriyoruz.",
+    title: 'Yenilikçi Batarya Teknolojisi',
+    description:
+      'Uzun menzil ve daha hızlı şarj için ileri teknoloji batarya çözümleri geliştiriyoruz.',
   },
   {
     icon: ZapIcon,
-    title: "Verimli Motorlar",
-    description: "Gücü ve verimliliği optimize etmek için yüksek verimli Mitsuba motorları kullanıyoruz.",
+    title: 'Verimli Motorlar',
+    description:
+      'Gücü ve verimliliği optimize etmek için yüksek verimli Mitsuba motorları kullanıyoruz.',
   },
-];
+]
 
 // Animation variants for the container and individual cards
 const containerVariants = {
@@ -33,20 +36,20 @@ const containerVariants = {
       staggerChildren: 0.2, // Animates cards one after the other
     },
   },
-};
+}
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    transition: { duration: 0.6, ease: "easeInOut" },
+    transition: { duration: 0.6, ease: 'easeInOut' },
   },
   hover: {
     scale: 1.05,
-    boxShadow: "0px 10px 30px rgba(255, 6, 32, 0.3)", // Red glow effect
-  }
-};
+    boxShadow: '0px 10px 30px rgba(255, 6, 32, 0.3)', // Red glow effect
+  },
+}
 
 export default function MainPageAboutCards() {
   return (
@@ -63,18 +66,13 @@ export default function MainPageAboutCards() {
           viewport={{ once: true, amount: 0.3 }}
         >
           {cardsData.map((card, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover="hover"
-              className="h-full"
-            >
+            <motion.div key={index} variants={itemVariants} whileHover="hover" className="h-full">
               <Card className="bg-slate-800/60 border-slate-700 h-full text-left p-4 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="mb-6">
                     <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center">
                       {React.createElement(card.icon, {
-                        className: "w-8 h-8 text-white",
+                        className: 'w-8 h-8 text-white',
                       })}
                     </div>
                   </div>
@@ -87,5 +85,5 @@ export default function MainPageAboutCards() {
         </motion.div>
       </div>
     </section>
-  );
+  )
 }

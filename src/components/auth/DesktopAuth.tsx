@@ -1,27 +1,22 @@
-"use client";
+'use client'
 /* PC için kimlik doğrulama butonu componenti
  *Kullanıcı oturum durumuna göre farklı butonlar gösterir
   - Giriş yapmış kullanıcılar için profil bilgileri ve çıkış butonu
   - Giriş yapmamış kullanıcılar için Google ile giriş butonu
  */
-import { signOut, useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
-import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { LogOut } from 'lucide-react'
+import Image from 'next/image'
+import { signOut, useSession } from 'next-auth/react'
+
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function DesktopAuth() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession()
 
-  if (status === "loading") {
-    return <Skeleton className="h-24 w-full" />;
+  if (status === 'loading') {
+    return <Skeleton className="h-24 w-full" />
   }
 
   if (session?.user) {
@@ -30,15 +25,16 @@ export default function DesktopAuth() {
         <CardHeader className="p-2 pt-0 md:p-4">
           <div className="flex items-center gap-3">
             <Image
-              src={session.user.image ?? ""}
-              alt={session.user.name ?? "Kullanıcı"}
+              src={session.user.image ?? ''}
+              alt={session.user.name ?? 'Kullanıcı'}
               width={40}
               height={40}
               className="rounded-full"
               style={{
-                maxWidth: "100%",
-                height: "auto"
-              }} />
+                maxWidth: '100%',
+                height: 'auto',
+              }}
+            />
             <div>
               <CardTitle className="text-sm font-medium leading-none">
                 {session.user.name}
@@ -54,15 +50,15 @@ export default function DesktopAuth() {
             type="button"
             size="sm"
             className="w-full"
-            onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+            onClick={() => signOut({ redirect: true, callbackUrl: '/' })}
           >
             <LogOut className="mr-2 h-4 w-4" />
             Çıkış Yap
           </Button>
         </CardContent>
       </Card>
-    );
+    )
   }
 
-  return null; // Kullanıcı giriş yapmamışsa hiçbir şey gösterme
+  return null // Kullanıcı giriş yapmamışsa hiçbir şey gösterme
 }

@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import Script from "next/script";
+import Script from 'next/script'
 
 export const GoogleAnalytics = () => {
-  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
   // Eğer Ölçüm Kimliği tanımlı değilse, hiçbir şey render etme
   if (!gaId) {
-    return null;
+    return null
   }
 
   return (
@@ -29,5 +29,5 @@ export const GoogleAnalytics = () => {
         }}
       />
     </>
-  );
-};
+  )
+}

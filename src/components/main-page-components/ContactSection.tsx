@@ -1,9 +1,10 @@
 // src/components/main-page-components/ContactSection.tsx
 
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, Phone, Instagram, Linkedin } from 'lucide-react';
+import { Mail, Phone, Instagram, Linkedin } from 'lucide-react'
+import React from 'react'
+
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const socialLinks = [
   {
@@ -16,7 +17,7 @@ const socialLinks = [
     href: 'https://www.linkedin.com/company/pehlivan-team/',
     Icon: Linkedin,
   },
-];
+]
 
 const ContactSection = () => {
   return (
@@ -29,7 +30,8 @@ const ContactSection = () => {
               İletişime Geçin
             </h2>
             <p className="max-w-[600px] text-gray-300 md:text-xl lg:mx-0 mx-auto">
-              Projemizle ilgileniyor, sponsor olmak istiyor veya ekibimize katılmayı düşünüyorsanız, bize ulaşmaktan çekinmeyin!
+              Projemizle ilgileniyor, sponsor olmak istiyor veya ekibimize katılmayı düşünüyorsanız,
+              bize ulaşmaktan çekinmeyin!
             </p>
           </div>
           <div className="flex justify-center lg:justify-start space-x-4">
@@ -56,8 +58,14 @@ const ContactSection = () => {
               <CardTitle>Genel Sorular için E-posta</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-300">Tüm sorularınız ve iş birliği teklifleriniz için bize e-posta gönderin.</p>
-              <Button asChild variant="link" className="px-0 text-lg text-red-400 hover:text-red-500">
+              <p className="text-gray-300">
+                Tüm sorularınız ve iş birliği teklifleriniz için bize e-posta gönderin.
+              </p>
+              <Button
+                asChild
+                variant="link"
+                className="px-0 text-lg text-red-400 hover:text-red-500"
+              >
                 <a href="mailto:pehli1team@gmail.com">pehli1team@gmail.com</a>
               </Button>
             </CardContent>
@@ -69,8 +77,14 @@ const ContactSection = () => {
               <CardTitle>Takım Kaptanı</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-300">Doğrudan iletişim için Takım Kaptanımız Eşref Kaan Kurtoğlu'na ulaşabilirsiniz.</p>
-              <Button asChild variant="link" className="px-0 text-lg text-red-400 hover:text-red-500">
+              <p className="text-gray-300">
+                Doğrudan iletişim için Takım Kaptanımız Eşref Kaan Kurtoğlu'na ulaşabilirsiniz.
+              </p>
+              <Button
+                asChild
+                variant="link"
+                className="px-0 text-lg text-red-400 hover:text-red-500"
+              >
                 <a href="tel:+905307617004">+90 530 761 7004</a>
               </Button>
             </CardContent>
@@ -78,7 +92,7 @@ const ContactSection = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default ContactSection;
+export default ContactSection

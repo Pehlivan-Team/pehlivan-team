@@ -1,50 +1,52 @@
-import { firestoreAdmin } from "@/lib/firebase-admin";
-import { NeedsClientPage } from "./_components/NeedsClientPage";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
-import Link from "next/link";
+import { PlusCircle } from 'lucide-react'
+import Link from 'next/link'
+
+import { Button } from '@/components/ui/button'
+import { firestoreAdmin } from '@/lib/firebase-admin'
+
+import { NeedsClientPage } from './_components/NeedsClientPage'
 
 export interface NeedItem {
-  id: string; // Firestore document ID
-  part_name: string;
-  quantity: number;
-  price: number;
-  link: string;
+  id: string // Firestore document ID
+  part_name: string
+  quantity: number
+  price: number
+  link: string
 }
 
 export interface DepartmentNeeds {
-  departmentName: string;
-  items: NeedItem[];
+  departmentName: string
+  items: NeedItem[]
 }
 
 // Firestore'dan tüm departmanların ihtiyaç listesini çeken fonksiyon
 async function getNeeds(): Promise<DepartmentNeeds[]> {
   // Departman listesini de Firestore'dan dinamik olarak çekiyoruz
-  const configDoc = await firestoreAdmin.collection('config').doc('needsList').get();
-  const departments = configDoc.data()?.departments || ["Mekanik", "Gövde", "Elektrik"];
+  const configDoc = await firestoreAdmin.collection('config').doc('needsList').get()
+  const departments = configDoc.data()?.departments || ['Mekanik', 'Gövde', 'Elektrik']
 
-  const allNeeds: DepartmentNeeds[] = [];
+  const allNeeds: DepartmentNeeds[] = []
 
   for (const dept of departments) {
-    const snapshot = await firestoreAdmin.collection(dept).get();
-    const items: NeedItem[] = snapshot.docs.map(doc => {
-      const data = doc.data();
+    const snapshot = await firestoreAdmin.collection(dept).get()
+    const items: NeedItem[] = snapshot.docs.map((doc) => {
+      const data = doc.data()
       return {
         id: doc.id,
         part_name: data.part_name,
         quantity: data.quantity,
         price: data.price,
         link: data.link,
-      };
-    });
-    allNeeds.push({ departmentName: dept, items });
+      }
+    })
+    allNeeds.push({ departmentName: dept, items })
   }
 
-  return allNeeds;
+  return allNeeds
 }
 
 export default async function AdminNeedsPage() {
-  const needsData = await getNeeds();
+  const needsData = await getNeeds()
 
   return (
     <div>
@@ -59,5 +61,5 @@ export default async function AdminNeedsPage() {
       </div>
       <NeedsClientPage initialData={needsData} />
     </div>
-  );
+  )
 }

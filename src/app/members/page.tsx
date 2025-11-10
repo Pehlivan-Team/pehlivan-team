@@ -1,11 +1,12 @@
-import React from "react";
-import logo from "@/public/logo_png.png";
-import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
-import { members as membersArray } from "@/constants/members";
+import Image from 'next/image'
+import React from 'react'
+
+import { Card, CardContent } from '@/components/ui/card'
+import { members as membersArray } from '@/constants/members'
+import logo from '@public/logo_png.png'
 
 const Members = () => {
-  const members = JSON.parse(JSON.stringify(membersArray));
+  const members = JSON.parse(JSON.stringify(membersArray))
 
   return (
     <div>
@@ -27,15 +28,14 @@ const Members = () => {
                         width={400}
                         height={400}
                         style={{
-                          maxWidth: "100%",
-                          height: "auto"
-                        }} />
+                          maxWidth: '100%',
+                          height: 'auto',
+                        }}
+                      />
                     </div>
                     <h3 className="text-lg font-semibold">{member.name}</h3>
                     <p className="text-sm text-gray-600 text-center">
-                    {member.role.split("/")
-                        ? member.role.split("/")[0]
-                        : member.role}
+                      {member.role.split('/') ? member.role.split('/')[0] : member.role}
                     </p>
                   </CardContent>
                 </Card>
@@ -45,7 +45,7 @@ const Members = () => {
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default Members;
+export default Members

@@ -1,7 +1,8 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FileLock2 } from "lucide-react";
-import Link from "next/link";
-import React from "react";
+import { FileLock2 } from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
+
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 function NoPermError() {
   return (
@@ -11,11 +12,10 @@ function NoPermError() {
         Bu Sayfaya Erişim İzniniz Bulunmamaktadır.
       </AlertTitle>
       <AlertDescription className="mt-2">
-        Bu sayfa yetki alanınız dışındadır. Bir hata olduğunu düşünüyorsanız,
-        lütfen{" "}
+        Bu sayfa yetki alanınız dışındadır. Bir hata olduğunu düşünüyorsanız, lütfen{' '}
         <Link className="text-blue-500" href="mailto:yenersg.58@gmail.com">
           buradan
-        </Link>{" "}
+        </Link>{' '}
         iletişime geçin.
         <br />
         <Link href="/admin" className="text-blue-500">
@@ -23,7 +23,7 @@ function NoPermError() {
         </Link>
       </AlertDescription>
     </Alert>
-  );
+  )
 }
 
-export default NoPermError;
+export default NoPermError

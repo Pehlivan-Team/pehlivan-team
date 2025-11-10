@@ -1,0 +1,24 @@
+# Build output
+.next
+out
+coverage
+build
+
+# Node
+node_modules
+
+# Generated
+package-lock.json
+yarn.lock
+
+# Logs
+*.log
+
+# Env
+.env*
+
+# Firebase
+.firebase
+
+# Next.js types
+next-env.d.ts

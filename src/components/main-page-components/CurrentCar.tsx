@@ -1,56 +1,57 @@
-"use client";
+'use client'
 
-import React from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import { Award, BatteryCharging, CircuitBoard, Wrench } from "lucide-react";
-import pehli1 from "@/public/arabalar/pehli1.png";
+import { motion } from 'framer-motion'
+import { Award, BatteryCharging, CircuitBoard, Wrench } from 'lucide-react'
+import Image from 'next/image'
+import React from 'react'
+
+import pehli1 from '@public/arabalar/pehli1.png'
 
 // 1. All car data is now in one place for easy updates.
 const currentCarData = {
-  name: "Pehli1",
+  name: 'Pehli1',
   year: 2024,
-  captain: "Fatih Coşar , Eşref Kaan Kurtoğlu",
+  captain: 'Fatih Coşar , Eşref Kaan Kurtoğlu',
   longDescription:
-    "Bu yenilikçi araç, yerli Aspilsan Li-ION piller ve yüksek verimli Mitsuba motor içermekte olup, maksimum verimlilik hedefiyle tasarlanmıştır. Pehli1, enerji tasarrufu ve performans açısından üstün özelliklere sahip olup, sürdürülebilir ulaşım çözümleri sunmayı amaçlamaktadır.",
+    'Bu yenilikçi araç, yerli Aspilsan Li-ION piller ve yüksek verimli Mitsuba motor içermekte olup, maksimum verimlilik hedefiyle tasarlanmıştır. Pehli1, enerji tasarrufu ve performans açısından üstün özelliklere sahip olup, sürdürülebilir ulaşım çözümleri sunmayı amaçlamaktadır.',
   image: pehli1,
   specifications: [
     {
       Icon: BatteryCharging,
-      label: "Batarya",
-      value: "Aspilsan Li-ION",
+      label: 'Batarya',
+      value: 'Aspilsan Li-ION',
     },
     {
       Icon: Wrench,
-      label: "Motor",
-      value: "Mitsuba M2096 Motor",
+      label: 'Motor',
+      value: 'Mitsuba M2096 Motor',
     },
     {
       Icon: CircuitBoard,
-      label: "Geliştirme",
-      value: "Elektronik , Yazılım , Mekanik , Aerodinamik , Tasarım",
+      label: 'Geliştirme',
+      value: 'Elektronik , Yazılım , Mekanik , Aerodinamik , Tasarım',
     },
     {
       Icon: Award,
-      label: "Hedef Yarışma",
-      value: "Shell Eco Marathon",
+      label: 'Hedef Yarışma',
+      value: 'Shell Eco Marathon',
     },
   ],
-};
+}
 
 const imageVariants = {
   hidden: { x: 100, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { duration: 0.7, ease: "easeOut" } },
-};
+  visible: { x: 0, opacity: 1, transition: { duration: 0.7, ease: 'easeOut' } },
+}
 
 const textVariants = {
   hidden: { x: -100, opacity: 0 },
   visible: {
     x: 0,
     opacity: 1,
-    transition: { duration: 0.7, ease: "easeOut", delay: 0.2 },
+    transition: { duration: 0.7, ease: 'easeOut', delay: 0.2 },
   },
-};
+}
 
 const specsContainerVariants = {
   hidden: { opacity: 0 },
@@ -58,20 +59,19 @@ const specsContainerVariants = {
     opacity: 1,
     transition: { staggerChildren: 0.2, delayChildren: 0.5 },
   },
-};
+}
 
 const specItemVariants = {
   hidden: { y: 20, opacity: 0 },
   visible: { y: 0, opacity: 1 },
-};
+}
 
 const CurrentCar = () => {
   return (
     <section
       className="bg-[#265fc9] text-white py-16 lg:py-24"
       style={{
-        backgroundImage:
-          "url('https://www.transparenttextures.com/patterns/axiom-pattern.png')",
+        backgroundImage: "url('https://www.transparenttextures.com/patterns/axiom-pattern.png')",
       }}
     >
       <div className="container mx-auto px-4">
@@ -86,19 +86,13 @@ const CurrentCar = () => {
           >
             <div>
               <p className="text-red-400 font-semibold">GÜNCEL PROJEMİZ</p>
-              <h1 className="text-4xl lg:text-5xl font-bold mt-1">
-                {currentCarData.name}
-              </h1>
-              <p className="text-xl text-gray-300 mt-1">
-                {currentCarData.year}
-              </p>
+              <h1 className="text-4xl lg:text-5xl font-bold mt-1">{currentCarData.name}</h1>
+              <p className="text-xl text-gray-300 mt-1">{currentCarData.year}</p>
               <p className="mt-2 text-lg">
                 Takım Kaptanı: <b>{currentCarData.captain}</b>
               </p>
             </div>
-            <p className="text-gray-200 leading-relaxed">
-              {currentCarData.longDescription}
-            </p>
+            <p className="text-gray-200 leading-relaxed">{currentCarData.longDescription}</p>
 
             <div className="mt-8 pt-6 border-t border-white/20">
               <h3 className="text-2xl font-semibold mb-4">Teknik Özellikler</h3>
@@ -141,14 +135,15 @@ const CurrentCar = () => {
               height={600}
               className="rounded-lg border-4 border-white shadow-2xl shadow-black/50 object-cover"
               style={{
-                maxWidth: "100%",
-                height: "auto"
-              }} />
+                maxWidth: '100%',
+                height: 'auto',
+              }}
+            />
           </motion.div>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default CurrentCar;
+export default CurrentCar

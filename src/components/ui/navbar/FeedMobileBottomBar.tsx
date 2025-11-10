@@ -1,20 +1,21 @@
-"use client";
+'use client'
 
-import React from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { MessageSquare, Plus, User, Menu as MenuIcon, Search as SearchIcon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import PostComposer from "@/app/profile/[username]/_components/PostComposer";
-import { cn } from "@/lib/utils";
+import { MessageSquare, Plus, User, Menu as MenuIcon, Search as SearchIcon } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useSession, signIn, signOut } from 'next-auth/react'
+import React from 'react'
+
+import PostComposer from '@/components/profile/PostComposer'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { cn } from '@/lib/utils'
 
 export default function FeedMobileBottomBar() {
-  const { data: session } = useSession();
-  const pathname = usePathname();
-  const username = (session as any)?.user?.username;
+  const { data: session } = useSession()
+  const pathname = usePathname()
+  const username = (session as any)?.user?.username
 
   return (
     <footer className="fixed bottom-0 z-50 w-full px-2 lg:hidden print:hidden">
@@ -23,7 +24,15 @@ export default function FeedMobileBottomBar() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href="/feed" className={cn("p-2 rounded-full", pathname?.startsWith("/feed") ? "bg-emerald-700 text-white" : "text-gray-300 hover:bg-white/10")}>
+                <Link
+                  href="/feed"
+                  className={cn(
+                    'p-2 rounded-full',
+                    pathname?.startsWith('/feed')
+                      ? 'bg-emerald-700 text-white'
+                      : 'text-gray-300 hover:bg-white/10'
+                  )}
+                >
                   <MessageSquare className="w-6 h-6" />
                 </Link>
               </TooltipTrigger>
@@ -34,7 +43,15 @@ export default function FeedMobileBottomBar() {
 
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href="/search" className={cn("p-2 rounded-full", pathname?.startsWith("/search") ? "bg-emerald-700 text-white" : "text-gray-300 hover:bg-white/10")}>
+                <Link
+                  href="/search"
+                  className={cn(
+                    'p-2 rounded-full',
+                    pathname?.startsWith('/search')
+                      ? 'bg-emerald-700 text-white'
+                      : 'text-gray-300 hover:bg-white/10'
+                  )}
+                >
                   <SearchIcon className="w-6 h-6" />
                 </Link>
               </TooltipTrigger>
@@ -56,7 +73,7 @@ export default function FeedMobileBottomBar() {
                       <SheetTitle className="text-white text-2xl">Yeni Gönderi</SheetTitle>
                     </SheetHeader>
                     <div className="mt-4">
-                      <PostComposer username={username || ""} />
+                      <PostComposer username={username || ''} />
                     </div>
                   </SheetContent>
                 </Sheet>
@@ -69,11 +86,17 @@ export default function FeedMobileBottomBar() {
             <Tooltip>
               <TooltipTrigger asChild>
                 {username ? (
-                  <Link href={`/profile/${username}`} className="p-2 rounded-full text-gray-300 hover:bg-white/10">
+                  <Link
+                    href={`/profile/${username}`}
+                    className="p-2 rounded-full text-gray-300 hover:bg-white/10"
+                  >
                     <User className="w-6 h-6" />
                   </Link>
                 ) : (
-                  <button onClick={() => signIn()} className="p-2 rounded-full text-gray-300 hover:bg-white/10">
+                  <button
+                    onClick={() => signIn()}
+                    className="p-2 rounded-full text-gray-300 hover:bg-white/10"
+                  >
                     <User className="w-6 h-6" />
                   </button>
                 )}
@@ -100,16 +123,24 @@ export default function FeedMobileBottomBar() {
                       <SheetTitle className="text-white text-2xl">Menu</SheetTitle>
                     </SheetHeader>
                     <div className="mt-8 flex flex-col space-y-4 px-4">
-                      <Link href="/teams" className="py-2">Takımlar</Link>
-                      <Link href="/timeline" className="py-2">Tarihçe</Link>
-                      <Link href="/blog" className="py-2">Blog</Link>
-                      <Link href="/feed/settings" className="py-2">Feed Ayarları</Link>
+                      <Link href="/teams" className="py-2">
+                        Takımlar
+                      </Link>
+                      <Link href="/timeline" className="py-2">
+                        Tarihçe
+                      </Link>
+                      <Link href="/blog" className="py-2">
+                        Blog
+                      </Link>
+                      <Link href="/feed/settings" className="py-2">
+                        Feed Ayarları
+                      </Link>
                     </div>
                     <div className="mt-4 px-4">
                       {session?.user ? (
                         <Button
                           type="button"
-                          onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+                          onClick={() => signOut({ redirect: true, callbackUrl: '/' })}
                           className="w-full bg-red-600 hover:bg-red-700"
                         >
                           Çıkış Yap
@@ -123,8 +154,22 @@ export default function FeedMobileBottomBar() {
                     <div className="mt-auto px-4 py-4">
                       <div className="flex items-center justify-between">
                         <div className="flex space-x-4">
-                          <a href="https://www.instagram.com/pehlivanteam" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white">IG</a>
-                          <a href="https://www.linkedin.com/company/pehlivan-team/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white">IN</a>
+                          <a
+                            href="https://www.instagram.com/pehlivanteam"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-gray-400 hover:text-white"
+                          >
+                            IG
+                          </a>
+                          <a
+                            href="https://www.linkedin.com/company/pehlivan-team/"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-gray-400 hover:text-white"
+                          >
+                            IN
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -139,5 +184,5 @@ export default function FeedMobileBottomBar() {
         </div>
       </nav>
     </footer>
-  );
+  )
 }

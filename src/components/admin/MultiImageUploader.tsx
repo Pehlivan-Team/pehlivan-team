@@ -1,42 +1,44 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useEdgeStore } from "@/lib/edgestore";
-import { toast } from "sonner";
-import Image from "next/image";
-import { UploadCloud, X, FileImage } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "../ui/button";
+import { UploadCloud, X, FileImage } from 'lucide-react'
+import Image from 'next/image'
+import { useState } from 'react'
+import { toast } from 'sonner'
+
+import { Progress } from '@/components/ui/progress'
+import { useEdgeStore } from '@/lib/edgestore'
+
+import { Button } from '../ui/button'
 
 interface MultiImageUploaderProps {
-  onUploadComplete: (urls: string[]) => void;
-  initialImageUrls?: string[];
+  onUploadComplete: (urls: string[]) => void
+  initialImageUrls?: string[]
 }
 
 interface UploadProgress {
-  progress: number;
-  fileName: string;
+  progress: number
+  fileName: string
 }
 
 export function MultiImageUploader({
   onUploadComplete,
   initialImageUrls = [],
 }: MultiImageUploaderProps) {
-  const [files, setFiles] = useState<File[]>([]);
-  const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
-  const [imageUrls, setImageUrls] = useState<string[]>(initialImageUrls);
-  const { edgestore } = useEdgeStore();
+  const [files, setFiles] = useState<File[]>([])
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([])
+  const [imageUrls, setImageUrls] = useState<string[]>(initialImageUrls)
+  const { edgestore } = useEdgeStore()
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFiles(Array.from(e.target.files));
+      setFiles(Array.from(e.target.files))
     }
-  };
+  }
 
   const handleUpload = async () => {
-    if (files.length === 0) return;
+    if (files.length === 0) return
 
-    const newUrls: string[] = [];
+    const newUrls: string[] = []
     await Promise.all(
       files.map(async (file) => {
         try {
@@ -44,36 +46,34 @@ export function MultiImageUploader({
             file,
             onProgressChange: (progress) => {
               setUploadProgress((prev) => {
-                const existing = prev.find((p) => p.fileName === file.name);
+                const existing = prev.find((p) => p.fileName === file.name)
                 if (existing) {
-                  return prev.map((p) =>
-                    p.fileName === file.name ? { ...p, progress } : p
-                  );
+                  return prev.map((p) => (p.fileName === file.name ? { ...p, progress } : p))
                 }
-                return [...prev, { fileName: file.name, progress }];
-              });
+                return [...prev, { fileName: file.name, progress }]
+              })
             },
-          });
-          newUrls.push(res.url);
+          })
+          newUrls.push(res.url)
         } catch (error) {
-          toast.error(`'${file.name}' yüklenirken bir hata oluştu.`);
+          toast.error(`'${file.name}' yüklenirken bir hata oluştu.`)
         }
       })
-    );
+    )
 
-    const updatedUrls = [...imageUrls, ...newUrls];
-    setImageUrls(updatedUrls);
-    onUploadComplete(updatedUrls);
-    setFiles([]);
-    setUploadProgress([]);
-    toast.success(`${newUrls.length} resim başarıyla yüklendi!`);
-  };
+    const updatedUrls = [...imageUrls, ...newUrls]
+    setImageUrls(updatedUrls)
+    onUploadComplete(updatedUrls)
+    setFiles([])
+    setUploadProgress([])
+    toast.success(`${newUrls.length} resim başarıyla yüklendi!`)
+  }
 
   const handleRemoveImage = (urlToRemove: string) => {
-    const updatedUrls = imageUrls.filter((url) => url !== urlToRemove);
-    setImageUrls(updatedUrls);
-    onUploadComplete(updatedUrls);
-  };
+    const updatedUrls = imageUrls.filter((url) => url !== urlToRemove)
+    setImageUrls(updatedUrls)
+    onUploadComplete(updatedUrls)
+  }
 
   return (
     <div className="col-span-3 space-y-4">
@@ -81,18 +81,16 @@ export function MultiImageUploader({
       {imageUrls.length > 0 && (
         <div className="grid grid-cols-3 gap-2">
           {imageUrls.map((url) => (
-            <div
-              key={url}
-              className="relative h-24 w-full rounded-md overflow-hidden"
-            >
+            <div key={url} className="relative h-24 w-full rounded-md overflow-hidden">
               <Image
                 src={url}
                 alt="Yüklenen resim"
-                
-                sizes="100vw"
+                width={100}
+                height={100}
                 style={{
-                  objectFit: "cover"
-                }} />
+                  objectFit: 'cover',
+                }}
+              />
               <button
                 type="button"
                 onClick={() => handleRemoveImage(url)}
@@ -128,9 +126,7 @@ export function MultiImageUploader({
               onClick={handleUpload}
               disabled={uploadProgress.length > 0}
             >
-              {uploadProgress.length > 0
-                ? "Yükleniyor..."
-                : `${files.length} Resim Yükle`}
+              {uploadProgress.length > 0 ? 'Yükleniyor...' : `${files.length} Resim Yükle`}
             </Button>
           </div>
         )}
@@ -147,5 +143,5 @@ export function MultiImageUploader({
         )}
       </div>
     </div>
-  );
+  )
 }

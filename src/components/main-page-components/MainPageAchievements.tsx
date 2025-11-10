@@ -1,32 +1,33 @@
-"use client";
-import React from "react";
-import { Card, CardContent } from "../ui/card";
-import { motion } from "framer-motion";
-import { Trophy } from "lucide-react";
+'use client'
+import { motion } from 'framer-motion'
+import { Trophy } from 'lucide-react'
+import React from 'react'
+
+import { Card, CardContent } from '../ui/card'
 
 // Data is now in an array, making it easier to add new achievements.
 const achievementsList = [
   {
-    event: "Tübitak Efficiency Challenge - 2015",
-    award: "Tasarım Ödülü",
+    event: 'Tübitak Efficiency Challenge - 2015',
+    award: 'Tasarım Ödülü',
   },
   {
-    event: "FormulaG Güneş Arabaları Yarışı - 2014",
-    award: "Kurul Özel Ödülü",
+    event: 'FormulaG Güneş Arabaları Yarışı - 2014',
+    award: 'Kurul Özel Ödülü',
   },
   {
-    event: "FormulaG Güneş Arabaları Yarışı - 2014",
-    award: "Üçüncülük Ödülü",
+    event: 'FormulaG Güneş Arabaları Yarışı - 2014',
+    award: 'Üçüncülük Ödülü',
   },
   {
-    event: "Tübitak Efficiency Challenge - 2016",
-    award: "İkincilik Ödülü",
+    event: 'Tübitak Efficiency Challenge - 2016',
+    award: 'İkincilik Ödülü',
   },
   {
-    event: "Tübitak Efficiency Challenge - 2016",
-    award: "Communication Award - En İyi Sunum Ödülü",
+    event: 'Tübitak Efficiency Challenge - 2016',
+    award: 'Communication Award - En İyi Sunum Ödülü',
   },
-];
+]
 
 // Animation variants for the container and individual cards
 const containerVariants = {
@@ -37,7 +38,7 @@ const containerVariants = {
       staggerChildren: 0.2, // Animates cards one by one
     },
   },
-};
+}
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
@@ -46,10 +47,10 @@ const itemVariants = {
     opacity: 1,
     transition: {
       duration: 0.5,
-      ease: "easeInOut",
+      ease: 'easeInOut',
     },
   },
-};
+}
 
 const MainPageAchievements = () => {
   return (
@@ -80,7 +81,7 @@ const MainPageAchievements = () => {
         </motion.div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default MainPageAchievements;
+export default MainPageAchievements

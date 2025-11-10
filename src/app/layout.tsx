@@ -1,28 +1,29 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { Topbar, BottomBar } from "@/components/ui/navbar/topbar";
-import Footer from "@/components/ui/navbar/footer";
-import { ThemeProvider } from "@/lib/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
-import { NextAuthProvider } from "@/lib/session-provider";
-import { EdgeStoreProviderClient } from "@/lib/edgestore-provider";
-import { NavbarWrapper } from "@/components/ui/navbar/navbar-wrapper";
-import { Analytics } from "@vercel/analytics/next";
-import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
-import Head from "next/head";
+import type { Metadata } from 'next'
 
-import GoogleOneTap from "@/components/auth/GoogleOneTap";
-import Script from "next/script";
+import './globals.css'
+import { Analytics } from '@vercel/analytics/next'
+import Head from 'next/head'
+import Script from 'next/script'
+
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
+import GoogleOneTap from '@/components/auth/GoogleOneTap'
+import Footer from '@/components/ui/navbar/footer'
+import { NavbarWrapper } from '@/components/ui/navbar/navbar-wrapper'
+import { Topbar, BottomBar } from '@/components/ui/navbar/topbar'
+import { Toaster } from '@/components/ui/sonner'
+import { EdgeStoreProviderClient } from '@/lib/edgestore-provider'
+import { NextAuthProvider } from '@/lib/session-provider'
+import { ThemeProvider } from '@/lib/theme-provider'
 
 export const metadata: Metadata = {
-  title: "Tasarım Proje Topluluğu",
-  description: "Tasarım Proje Topluluğu",
-};
+  title: 'Tasarım Proje Topluluğu',
+  description: 'Tasarım Proje Topluluğu',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en" className="overflow-x-hidden" suppressHydrationWarning>
@@ -54,7 +55,8 @@ export default function RootLayout({
             >
               <GoogleOneTap />
               <NavbarWrapper />
-              <main className="lg:">{children}</main>
+              {/* Add left padding when a fixed sidebar is present (handled inside individual pages with lg:pl-72) */}
+              <main className="min-h-screen">{children}</main>
               <Footer />
               <Toaster />
             </ThemeProvider>
@@ -62,5 +64,5 @@ export default function RootLayout({
         </NextAuthProvider>
       </body>
     </html>
-  );
+  )
 }

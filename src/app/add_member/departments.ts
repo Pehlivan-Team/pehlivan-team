@@ -1,302 +1,302 @@
 export const departmentlist: Record<string, { dept: string; key: string }[]> = {
-  "Keşan Hakkı Yörük Sağlık Yüksekokulu": [
+  'Keşan Hakkı Yörük Sağlık Yüksekokulu': [
     {
-      dept: "Acil Yardım ve Afet Yönetimi",
-      key: "AYAY",
+      dept: 'Acil Yardım ve Afet Yönetimi',
+      key: 'AYAY',
     },
     {
-      dept: "Hemşirelik",
-      key: "hemsirelik",
-    },
-  ],
-  "Edebiyat Fakültesi": [
-    {
-      dept: "Almanca Mütercim ve Tercümanlık",
-      key: "AMT",
-    },
-    {
-      dept: "Arkeoloji",
-      key: "arkeoloji",
-    },
-    {
-      dept: "Arnavut Dili ve Edebiyatı",
-      key: "ADE",
-    },
-    {
-      dept: "Boşnak Dili ve Edebiyatı",
-      key: "BDE",
-    },
-    {
-      dept: "Bulgarca Mütercim ve Tercümanlık",
-      key: "BMT",
-    },
-    {
-      dept: "Çağdaş Yunan Dili ve Edebiyatı",
-      key: "CYDE",
-    },
-    {
-      dept: "İngilizce Mütercim ve Tercümanlık",
-      key: "IMT",
-    },
-    {
-      dept: "Sanat Tarihi",
-      key: "ST",
-    },
-    {
-      dept: "Tarih",
-      key: "tarih",
-    },
-    {
-      dept: "Türk Dili ve Edebiyatı",
-      key: "TDE",
+      dept: 'Hemşirelik',
+      key: 'hemsirelik',
     },
   ],
-  "Eğitim Fakültesi": [
+  'Edebiyat Fakültesi': [
     {
-      dept: "Almanca Öğretmenliği",
-      key: "AO",
+      dept: 'Almanca Mütercim ve Tercümanlık',
+      key: 'AMT',
     },
     {
-      dept: "Fen Bilgisi Öğretmenliği",
-      key: "FBO",
+      dept: 'Arkeoloji',
+      key: 'arkeoloji',
     },
     {
-      dept: "İlköğretim Matematik Öğretmenliği",
-      key: "IMO",
+      dept: 'Arnavut Dili ve Edebiyatı',
+      key: 'ADE',
     },
     {
-      dept: "İngilizce Öğretmenliği",
-      key: "IO",
+      dept: 'Boşnak Dili ve Edebiyatı',
+      key: 'BDE',
     },
     {
-      dept: "Okul Öncesi Öğretmenliği",
-      key: "OOO",
+      dept: 'Bulgarca Mütercim ve Tercümanlık',
+      key: 'BMT',
     },
     {
-      dept: "Özel Eğitim Öğretmenliği",
-      key: "OEO",
+      dept: 'Çağdaş Yunan Dili ve Edebiyatı',
+      key: 'CYDE',
     },
     {
-      dept: "Rehberlik ve Psikolojik Danışmanlık",
-      key: "RPD",
+      dept: 'İngilizce Mütercim ve Tercümanlık',
+      key: 'IMT',
     },
     {
-      dept: "Sınıf Öğretmenliği",
-      key: "SO",
+      dept: 'Sanat Tarihi',
+      key: 'ST',
     },
     {
-      dept: "Sosyal Bilgiler Öğretmenliği",
-      key: "SBO",
+      dept: 'Tarih',
+      key: 'tarih',
     },
     {
-      dept: "Türkçe Öğretmenliği",
-      key: "TO",
-    },
-  ],
-  "Uzunköprü Uygulamalı Bilimler Yüksekokulu": [
-    {
-      dept: "Bankacılık ve Sigortacılık",
-      key: "BS",
-    },
-    {
-      dept: "Muhasebe ve Finans Yönetimi",
-      key: "MFY",
+      dept: 'Türk Dili ve Edebiyatı',
+      key: 'TDE',
     },
   ],
-  "Keşan Yusuf Çapraz Uygulamalı Bilimler Yüksekokulu": [
+  'Eğitim Fakültesi': [
     {
-      dept: "Bankacılık ve Sigortacılık",
-      key: "BS",
+      dept: 'Almanca Öğretmenliği',
+      key: 'AO',
     },
     {
-      dept: "Bilişim Sistemleri ve Teknolojileri",
-      key: "BST",
+      dept: 'Fen Bilgisi Öğretmenliği',
+      key: 'FBO',
     },
     {
-      dept: "Gümrük İşletme",
-      key: "GI",
+      dept: 'İlköğretim Matematik Öğretmenliği',
+      key: 'IMO',
     },
     {
-      dept: "Halkla İlişkiler ve Reklamcılık",
-      key: "HIR",
+      dept: 'İngilizce Öğretmenliği',
+      key: 'IO',
     },
     {
-      dept: "Uluslararası Ticaret ve Finansman",
-      key: "UTF",
-    },
-  ],
-  "Sağlık Bilimleri Fakültesi": [
-    {
-      dept: "Beslenme ve Diyetetik",
-      key: "BD",
+      dept: 'Okul Öncesi Öğretmenliği',
+      key: 'OOO',
     },
     {
-      dept: "Ergoterapi",
-      key: "ergoterapi",
+      dept: 'Özel Eğitim Öğretmenliği',
+      key: 'OEO',
     },
     {
-      dept: "Fizyoterapi ve Rehabilitasyon",
-      key: "FR",
+      dept: 'Rehberlik ve Psikolojik Danışmanlık',
+      key: 'RPD',
     },
     {
-      dept: "Hemşirelik",
-      key: "hemsirelik",
+      dept: 'Sınıf Öğretmenliği',
+      key: 'SO',
     },
     {
-      dept: "Odyoloji",
-      key: "odyoloji",
+      dept: 'Sosyal Bilgiler Öğretmenliği',
+      key: 'SBO',
     },
     {
-      dept: "Sağlık Yönetimi",
-      key: "SY",
+      dept: 'Türkçe Öğretmenliği',
+      key: 'TO',
     },
   ],
-  "Fen Fakültesi": [
+  'Uzunköprü Uygulamalı Bilimler Yüksekokulu': [
     {
-      dept: "Bilgi Güvenliği Teknolojisi",
-      key: "BGT",
+      dept: 'Bankacılık ve Sigortacılık',
+      key: 'BS',
     },
     {
-      dept: "Biyoloji",
-      key: "biyoloji",
-    },
-    {
-      dept: "Fizik",
-      key: "fizik",
-    },
-    {
-      dept: "Kimya",
-      key: "kimya",
-    },
-    {
-      dept: "Matematik",
-      key: "matematik",
-    },
-    {
-      dept: "Yazılım Geliştirme",
-      key: "YG",
+      dept: 'Muhasebe ve Finans Yönetimi',
+      key: 'MFY',
     },
   ],
-  "Mühendislik Fakültesi": [
+  'Keşan Yusuf Çapraz Uygulamalı Bilimler Yüksekokulu': [
     {
-      dept: "Bilgisayar Mühendisliği",
-      key: "BM",
+      dept: 'Bankacılık ve Sigortacılık',
+      key: 'BS',
     },
     {
-      dept: "Elektrik-Elektronik Mühendisliği",
-      key: "EEM",
+      dept: 'Bilişim Sistemleri ve Teknolojileri',
+      key: 'BST',
     },
     {
-      dept: "Genetik ve Biyomühendislik",
-      key: "GB",
+      dept: 'Gümrük İşletme',
+      key: 'GI',
     },
     {
-      dept: "Gıda Mühendisliği",
-      key: "GM",
+      dept: 'Halkla İlişkiler ve Reklamcılık',
+      key: 'HIR',
     },
     {
-      dept: "Makine Mühendisliği",
-      key: "MM",
-    },
-  ],
-  "İktisadi ve İdari Bilimler Fakültesi": [
-    {
-      dept: "Çalışma Ekonomisi ve Endüstri İlişkileri",
-      key: "CEEI",
-    },
-    {
-      dept: "Ekonometri",
-      key: "ekonometri",
-    },
-    {
-      dept: "İktisat",
-      key: "iktisat",
-    },
-    {
-      dept: "İşletme",
-      key: "isletme",
-    },
-    {
-      dept: "Maliye",
-      key: "maliye",
-    },
-    {
-      dept: "Siyaset Bilimi ve Kamu Yönetimi",
-      key: "SBKY",
-    },
-    {
-      dept: "Uluslararası İlişkiler",
-      key: "UI",
+      dept: 'Uluslararası Ticaret ve Finansman',
+      key: 'UTF',
     },
   ],
-  "Diş Hekimliği Fakültesi": [
+  'Sağlık Bilimleri Fakültesi': [
     {
-      dept: "Diş Hekimliği",
-      key: "DH",
+      dept: 'Beslenme ve Diyetetik',
+      key: 'BD',
+    },
+    {
+      dept: 'Ergoterapi',
+      key: 'ergoterapi',
+    },
+    {
+      dept: 'Fizyoterapi ve Rehabilitasyon',
+      key: 'FR',
+    },
+    {
+      dept: 'Hemşirelik',
+      key: 'hemsirelik',
+    },
+    {
+      dept: 'Odyoloji',
+      key: 'odyoloji',
+    },
+    {
+      dept: 'Sağlık Yönetimi',
+      key: 'SY',
     },
   ],
-  "Eczacılık Fakültesi": [
+  'Fen Fakültesi': [
     {
-      dept: "Eczacılık",
-      key: "eczacilik",
+      dept: 'Bilgi Güvenliği Teknolojisi',
+      key: 'BGT',
+    },
+    {
+      dept: 'Biyoloji',
+      key: 'biyoloji',
+    },
+    {
+      dept: 'Fizik',
+      key: 'fizik',
+    },
+    {
+      dept: 'Kimya',
+      key: 'kimya',
+    },
+    {
+      dept: 'Matematik',
+      key: 'matematik',
+    },
+    {
+      dept: 'Yazılım Geliştirme',
+      key: 'YG',
     },
   ],
-  "Uygulamalı Bilimler Fakültesi": [
+  'Mühendislik Fakültesi': [
     {
-      dept: "Finans ve Bankacılık",
-      key: "FB",
+      dept: 'Bilgisayar Mühendisliği',
+      key: 'BM',
     },
     {
-      dept: "Turizm İşletmeciliği",
-      key: "TI",
+      dept: 'Elektrik-Elektronik Mühendisliği',
+      key: 'EEM',
     },
     {
-      dept: "Yönetim Bilişim Sistemleri",
-      key: "YBS",
-    },
-  ],
-  "Mimarlık Fakültesi": [
-    {
-      dept: "İç Mimarlık",
-      key: "IM",
+      dept: 'Genetik ve Biyomühendislik',
+      key: 'GB',
     },
     {
-      dept: "Mimarlık",
-      key: "mimarlik",
+      dept: 'Gıda Mühendisliği',
+      key: 'GM',
     },
     {
-      dept: "Peyzaj Mimarlığı",
-      key: "PM",
+      dept: 'Makine Mühendisliği',
+      key: 'MM',
     },
   ],
-  "İlahiyat Fakültesi": [
+  'İktisadi ve İdari Bilimler Fakültesi': [
     {
-      dept: "İlahiyat",
-      key: "ilahiyat",
+      dept: 'Çalışma Ekonomisi ve Endüstri İlişkileri',
+      key: 'CEEI',
+    },
+    {
+      dept: 'Ekonometri',
+      key: 'ekonometri',
+    },
+    {
+      dept: 'İktisat',
+      key: 'iktisat',
+    },
+    {
+      dept: 'İşletme',
+      key: 'isletme',
+    },
+    {
+      dept: 'Maliye',
+      key: 'maliye',
+    },
+    {
+      dept: 'Siyaset Bilimi ve Kamu Yönetimi',
+      key: 'SBKY',
+    },
+    {
+      dept: 'Uluslararası İlişkiler',
+      key: 'UI',
     },
   ],
-  "Güzel Sanatlar Fakültesi": [
+  'Diş Hekimliği Fakültesi': [
     {
-      dept: "İletişim ve Tasarımı",
-      key: "IT",
+      dept: 'Diş Hekimliği',
+      key: 'DH',
     },
   ],
-  "Kırkpınar Spor Bilimleri Fakültesi": [
+  'Eczacılık Fakültesi': [
     {
-      dept: "Spor Yöneticiliği",
-      key: "SY",
+      dept: 'Eczacılık',
+      key: 'eczacilik',
     },
   ],
-  "Tıp Fakültesi": [
+  'Uygulamalı Bilimler Fakültesi': [
     {
-      dept: "Tıp",
-      key: "tip",
+      dept: 'Finans ve Bankacılık',
+      key: 'FB',
+    },
+    {
+      dept: 'Turizm İşletmeciliği',
+      key: 'TI',
+    },
+    {
+      dept: 'Yönetim Bilişim Sistemleri',
+      key: 'YBS',
     },
   ],
-  "Bölüm bulunamadı": [
+  'Mimarlık Fakültesi': [
     {
-      dept: "Bölümüm Listede Yok",
-      key: "-",
+      dept: 'İç Mimarlık',
+      key: 'IM',
+    },
+    {
+      dept: 'Mimarlık',
+      key: 'mimarlik',
+    },
+    {
+      dept: 'Peyzaj Mimarlığı',
+      key: 'PM',
     },
   ],
-};
+  'İlahiyat Fakültesi': [
+    {
+      dept: 'İlahiyat',
+      key: 'ilahiyat',
+    },
+  ],
+  'Güzel Sanatlar Fakültesi': [
+    {
+      dept: 'İletişim ve Tasarımı',
+      key: 'IT',
+    },
+  ],
+  'Kırkpınar Spor Bilimleri Fakültesi': [
+    {
+      dept: 'Spor Yöneticiliği',
+      key: 'SY',
+    },
+  ],
+  'Tıp Fakültesi': [
+    {
+      dept: 'Tıp',
+      key: 'tip',
+    },
+  ],
+  'Bölüm bulunamadı': [
+    {
+      dept: 'Bölümüm Listede Yok',
+      key: '-',
+    },
+  ],
+}

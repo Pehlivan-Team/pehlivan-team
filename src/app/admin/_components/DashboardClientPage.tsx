@@ -1,8 +1,11 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Users, User, Briefcase, SheetIcon } from 'lucide-react'
+import Link from 'next/link'
+
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import {
   Table,
   TableBody,
@@ -10,20 +13,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Users, User, Briefcase, SheetIcon } from "lucide-react";
-import Link from "next/link";
+} from '@/components/ui/table'
 
 // Veri yapısını tanımlıyoruz
 export interface StatItem {
-  name: string;
-  count: number;
+  name: string
+  count: number
 }
 
 export interface Stats {
-  totalParticipants: number;
-  byTeam: StatItem[];
-  byDepartment: StatItem[];
+  totalParticipants: number
+  byTeam: StatItem[]
+  byDepartment: StatItem[]
 }
 
 export function DashboardClientPage({ initialStats }: { initialStats: Stats }) {
@@ -35,15 +36,11 @@ export function DashboardClientPage({ initialStats }: { initialStats: Stats }) {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Toplam Katılımcı
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Toplam Katılımcı</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {initialStats.totalParticipants}
-            </div>
+            <div className="text-2xl font-bold">{initialStats.totalParticipants}</div>
             <p className="text-xs text-muted-foreground">toplam kayıtlı üye</p>
           </CardContent>
         </Card>
@@ -56,7 +53,7 @@ export function DashboardClientPage({ initialStats }: { initialStats: Stats }) {
             <Button asChild variant="outline" className="w-full">
               <Link
                 href={
-                  "https://docs.google.com/spreadsheets/d/1y9hOX2CdyOn005ZBGtWpSljkYx1yRMDltteuflnp-9c/edit?usp=sharing"
+                  'https://docs.google.com/spreadsheets/d/1y9hOX2CdyOn005ZBGtWpSljkYx1yRMDltteuflnp-9c/edit?usp=sharing'
                 }
                 target="_blank"
                 rel="noopener noreferrer"
@@ -88,9 +85,7 @@ export function DashboardClientPage({ initialStats }: { initialStats: Stats }) {
                 {initialStats.byDepartment.map((item) => (
                   <TableRow key={item.name}>
                     <TableCell>{item.name}</TableCell>
-                    <TableCell className="text-right font-bold">
-                      {item.count}
-                    </TableCell>
+                    <TableCell className="text-right font-bold">{item.count}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -114,9 +109,7 @@ export function DashboardClientPage({ initialStats }: { initialStats: Stats }) {
                 {initialStats.byTeam.map((item) => (
                   <TableRow key={item.name}>
                     <TableCell>{item.name}</TableCell>
-                    <TableCell className="text-right font-bold">
-                      {item.count}
-                    </TableCell>
+                    <TableCell className="text-right font-bold">{item.count}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -125,5 +118,5 @@ export function DashboardClientPage({ initialStats }: { initialStats: Stats }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

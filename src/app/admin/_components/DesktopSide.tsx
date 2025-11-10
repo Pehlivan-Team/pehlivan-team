@@ -1,15 +1,17 @@
-"use client";
+'use client'
 
-import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Home } from "lucide-react";
-import { navLinks, settingsLink } from "./MobileSide";
-import DesktopAuth from "@/components/auth/DesktopAuth";
-import { cn } from "@/lib/utils";
+import { Home } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import React from 'react'
+
+import DesktopAuth from '@/components/auth/DesktopAuth'
+import { cn } from '@/lib/utils'
+
+import { navLinks, settingsLink } from './MobileSide'
 
 export function DesktopSidebar() {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <aside className="hidden border-r bg-background md:flex md:flex-col w-64">
@@ -27,8 +29,8 @@ export function DesktopSidebar() {
                 key={href}
                 href={href}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all bg-white/10 hover:bg-white/20 hover:text-foreground",
-                  pathname === href && "bg-white/20 text-primary" // Aktif link stili
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all bg-white/10 hover:bg-white/20 hover:text-foreground',
+                  pathname === href && 'bg-white/20 text-primary' // Aktif link stili
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -42,5 +44,5 @@ export function DesktopSidebar() {
         </div>
       </div>
     </aside>
-  );
+  )
 }

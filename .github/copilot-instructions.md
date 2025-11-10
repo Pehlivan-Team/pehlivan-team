@@ -1,53 +1,63 @@
-## Copilot / AI contributor notes — Pehlivan Team
+## Copilot / AI agent instructions — pehlivan-team
 
-Quick, focused guidance for AI agents working on this repository. Keep edits minimal, follow project conventions, and reference the files below when in doubt.
+Purpose: give an AI agent the immediate, practical knowledge needed to be productive in this repo.
 
-1) Project overview (big picture)
-- Next.js 14 app-router TypeScript site (source under `src/app/`). UI is built with Tailwind + shadcn-style components in `src/components/`.
-- Authentication: NextAuth is used; the app wraps pages with `NextAuthProvider` in `src/app/layout.tsx` and protects `/admin` using `src/middleware.ts` (see token.isAdmin logic).
-- Data/storage: Firebase (client) is initialized in `src/lib/firebase.ts`; there is also server-side admin usage in `src/lib/firebase-admin.ts`.
-- Edge store: `@edgestore/react` and `@edgestore/server` are used via `src/lib/edgestore-provider.tsx` and `src/lib/edgestore.tsx`.
+Keep this short and actionable. When in doubt, open the cited files.
 
-2) How to run & quick workflows
-- Local dev: use the package manager in `package.json` (project uses Yarn v1). Common scripts are in `package.json`: `dev` -> `next dev`, `build` -> `next build`, `start` -> `next start`, `lint` -> `next lint`.
-- When adding environment variables, prefer a `.env.local` for secrets. Note: some Firebase config exists in `src/lib/firebase.ts` (used client-side).
+1) Big picture (what this repo is):
+	- A Next.js 14 TypeScript web app using the App Router under `src/app/` (server-first, with client components where needed).
+	- Styling: Tailwind + shadcn/ui. Animations via Framer Motion.
+	- Auth: `next-auth` (config in `src/lib/auth.ts`) backed by Firestore (admin operations use `src/lib/firebase-admin.ts`).
+	- Data stores: Firebase (client SDK in `src/lib/firebase.ts`), server-admin Firebase (`src/lib/firebase-admin.ts`), and EdgeStore integration (`src/lib/edgestore.tsx` + API at `src/app/api/edgestore/[...edgestore]/route`).
+	- Other notable integrations: Google Sheets / Google Analytics, and many Radix UI components.
 
-3) Important files & conventions (use these as anchors)
-- Layout/providers: `src/app/layout.tsx` — global providers live here (ThemeProvider, NextAuth, EdgeStore). When adding global context, wire it through this file.
-- Middleware & admin protection: `src/middleware.ts` — protects `/admin/:path*`. Admin checks rely on `token.isAdmin` — if you modify auth flows, update token shape and middleware together.
-- Firebase client: `src/lib/firebase.ts` — client initialization pattern uses `getApps()` guard to avoid re-initialization in dev.
-- EdgeStore provider: `src/lib/edgestore-provider.tsx` and `src/lib/edgestore.tsx` — used for server/client edge data; prefer these utilities over ad-hoc implementations.
-- Component conventions: UI components follow a shadcn-like pattern under `src/components/` (look for `ui/` and `main-page-components/` namespaces).
-- TypeScript path alias: `@/*` maps to `./src/*` (see `tsconfig.json`).
+2) Quick dev & CI commands (see `package.json`):
+	- dev: `yarn dev` (runs `next dev`)
+	- build: `yarn build` (runs `next build`)
+	- start: `yarn start` (runs `next start`)
+	- lint: `yarn lint` / `yarn lint:fix`
+	- format: `yarn format` (Prettier)
+	- tests: `yarn test`, watch: `yarn test:watch`, coverage: `yarn test:coverage` (Vitest)
 
-4) Patterns and gotchas for edits
-- App router: pages live in `src/app/` (not `pages/`); mutations to routing must use app-router conventions (layout.tsx, page.tsx, segment folders).
-- Server vs client components: default is server; if a component uses browser APIs or hooks, mark it with `'use client'` at the top.
-- Firebase secrets: client config is in repo for the demo site; do not add other secrets to source control — use `.env.local` for private keys and server-only credentials (firebase-admin credentials belong server-side only).
-- Images: external image domains are whitelisted in `next.config.mjs` — add domains there when introducing new external images.
+3) Environment & runtime notes
+	- Uses Yarn v1 (see `packageManager`). Use `yarn` for installs and scripts.
+	- Important env vars referenced in code: `NEXTAUTH_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET`. Put them in `.env.local` for local dev.
+	- Firebase client config is in `src/lib/firebase.ts`. Admin usage is in `src/lib/firebase-admin.ts` and used by server routes and `next-auth` callbacks.
+	- Cookie domain behavior is present but commented-out in `src/lib/auth.ts` — be careful when modifying cookie settings for cross-subdomain auth.
 
-5) Testing, linting, and quality checks
-- Lint: `yarn lint` (uses Next's ESLint config). There are no repository tests visible — prefer small manual checks after UI changes.
+4) Project conventions & patterns (concrete examples)
+	- App Router conventions: pages and APIs live under `src/app/`. Example: top-level layout is `src/app/layout.tsx` where providers are wired (EdgeStore, NextAuth, ThemeProvider). See `src/app/layout.tsx` for how providers are nested and how `GoogleOneTap` and analytics scripts are injected.
+	- Client code: files with `"use client"` (e.g. `src/lib/edgestore.tsx`) run in the browser; prefer putting UI interactions and hooks there.
+	- Server code / API routes: use `src/app/api/*/route.ts` (or `route.tsx`) patterns. The repo contains many API subfolders (`src/app/api/*`) — follow the existing structure when adding new endpoints.
+	- Auth/session shape: `next-auth` callbacks set `session.user.isAdmin`, `session.user.permissions`, and `session.user.username`. When changing auth, update `src/lib/auth.ts` and consider Firestore reads in the `jwt` callback.
+	- EdgeStore: the project uses `@edgestore/react` for client usage and `@edgestore/server` for server. The provider is created in `src/lib/edgestore.tsx` and the server router is defined at `src/app/api/edgestore/[...edgestore]/route`.
+	- Images: host/domains allowed are configured in `next.config.mjs` — add domains here when adding external images (see `images.domains`).
 
-6) Integration points to watch
-- Google Analytics: `@vercel/analytics` + a local `GoogleAnalytics` component under `src/components/analytics/GoogleAnalytics.tsx`.
-- Google One Tap: script injection happens in `src/app/layout.tsx` (beforeInteractive strategy). Be cautious with auth flows when modifying this.
-- Google Sheets / Sheets API usage: README describes a Sheets integration; search `googleapis` or `sheets` code paths when changing related features.
+5) Tests & linting
+	- Use `yarn test` (Vitest) for unit tests in `src/` and `lib/`.
+	- Linting follows `next lint` + ESLint config. Format with Prettier via `yarn format`.
 
-7) Examples (copy/paste snippets)
-- Protect admin routes (middleware matcher): `src/middleware.ts` uses `matcher: ["/admin/:path*"]` and `withAuth` callbacks that expect `token.isAdmin === true`.
-- Firebase init guard (client):
-  const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+6) When making changes, follow these small rules
+	- Keep server-only secrets and admin SDK usage in server code (API routes or `src/lib/*-admin.ts`) — do not import admin SDK into client components.
+	- If you add a provider or app-level change, update `src/app/layout.tsx` so it wraps `children` consistently (see existing provider ordering: NextAuth -> EdgeStoreProviderClient -> ThemeProvider).
+	- For auth changes, prefer to update `src/lib/auth.ts` and also review `src/lib/firebase-admin.ts` for Firestore admin calls used in callbacks.
+	- When adding new API route folders under `src/app/api/`, export a default `route.ts` handler compatible with Next.js App Router server handlers.
 
-8) When to ask the human owner
-- If you need to rotate or add server secrets (Firebase admin credentials, OAuth client secrets, Sheets service account) — stop and ask for secure provisioning steps.
-- If changing authentication tokens/claims structure (e.g., `isAdmin`), confirm the shape with maintainers before wide refactors.
+7) Files to open first (best starting points)
+	- `src/app/layout.tsx` — shows global providers and scripts.
+	- `src/lib/firebase.ts` & `src/lib/firebase-admin.ts` — client vs admin Firebase usage.
+	- `src/lib/auth.ts` — NextAuth configuration & callbacks.
+	- `src/lib/edgestore.tsx` and `src/app/api/edgestore/[...edgestore]/route` — EdgeStore integration.
+	- `next.config.mjs` — image domains and small Next.js experiment flags.
 
-9) Files worth reading first
-- `src/app/layout.tsx` — providers & global scripts
-- `src/middleware.ts` — admin protection pattern
-- `src/lib/firebase.ts`, `src/lib/firebase-admin.ts` — client vs server Firebase usage
-- `next.config.mjs` — image domains and experimental flags
-- `package.json` & `tsconfig.json` — scripts and aliases
+8) Common pitfalls seen in the repo
+	- Firebase client config is hard-coded in `src/lib/firebase.ts`. Be cautious when changing it or moving it to env vars.
+	- Cookie domain lines in `src/lib/auth.ts` are commented; cross-subdomain auth was attempted and may be brittle.
+	- Many components expect `session.user` to contain `isAdmin`, `permissions`, and `username` — changing session shape can break UI unless both the server callback and client usage are updated.
 
-If anything above is unclear or you want the instructions tailored (more examples, more safety checks), tell me which areas to expand and I will iterate.
+9) When adding PR comments or code suggestions
+	- Provide exact file paths and small, focused diffs/patches.
+	- Suggest `yarn` commands to run locally (e.g., `yarn dev`) and include expected quick checks (open localhost:3000, sign in with Google test account, run `yarn test`).
+
+If anything here is unclear or you want more detail (example: typical API route shape, a test example, or the list of env vars used by each API), tell me which area to expand and I'll update this file.
+

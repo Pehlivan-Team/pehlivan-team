@@ -1,89 +1,81 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
-import { Post } from "@/types/blog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { ImageUploader } from "@/components/admin/ImageUploader";
-import { toast } from "sonner";
-import slugify from "slugify";
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
+import slugify from 'slugify'
+import { toast } from 'sonner'
+
+import { ImageUploader } from '@/components/admin/ImageUploader'
+import { Alert } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 
 // ReactQuill kütüphanesini sadece istemci tarafında yüklüyoruz
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-import "react-quill/dist/quill.snow.css"; // Editörün stil dosyası
-import { Alert } from "@/components/ui/alert";
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+import 'react-quill/dist/quill.snow.css' // Editörün stil dosyası
+import { Post } from '@/types/blog'
 
 type PostFormProps = {
-  initialData?: Post; // Düzenleme modu için mevcut yazı verisi
-};
+  initialData?: Post // Düzenleme modu için mevcut yazı verisi
+}
 
 export function PostForm({ initialData }: PostFormProps) {
-  const router = useRouter();
-  const [title, setTitle] = useState(initialData?.title || "");
-  const [slug, setSlug] = useState(initialData?.slug || "");
-  const [content, setContent] = useState(initialData?.content || "");
-  const [imageUrl, setImageUrl] = useState(initialData?.imageUrl || "");
-  const [isPublished, setIsPublished] = useState(
-    initialData?.isPublished || false
-  );
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter()
+  const [title, setTitle] = useState(initialData?.title || '')
+  const [slug, setSlug] = useState(initialData?.slug || '')
+  const [content, setContent] = useState(initialData?.content || '')
+  const [imageUrl, setImageUrl] = useState(initialData?.imageUrl || '')
+  const [isPublished, setIsPublished] = useState(initialData?.isPublished || false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setTitle(newTitle);
+    const newTitle = e.target.value
+    setTitle(newTitle)
     // Başlık değiştikçe, URL'e uygun slug'ı otomatik oluştur
-    setSlug(slugify(newTitle, { lower: true, strict: true }));
-  };
+    setSlug(slugify(newTitle, { lower: true, strict: true }))
+  }
 
   const handleSubmit = async () => {
-    setIsLoading(true);
-    const postData = { title, slug, content, imageUrl, isPublished };
+    setIsLoading(true)
+    const postData = { title, slug, content, imageUrl, isPublished }
 
-    const isEditing = !!initialData;
-    const url = isEditing
-      ? `/api/admin/posts/${initialData.id}`
-      : "/api/admin/posts";
-    const method = isEditing ? "PUT" : "POST";
+    const isEditing = !!initialData
+    const url = isEditing ? `/api/admin/posts/${initialData.id}` : '/api/admin/posts'
+    const method = isEditing ? 'PUT' : 'POST'
 
     try {
       const response = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(postData),
-      });
-      const result = await response.json();
-      if (!result.success) throw new Error(result.error);
+      })
+      const result = await response.json()
+      if (!result.success) throw new Error(result.error)
 
-      toast.success(
-        isEditing
-          ? "Yazı başarıyla güncellendi!"
-          : "Yazı başarıyla oluşturuldu!"
-      );
-      router.push("/admin/blog"); // İşlem sonrası ana blog yönetimi sayfasına yönlendir
-      router.refresh(); // Sunucu tarafındaki verilerin yenilenmesini sağla
+      toast.success(isEditing ? 'Yazı başarıyla güncellendi!' : 'Yazı başarıyla oluşturuldu!')
+      router.push('/admin/blog') // İşlem sonrası ana blog yönetimi sayfasına yönlendir
+      router.refresh() // Sunucu tarafındaki verilerin yenilenmesini sağla
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Bir hata oluştu.");
+      toast.error(error instanceof Error ? error.message : 'Bir hata oluştu.')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <Alert className="mt-4 col-span-9">
         <h4 className="font-medium text-lg mb-2">Yazı Oluşturma Rehberi</h4>
         <p>
-          Not: Yazı oluşturduktan sonra, yazınızı ana blog sayfasında
-          yayınlayabilir veya taslak olarak kaydedebilirsiniz.
+          Not: Yazı oluşturduktan sonra, yazınızı ana blog sayfasında yayınlayabilir veya taslak
+          olarak kaydedebilirsiniz.
         </p>
         <br />
         <p>
-          İçerik alanı zengin metin formatını destekler. Görselleri sürükleyip
-          bırakabilirsiniz.
+          İçerik alanı zengin metin formatını destekler. Görselleri sürükleyip bırakabilirsiniz.
         </p>
       </Alert>
       {/* Sol Taraf: Ana Form Alanları */}
@@ -122,7 +114,7 @@ export function PostForm({ initialData }: PostFormProps) {
         <div className="p-4 border rounded-lg bg-slate-900/50 border-slate-800">
           <h3 className="font-semibold mb-4">Ayarlar</h3>
           <div className="flex items-center justify-between">
-            <Label htmlFor="isPublished">{isPublished ? "Yayında" : "Taslak"}</Label>
+            <Label htmlFor="isPublished">{isPublished ? 'Yayında' : 'Taslak'}</Label>
             <Switch
               className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
               id="isPublished"
@@ -133,19 +125,12 @@ export function PostForm({ initialData }: PostFormProps) {
         </div>
         <div className="p-4 border rounded-lg bg-slate-900/50 border-slate-800">
           <h3 className="font-semibold mb-4">Kapak Resmi</h3>
-          <ImageUploader
-            initialImageUrl={imageUrl}
-            onUploadComplete={setImageUrl}
-          />
+          <ImageUploader initialImageUrl={imageUrl} onUploadComplete={setImageUrl} />
         </div>
         <Button onClick={handleSubmit} disabled={isLoading} className="w-full">
-          {isLoading
-            ? "Kaydediliyor..."
-            : initialData
-            ? "Değişiklikleri Kaydet"
-            : "Yazıyı Oluştur"}
+          {isLoading ? 'Kaydediliyor...' : initialData ? 'Değişiklikleri Kaydet' : 'Yazıyı Oluştur'}
         </Button>
       </div>
     </div>
-  );
+  )
 }

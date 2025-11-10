@@ -1,11 +1,7 @@
-"use client";
+'use client'
 
-import React from "react";
-import logo from "@/app/public/tasprologo.jpg";
-import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
+import { InstagramLogoIcon, LinkedInLogoIcon } from '@radix-ui/react-icons'
+import { motion } from 'framer-motion'
 import {
   Mail,
   Trophy,
@@ -18,65 +14,59 @@ import {
   FileText,
   MessageSquare,
   Search as SearchIcon,
-} from "lucide-react";
-import { useActiveSection } from "@/hooks/use-active-section";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import AuthButton from "@/components/auth/AuthButton"; // 1. AuthButton'ı import ediyoruz
-import { Separator } from "@/components/ui/separator"; // 2. Ayırıcı (Separator) import ediyoruz
-import MobileAuth from "@/components/auth/MobileAuthButton";
-import { usePathname } from "next/navigation";
+} from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import React from 'react'
+
+import AuthButton from '@/components/auth/AuthButton' // 1. AuthButton'ı import ediyoruz
+import MobileAuth from '@/components/auth/MobileAuthButton'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator' // 2. Ayırıcı (Separator) import ediyoruz
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useActiveSection } from '@/hooks/use-active-section'
+import { cn } from '@/lib/utils'
+import logo from '@public/tasprologo.jpg'
 
 const socialLinks = [
   {
-    href: "https://www.instagram.com/pehlivanteam",
+    href: 'https://www.instagram.com/pehlivanteam',
     Icon: InstagramLogoIcon,
-    label: "Instagram",
+    label: 'Instagram',
   },
   {
-    href: "https://www.linkedin.com/company/pehlivan-team/",
+    href: 'https://www.linkedin.com/company/pehlivan-team/',
     Icon: LinkedInLogoIcon,
-    label: "LinkedIn",
+    label: 'LinkedIn',
   },
   {
-    href: "https://www.github.com/Pehlivan-Team",
+    href: 'https://www.github.com/Pehlivan-Team',
     Icon: GithubIcon,
-    label: "GitHub",
+    label: 'GitHub',
   },
-];
+]
 
 const internalLinks = [
-  { href: "/feed", label: "Sosyalleş", Icon: MessageSquare },
-  { href: "/search", label: "Ara", Icon: SearchIcon },
-  { href: "/teams", label: "Takımlar", Icon: Users },
-  { href: "/timeline", label: "Tarihçe", Icon: Milestone },
-  { href: "/blog", label: "Blog", Icon: FileText },
-  { href: "/#achievements", label: "Başarılar", Icon: Trophy },
-  { href: "/add_member", label: "Bize Katıl", Icon: UserPlus },
-  { href: "/#contact", label: "İletişim", Icon: Mail },
-  { href: "/shortener", label: "Link Kısaltıcı", Icon: LinkIcon },
-];
+  { href: '/feed', label: 'Sosyalleş', Icon: MessageSquare },
+  { href: '/search', label: 'Ara', Icon: SearchIcon },
+  { href: '/teams', label: 'Takımlar', Icon: Users },
+  { href: '/timeline', label: 'Tarihçe', Icon: Milestone },
+  { href: '/blog', label: 'Blog', Icon: FileText },
+  { href: '/#achievements', label: 'Başarılar', Icon: Trophy },
+  { href: '/add_member', label: 'Bize Katıl', Icon: UserPlus },
+  { href: '/#contact', label: 'İletişim', Icon: Mail },
+  { href: '/shortener', label: 'Link Kısaltıcı', Icon: LinkIcon },
+]
 
-const internalLinkIds = internalLinks.map((link) => link.href);
+const internalLinkIds = internalLinks.map((link) => link.href)
 
 const Logo = () => (
   <motion.a
     initial={{ rotateZ: 0 }}
     whileHover={{ rotateZ: 360 }}
-    transition={{ duration: 0.7, ease: "circInOut" }}
+    transition={{ duration: 0.7, ease: 'circInOut' }}
     href="/"
     className="bg-white rounded"
   >
@@ -88,22 +78,22 @@ const Logo = () => (
       height={40}
       priority
       style={{
-        maxWidth: "100%",
-        height: "auto",
+        maxWidth: '100%',
+        height: 'auto',
       }}
     />
   </motion.a>
-);
+)
 
 const Topbar = () => {
-  const activeSection = useActiveSection(internalLinkIds);
-  const pathname = usePathname();
+  const activeSection = useActiveSection(internalLinkIds)
+  const pathname = usePathname()
   return (
     <header className="fixed top-0 z-50 hidden w-full px-12 lg:block">
       <nav
         className={cn(
-          "flex items-center justify-between h-16 px-8 bg-black/30 backdrop-blur-lg border-b border-white/10 rounded-b-3xl",
-          pathname?.startsWith("/feed") && "bg-emerald-900/40"
+          'flex items-center justify-between h-16 px-8 bg-black/30 backdrop-blur-lg border-b border-white/10 rounded-b-3xl',
+          pathname?.startsWith('/feed') && 'bg-emerald-900/40'
         )}
       >
         <Logo />
@@ -126,8 +116,8 @@ const Topbar = () => {
               key={href}
               href={href}
               className={cn(
-                "flex items-center gap-x-2 text-gray-300 transition-colors hover:text-white",
-                activeSection === href && "font-bold text-red-400"
+                'flex items-center gap-x-2 text-gray-300 transition-colors hover:text-white',
+                activeSection === href && 'font-bold text-red-400'
               )}
             >
               <Icon className="h-5 w-5" />
@@ -139,21 +129,21 @@ const Topbar = () => {
         </div>
       </nav>
     </header>
-  );
-};
+  )
+}
 
 const BottomBar = () => {
-  const activeSection = useActiveSection(internalLinkIds);
-  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+  const activeSection = useActiveSection(internalLinkIds)
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false)
 
   const primaryActions = [
-    { href: "/add_member", label: "Bize Katıl", Icon: UserPlus },
-    { href: "/#contact", label: "İletişim", Icon: Mail },
-  ];
+    { href: '/add_member', label: 'Bize Katıl', Icon: UserPlus },
+    { href: '/#contact', label: 'İletişim', Icon: Mail },
+  ]
 
   const menuLinks = internalLinks.filter(
     (link) => !primaryActions.some((action) => action.href === link.href)
-  );
+  )
 
   return (
     <footer className="fixed bottom-0 z-50 w-full px-2 lg:hidden print:hidden">
@@ -168,10 +158,10 @@ const BottomBar = () => {
                   <Link
                     href={href}
                     className={cn(
-                      "p-2 rounded-full transition-colors",
+                      'p-2 rounded-full transition-colors',
                       activeSection === href
-                        ? "bg-red-500/50 text-white"
-                        : "text-gray-300 hover:bg-white/10"
+                        ? 'bg-red-500/50 text-white'
+                        : 'text-gray-300 hover:bg-white/10'
                     )}
                   >
                     <Icon className="w-6 h-6" />
@@ -211,10 +201,8 @@ const BottomBar = () => {
                       href={href}
                       onClick={() => setIsSheetOpen(false)}
                       className={cn(
-                        "flex items-center gap-4 text-lg p-2 rounded-md transition-colors",
-                        activeSection === href
-                          ? "bg-red-500/50 text-white"
-                          : "hover:bg-slate-800"
+                        'flex items-center gap-4 text-lg p-2 rounded-md transition-colors',
+                        activeSection === href ? 'bg-red-500/50 text-white' : 'hover:bg-slate-800'
                       )}
                     >
                       <Icon className="w-6 h-6" />
@@ -249,7 +237,7 @@ const BottomBar = () => {
         </div>
       </nav>
     </footer>
-  );
-};
+  )
+}
 
-export { Topbar, BottomBar };
+export { Topbar, BottomBar }

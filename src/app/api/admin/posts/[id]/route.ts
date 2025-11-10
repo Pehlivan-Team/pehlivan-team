@@ -1,24 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
-import { firestoreAdmin } from "@/lib/firebase-admin";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import admin from "firebase-admin";
+import admin from 'firebase-admin'
+import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+
+import { authOptions } from '@/lib/auth'
+import { firestoreAdmin } from '@/lib/firebase-admin'
 
 // YAZI GÜNCELLEME (PUT)
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
     if (!session?.user?.isAdmin) {
-      return NextResponse.json(
-        { success: false, error: "Yetkiniz yok." },
-        { status: 403 }
-      );
+      return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 })
     }
-    const docId = params.id;
-    const body = await request.json();
+    const docId = params.id
+    const body = await request.json()
     /*
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       kısmı önemli.
@@ -32,44 +27,38 @@ export async function PUT(
       Ayrıca bunu eklememek firestore'un kendi timestamp'ini render ederken sorunlara yol açıyor.
       */
     await firestoreAdmin
-      .collection("posts")
+      .collection('posts')
       .doc(docId)
       .update({
         ...body,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+      })
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Post Update Error:", error);
+    console.error('Post Update Error:', error)
     return NextResponse.json(
-      { success: false, error: "Güncelleme sırasında bir hata oluştu." },
+      { success: false, error: 'Güncelleme sırasında bir hata oluştu.' },
       { status: 500 }
-    );
+    )
   }
 }
 
 // YAZI SİLME (DELETE)
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
     if (!session?.user?.isAdmin) {
-      return NextResponse.json(
-        { success: false, error: "Yetkiniz yok." },
-        { status: 403 }
-      );
+      return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 })
     }
-    const docId = params.id;
-    await firestoreAdmin.collection("posts").doc(docId).delete();
-    return NextResponse.json({ success: true });
+    const docId = params.id
+    await firestoreAdmin.collection('posts').doc(docId).delete()
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Post Delete Error:", error);
+    console.error('Post Delete Error:', error)
     return NextResponse.json(
-      { success: false, error: "Silme sırasında bir hata oluştu." },
+      { success: false, error: 'Silme sırasında bir hata oluştu.' },
       { status: 500 }
-    );
+    )
   }
 }

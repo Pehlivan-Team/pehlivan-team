@@ -1,24 +1,11 @@
-"use client";
+'use client'
 
-import React, { Fragment, useState } from "react";
-import { AdminUser } from "../page";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuCheckboxItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Trash2, PlusCircle, Loader2, Settings } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import React, { Fragment, useState } from 'react'
+import { toast } from 'sonner'
+
+// Alert component not used in this file
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,77 +16,72 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  Trash2,
-  PlusCircle,
-  Loader2,
-  Settings,
-  GhostIcon,
-  FileLock2,
-} from "lucide-react";
-import { toast } from "sonner";
-import { useSession } from "next-auth/react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import Link from "next/link";
-import NoPermError from "../../_components/NoPermError";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
+
+import NoPermError from '../../_components/NoPermError'
+import { AdminUser } from '../page'
 
 const allPermissions = [
-  { id: "canManageAdmins", label: "Admin Yönetimi" },
-  { id: "canManageBlog", label: "Blog Yönetimi" },
-  { id: "canManageLinks", label: "Link Yönetimi" },
-  { id: "canManageNeeds", label: "İhtiyaç Listesi" },
-  { id: "canManageTimeline", label: "Tarihçe Yönetimi" },
-];
+  { id: 'canManageAdmins', label: 'Admin Yönetimi' },
+  { id: 'canManageBlog', label: 'Blog Yönetimi' },
+  { id: 'canManageLinks', label: 'Link Yönetimi' },
+  { id: 'canManageNeeds', label: 'İhtiyaç Listesi' },
+  { id: 'canManageTimeline', label: 'Tarihçe Yönetimi' },
+]
 
-export function AdminsClientPage({
-  initialAdmins,
-}: {
-  initialAdmins: AdminUser[];
-}) {
-  const [admins, setAdmins] = useState(initialAdmins);
-  const [newAdminEmail, setNewAdminEmail] = useState("");
-  const [isAdding, setIsAdding] = useState(false);
-  const { data: session } = useSession();
+export function AdminsClientPage({ initialAdmins }: { initialAdmins: AdminUser[] }) {
+  const [admins, setAdmins] = useState(initialAdmins)
+  const [newAdminEmail, setNewAdminEmail] = useState('')
+  const [isAdding, setIsAdding] = useState(false)
+  const { data: session } = useSession()
 
   const handleAddAdmin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsAdding(true);
+    e.preventDefault()
+    setIsAdding(true)
     try {
-      const response = await fetch("/api/admin/admins", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/admin/admins', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: newAdminEmail }),
-      });
-      const result = await response.json();
-      if (!result.success) throw new Error(result.error);
-      setAdmins((prev) => [...prev, { email: newAdminEmail, permissions: {} }]);
-      setNewAdminEmail("");
-      toast.success(`'${newAdminEmail}' başarıyla admin olarak eklendi!`);
+      })
+      const result = await response.json()
+      if (!result.success) throw new Error(result.error)
+      setAdmins((prev) => [...prev, { email: newAdminEmail, permissions: {} }])
+      setNewAdminEmail('')
+      toast.success(`'${newAdminEmail}' başarıyla admin olarak eklendi!`)
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Admin eklenemedi.");
+      toast.error(error instanceof Error ? error.message : 'Admin eklenemedi.')
     } finally {
-      setIsAdding(false);
+      setIsAdding(false)
     }
-  };
+  }
 
   const handleDeleteAdmin = async (emailToDelete: string) => {
     try {
-      const response = await fetch("/api/admin/admins", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/admin/admins', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: emailToDelete }),
-      });
-      const result = await response.json();
-      if (!result.success) throw new Error(result.error);
-      setAdmins((prev) =>
-        prev.filter((admin) => admin.email !== emailToDelete)
-      );
-      toast.success(`'${emailToDelete}' admin listesinden kaldırıldı.`);
+      })
+      const result = await response.json()
+      if (!result.success) throw new Error(result.error)
+      setAdmins((prev) => prev.filter((admin) => admin.email !== emailToDelete))
+      toast.success(`'${emailToDelete}' admin listesinden kaldırıldı.`)
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Admin silinemedi.");
+      toast.error(error instanceof Error ? error.message : 'Admin silinemedi.')
     }
-  };
+  }
 
   const handlePermissionChange = async (
     email: string,
@@ -107,40 +89,36 @@ export function AdminsClientPage({
     isChecked: boolean
   ) => {
     try {
-      const currentAdmin = admins.find((a) => a.email === email);
-      if (!currentAdmin) throw new Error("Kullanıcı bulunamadı.");
+      const currentAdmin = admins.find((a) => a.email === email)
+      if (!currentAdmin) throw new Error('Kullanıcı bulunamadı.')
 
       const updatedPermissions = {
         ...currentAdmin.permissions,
         [permissionId]: isChecked,
-      };
+      }
 
-      const response = await fetch("/api/admin/admins", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/admin/admins', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, permissions: updatedPermissions }),
-      });
-      const result = await response.json();
-      if (!result.success) throw new Error(result.error);
+      })
+      const result = await response.json()
+      if (!result.success) throw new Error(result.error)
 
       setAdmins(
         admins.map((admin) =>
-          admin.email === email
-            ? { ...admin, permissions: updatedPermissions }
-            : admin
+          admin.email === email ? { ...admin, permissions: updatedPermissions } : admin
         )
-      );
-      toast.success(`'${email}' için yetkiler güncellendi.`);
+      )
+      toast.success(`'${email}' için yetkiler güncellendi.`)
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Yetki güncellenemedi."
-      );
+      toast.error(error instanceof Error ? error.message : 'Yetki güncellenemedi.')
       // Hata durumunda UI'ı eski haline döndürmek için state'i tekrar set edebiliriz.
-      setAdmins([...admins]);
+      setAdmins([...admins])
     }
-  };
+  }
   if (!session?.user?.permissions?.canManageAdmins) {
-    return <NoPermError />;
+    return <NoPermError />
   }
   return (
     <div className="space-y-8">
@@ -174,9 +152,7 @@ export function AdminsClientPage({
       <Card>
         <CardHeader>
           <CardTitle>Yetki Yönetimi</CardTitle>
-          <CardDescription>
-            Mevcut adminlerin yetkilerini düzenleyin.
-          </CardDescription>
+          <CardDescription>Mevcut adminlerin yetkilerini düzenleyin.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="border rounded-lg">
@@ -209,11 +185,7 @@ export function AdminsClientPage({
                                   ]
                                 }
                                 onCheckedChange={(checked) =>
-                                  handlePermissionChange(
-                                    admin.email,
-                                    permission.id,
-                                    !!checked
-                                  )
+                                  handlePermissionChange(admin.email, permission.id, !!checked)
                                 }
                               >
                                 {permission.label}
@@ -240,9 +212,8 @@ export function AdminsClientPage({
                           <AlertDialogHeader>
                             <AlertDialogTitle>Emin misiniz?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              "{admin.email}" adlı kullanıcıyı admin listesinden
-                              kalıcı olarak kaldırmak istediğinizden emin
-                              misiniz?
+                              "{admin.email}" adlı kullanıcıyı admin listesinden kalıcı olarak
+                              kaldırmak istediğinizden emin misiniz?
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -264,5 +235,5 @@ export function AdminsClientPage({
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

@@ -1,49 +1,47 @@
-import Link from "next/link";
-import Image from "next/image";
-import { firestoreAdmin } from "@/lib/firebase-admin";
-import { Post } from "@/types/blog";
-import { format } from "date-fns";
-import { tr } from "date-fns/locale";
-import { Badge } from "@/components/ui/badge";
+import { format } from 'date-fns'
+import { tr } from 'date-fns/locale'
+import Image from 'next/image'
+import Link from 'next/link'
 
-export const dynamic = "force-dynamic";
+import { Badge } from '@/components/ui/badge'
+import { firestoreAdmin } from '@/lib/firebase-admin'
+import { Post } from '@/types/blog'
+
+export const dynamic = 'force-dynamic'
 
 // Sunucu tarafında yayınlanmış tüm yazıları çeken fonksiyon
 async function getPublishedPosts(): Promise<Post[]> {
   const snapshot = await firestoreAdmin
-    .collection("posts")
-    .where("isPublished", "==", true)
-    .orderBy("createdAt", "desc")
-    .get();
+    .collection('posts')
+    .where('isPublished', '==', true)
+    .orderBy('createdAt', 'desc')
+    .get()
 
   if (snapshot.empty) {
-    return [];
+    return []
   }
 
   return snapshot.docs.map((doc) => {
-    const data = doc.data();
+    const data = doc.data()
     return {
       id: doc.id,
       ...data,
       createdAt: data.createdAt.toDate().toISOString(),
       updatedAt: data.updatedAt.toDate().toISOString(),
-    } as Post;
-  });
+    } as Post
+  })
 }
 
 export default async function BlogPage() {
-  const posts = await getPublishedPosts();
+  const posts = await getPublishedPosts()
 
   return (
     <div className="bg-gray-950 min-h-screen text-white">
       <header className="pt-32 pb-16 bg-[#101b40]">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold tracking-tighter">
-            Blog
-          </h1>
+          <h1 className="text-4xl lg:text-5xl font-bold tracking-tighter">Blog</h1>
           <p className="mt-4 max-w-2xl mx-auto text-gray-300">
-            Takımımızın en son haberleri, teknik makaleleri ve proje
-            güncellemeleri.
+            Takımımızın en son haberleri, teknik makaleleri ve proje güncellemeleri.
           </p>
         </div>
       </header>
@@ -55,36 +53,38 @@ export default async function BlogPage() {
                 <div className="relative w-full h-48">
                   <Image
                     // Eğer kapak resmi yoksa bir varsayılan resim göster
-                    src={post.imageUrl || "/placeholder.jpg"}
+                    src={post.imageUrl || '/placeholder.jpg'}
                     alt={post.title}
                     className="group-hover:scale-105 transition-transform duration-300"
                     fill
                     sizes="100vw"
                     style={{
-                      objectFit: "cover"
-                    }} />
+                      objectFit: 'cover',
+                    }}
+                  />
                 </div>
                 <div className="p-6 flex-grow flex flex-col">
                   <h2 className="text-xl font-bold group-hover:text-red-400 transition-colors">
                     {post.title}
                   </h2>
                   <p className="text-sm text-gray-400 mt-2">
-                    {format(new Date(post.createdAt), "dd MMMM yyyy", {
+                    {format(new Date(post.createdAt), 'dd MMMM yyyy', {
                       locale: tr,
                     })}
                   </p>
                   <div className="flex-grow" />
                   <div className="flex items-center gap-2 mt-4">
                     <Image
-                      src={post.authorImage || "/default-avatar.png"}
+                      src={post.authorImage || '/default-avatar.png'}
                       alt={post.author}
                       width={24}
                       height={24}
                       className="rounded-full"
                       style={{
-                        maxWidth: "100%",
-                        height: "auto"
-                      }} />
+                        maxWidth: '100%',
+                        height: 'auto',
+                      }}
+                    />
                     <span className="text-sm text-gray-300">{post.author}</span>
                   </div>
                 </div>
@@ -97,12 +97,10 @@ export default async function BlogPage() {
             <h2 className="text-2xl font-semibold text-gray-400">
               Henüz yayınlanmış bir yazı bulunmuyor.
             </h2>
-            <p className="text-gray-500 mt-2">
-              Lütfen daha sonra tekrar kontrol edin!
-            </p>
+            <p className="text-gray-500 mt-2">Lütfen daha sonra tekrar kontrol edin!</p>
           </div>
         )}
       </main>
     </div>
-  );
+  )
 }
