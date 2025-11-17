@@ -30,8 +30,9 @@ async function getUrlAndTrackClick(slug: string): Promise<string | null> {
   }
 }
 
-export default async function ShortLinkRedirectPage({ params }: { params: { slug: string } }) {
-  const longUrl = await getUrlAndTrackClick(params.slug)
+export default async function ShortLinkRedirectPage({ params }: { params: any }) {
+  const { slug } = await params
+  const longUrl = await getUrlAndTrackClick(slug)
 
   if (!longUrl) {
     return notFound()

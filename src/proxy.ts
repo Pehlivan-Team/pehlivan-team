@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
-export default async function middleware(req: Request & { nextUrl: any; headers: any }) {
+export default async function proxy(req: Request & { nextUrl: any; headers: any }) {
   const host = (req.headers.get('host') || '').toLowerCase()
   const url = req.nextUrl
 

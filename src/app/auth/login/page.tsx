@@ -5,7 +5,7 @@ import { Github, LinkedinIcon, ChromeIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -15,8 +15,16 @@ import { Label } from '@/components/ui/label'
 
 export default function GirisPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+  // Avoid using `useSearchParams()` here to prevent CSR-bailout prerender issues.
+  const [callbackUrl, setCallbackUrl] = useState('/')
+  useEffect(() => {
+    try {
+      const sp = new URLSearchParams(window.location.search)
+      setCallbackUrl(sp.get('callbackUrl') || '/')
+    } catch (e) {
+      setCallbackUrl('/')
+    }
+  }, [])
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

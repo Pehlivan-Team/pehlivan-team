@@ -9,17 +9,26 @@ import { CreateCommentRequest, ListCommentsResponse } from '@/types/posts'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { postId: string } }
+  context: { params: any }
 ): Promise<NextResponse> {
   try {
+    const params = context.params
+    const resolvedParams: any = await params
+    console.debug('[comments GET] params:', resolvedParams)
     const { searchParams } = new URL(req.url)
     const limitParam = parseInt(searchParams.get('limit') || '10', 10)
     const limit = Math.max(1, Math.min(50, isNaN(limitParam) ? 10 : limitParam))
     const cursor = searchParams.get('cursor') || undefined
 
+    const postId = resolvedParams?.postId
+    if (!postId) {
+      console.error('[comments GET] missing postId in params', { resolvedParams })
+      return NextResponse.json({ error: 'Missing postId' }, { status: 400 })
+    }
+
     let query = firestoreAdmin
       .collection('posts')
-      .doc(params.postId)
+      .doc(postId)
       .collection('comments')
       .orderBy('createdAt', 'desc')
       .limit(limit + 1)
@@ -45,17 +54,27 @@ export async function GET(
     return NextResponse.json(res, { status: 200 })
   } catch (error) {
     console.error('List comments error', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    // Surface the error message when available to make debugging easier in dev
+    const message = (error as any)?.message || 'Internal Server Error'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { postId: string } }
+  context: { params: any }
 ): Promise<NextResponse> {
   try {
+    const params = context.params
+    const resolvedParams: any = await params
+    console.debug('[comments POST] params:', resolvedParams)
     const session: any = await getServerSession(authOptions as any)
-    if (!session || !session.user || !session.user.email || !session.user.username) {
+    console.debug('[comments POST] session:', session)
+    // Accept either the stable `session.user.id` (preferred) or the legacy email.
+    const userId = session?.user?.id || session?.user?.email
+    const username = session?.user?.username || session?.user?.name || null
+    if (!session || !session.user || !userId) {
+      console.warn('[comments POST] unauthorized - session missing or incomplete', { session })
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -69,7 +88,13 @@ export async function POST(
     }
     const { content } = parsed.data
 
-    const postRef = firestoreAdmin.collection('posts').doc(params.postId)
+    const postId = resolvedParams?.postId
+    if (!postId) {
+      console.error('[comments POST] missing postId in params', { resolvedParams })
+      return NextResponse.json({ error: 'Missing postId' }, { status: 400 })
+    }
+
+    const postRef = firestoreAdmin.collection('posts').doc(postId)
     const commentsRef = postRef.collection('comments')
 
     const result = await firestoreAdmin.runTransaction(async (tx) => {
@@ -78,8 +103,8 @@ export async function POST(
 
       const newRef = commentsRef.doc()
       tx.set(newRef, {
-        userId: session.user.email,
-        username: session.user.username,
+        userId,
+        username,
         content,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       })
@@ -95,6 +120,7 @@ export async function POST(
       return NextResponse.json({ error: 'Not Found' }, { status: 404 })
     }
     console.error('Create comment error', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    const message = error?.message || 'Internal Server Error'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

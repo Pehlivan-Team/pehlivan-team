@@ -4,7 +4,7 @@ import { Post } from '@/types/blog'
 import { BlogClientPage } from './_components/BlogClientPage'
 
 async function getPosts(): Promise<Post[]> {
-  const postsSnapshot = await firestoreAdmin.collection('posts').orderBy('createdAt', 'desc').get()
+  const postsSnapshot = await firestoreAdmin.collection('blogs').orderBy('createdAt', 'desc').get()
 
   if (postsSnapshot.empty) {
     return []

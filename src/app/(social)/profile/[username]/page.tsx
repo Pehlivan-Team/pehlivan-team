@@ -14,7 +14,7 @@ import { UserProfile } from '@/types/profile'
 
 
 // Sunucu tarafında veriyi çek
-async function getProfile(username: string): Promise<UserProfile | null> {
+async function getProfile(username: string): Promise<(UserProfile & { uid?: string }) | null> {
   try {
     const usersRef = firestoreAdmin.collection('users')
     const q = usersRef.where('username', '==', username).limit(1)
@@ -27,7 +27,7 @@ async function getProfile(username: string): Promise<UserProfile | null> {
     const userDoc = querySnapshot.docs[0]
     const userData = userDoc.data()
 
-    const publicProfile: UserProfile = {
+    const publicProfile: UserProfile & { uid?: string } = {
       username: userData.username,
       name: userData.name,
       bio: userData.bio,
@@ -38,6 +38,9 @@ async function getProfile(username: string): Promise<UserProfile | null> {
       image: '',
     }
 
+    // include the canonical uid so callers can query by authorId
+    ;(publicProfile as any).uid = userDoc.id
+
     return publicProfile
   } catch (error) {
     console.error('Profil getirme hatası:', error)
@@ -45,20 +48,40 @@ async function getProfile(username: string): Promise<UserProfile | null> {
   }
 }
 
-async function getLatestPosts(username: string) {
+async function getLatestPosts(uid: string | undefined, username: string) {
   try {
-    const q = firestoreAdmin
-      .collection('posts')
-      .where('authorUsername', '==', username)
-      .orderBy('createdAt', 'desc')
-      .limit(3)
-    const snap = await q.get()
+    let snap
+    if (uid) {
+      const q = firestoreAdmin
+        .collection('posts')
+        .where('authorId', '==', uid)
+        .orderBy('createdAt', 'desc')
+        .limit(3)
+      snap = await q.get()
+      // fallback to legacy username field if no results
+      if (snap.empty) {
+        const q2 = firestoreAdmin
+          .collection('posts')
+          .where('authorUsername', '==', username)
+          .orderBy('createdAt', 'desc')
+          .limit(3)
+        snap = await q2.get()
+      }
+    } else {
+      const q = firestoreAdmin
+        .collection('posts')
+        .where('authorUsername', '==', username)
+        .orderBy('createdAt', 'desc')
+        .limit(3)
+      snap = await q.get()
+    }
     return snap.docs.map((d) => {
       const data: any = d.data()
       return {
         id: d.id,
         content: data?.content ?? '',
         imageUrl: data?.imageUrl ?? undefined,
+        imageUrls: data?.imageUrls ?? undefined,
         likeCount: data?.likeCount ?? 0,
         commentCount: data?.commentCount ?? 0,
       }
@@ -69,36 +92,66 @@ async function getLatestPosts(username: string) {
   }
 }
 
-async function getLatestBlogsByAuthor(authorName: string) {
+async function getLatestBlogsByAuthor(authorName: string, username: string, uid?: string) {
   try {
-    const q = firestoreAdmin
-      .collection('posts')
-      .where('author', '==', authorName)
-      .where('isPublished', '==', true)
-      .orderBy('createdAt', 'desc')
-      .limit(3)
-    const snap = await q.get()
-    return snap.docs.map((d) => {
-      const data: any = d.data()
-      return {
-        slug: data?.slug ?? d.id,
-        title: data?.title ?? 'Untitled',
+    const col = firestoreAdmin.collection('blogs')
+
+    // prefer canonical authorId query when available
+    if (uid) {
+      const snap = await col.where('authorId', '==', uid).where('isPublished', '==', true).orderBy('createdAt', 'desc').limit(3).get()
+      if (!snap.empty) {
+        return snap.docs.map((d) => {
+          const data: any = d.data()
+          return { slug: data?.slug ?? d.id, title: data?.title ?? 'Untitled' }
+        })
       }
-    })
+    }
+
+    // fallback: try matching display name or username on legacy fields
+    const queries = [
+      col.where('author', '==', authorName).where('isPublished', '==', true).orderBy('createdAt', 'desc').limit(5),
+      col.where('author', '==', username).where('isPublished', '==', true).orderBy('createdAt', 'desc').limit(5),
+    ]
+
+    const results = await Promise.all(queries.map((q) => q.get()))
+    const map = new Map<string, { slug: string; title: string; createdAt?: any }>()
+
+    for (const snap of results) {
+      for (const d of snap.docs) {
+        const data: any = d.data()
+        const slug = data?.slug ?? d.id
+        if (!map.has(slug)) {
+          map.set(slug, { slug, title: data?.title ?? 'Untitled', createdAt: data?.createdAt })
+        }
+      }
+    }
+
+    // Sort by createdAt desc and return up to 3
+    const merged = Array.from(map.values())
+      .sort((a, b) => {
+        const at = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const bt = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : b.createdAt ? new Date(b.createdAt).getTime() : 0
+        return bt - at
+      })
+      .slice(0, 3)
+
+    return merged.map((m) => ({ slug: m.slug, title: m.title }))
   } catch (e) {
     console.error('Son bloglar getirilemedi', e)
     return [] as any[]
   }
 }
 
-export default async function PublicProfilePage({ params }: { params: { username: string } }) {
-  const profile = await getProfile(params.username)
+export default async function PublicProfilePage({ params }: { params: any }) {
+  const { username } = await params
+  const profile = await getProfile(username)
   if (!profile) {
     notFound()
   }
 
-  const latestPosts = await getLatestPosts(profile.username)
-  const latestBlogs = await getLatestBlogsByAuthor(profile.name)
+  const uid = (profile as any).uid as string | undefined
+  const latestPosts = await getLatestPosts(uid, profile.username)
+  const latestBlogs = await getLatestBlogsByAuthor(profile.name, profile.username, uid)
 
   const socials = [
     {

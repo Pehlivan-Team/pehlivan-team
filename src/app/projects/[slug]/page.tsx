@@ -23,8 +23,9 @@ async function getProject(slug: string): Promise<Project | null> {
   return { id: doc.id, ...doc.data() } as Project
 }
 
-export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
-  const project: Project | null = await getProject(params.slug)
+export default async function ProjectDetailPage({ params }: { params: any }) {
+  const { slug } = await params
+  const project: Project | null = await getProject(slug)
 
   if (!project) {
     notFound()
@@ -73,10 +74,8 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
                         src={photo}
                         alt={`${project.name} - Resim ${index + 1}`}
                         priority={index === 0}
-                        sizes="100vw"
-                        style={{
-                          objectFit: 'cover',
-                        }}
+                        fill
+                        className="object-center"
                       />
                     </div>
                   </CarouselItem>

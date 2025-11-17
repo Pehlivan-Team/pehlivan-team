@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { firestoreAdmin } from '@/lib/firebase-admin'
 import { nanoid } from 'nanoid'
+import { resetPasswordEmail } from '@/lib/email/resetPasswordTemplate'
 
 export async function POST(req: Request) {
   try {
@@ -37,9 +38,64 @@ export async function POST(req: Request) {
 
     // Try to send email if SMTP configured, otherwise log the link
     try {
-      if (process.env.SMTP_HOST && process.env.SMTP_USER) {
-  // nodemailer may not be installed in every environment; keep import dynamic and ignore TS compile-time check
-  // @ts-expect-error - dynamic import may not be present in all environments
+      const forceEthereal = process.env.FORCE_ETHEREAL === 'true'
+
+      // If FORCE_ETHEREAL is set, always send via Ethereal (useful for dev or staging)
+      if (forceEthereal) {
+        // @ts-expect-error - dynamic import may not be present in all environments
+        const nodemailer = await import('nodemailer')
+
+        if (process.env.ETHEREAL_USER && process.env.ETHEREAL_PASS) {
+          const transporter = nodemailer.createTransport({
+            host: 'smtp.ethereal.email',
+            port: 587,
+            secure: false,
+            auth: {
+              user: process.env.ETHEREAL_USER,
+              pass: process.env.ETHEREAL_PASS,
+            },
+          })
+
+          const from = process.env.SMTP_FROM || process.env.ETHEREAL_USER
+          const emailBody = resetPasswordEmail({ resetLink, siteName: process.env.NEXT_PUBLIC_SITE_NAME || 'Pehlivan Team' })
+          const info = await transporter.sendMail({
+            from,
+            to: email,
+            subject: 'Şifre sıfırlama isteğiniz (Ethereal preview)',
+            html: emailBody.html,
+            text: emailBody.text,
+          })
+          const previewUrl = nodemailer.getTestMessageUrl(info)
+          console.log('[forgot] Ethereal preview URL (forced, from env):', previewUrl)
+        } else {
+          const testAccount = await nodemailer.createTestAccount()
+          const transporter = nodemailer.createTransport({
+            host: testAccount.smtp.host,
+            port: testAccount.smtp.port,
+            secure: testAccount.smtp.secure,
+            auth: {
+              user: testAccount.user,
+              pass: testAccount.pass,
+            },
+          })
+
+          const from = process.env.SMTP_FROM || testAccount.user
+          const emailBody = resetPasswordEmail({ resetLink, siteName: process.env.NEXT_PUBLIC_SITE_NAME || 'Pehlivan Team' })
+          const info = await transporter.sendMail({
+            from,
+            to: email,
+            subject: 'Şifre sıfırlama isteğiniz (Ethereal preview)',
+            html: emailBody.html,
+            text: emailBody.text,
+          })
+          const previewUrl = nodemailer.getTestMessageUrl(info)
+          console.log('[forgot] Ethereal preview URL (forced):', previewUrl)
+        }
+
+      // try real SMTP when configured
+      } else if (process.env.SMTP_HOST && process.env.SMTP_USER) {
+        // nodemailer may not be installed in every environment; keep import dynamic and ignore TS compile-time check
+        // @ts-expect-error - dynamic import may not be present in all environments
         const nodemailer = await import('nodemailer')
         const transporter = nodemailer.createTransport({
           host: process.env.SMTP_HOST,
@@ -52,13 +108,71 @@ export async function POST(req: Request) {
         })
 
         const from = process.env.SMTP_FROM || process.env.SMTP_USER
-        await transporter.sendMail({
+        const emailBody = resetPasswordEmail({ resetLink, siteName: process.env.NEXT_PUBLIC_SITE_NAME || 'Pehlivan Team' })
+        const info = await transporter.sendMail({
           from,
           to: email,
           subject: 'Şifre sıfırlama isteğiniz',
-          html: `<p>Şifre sıfırlama talebi aldık. Şifrenizi sıfırlamak için <a href="${resetLink}">buraya tıklayın</a>. Bu bağlantı 1 saat geçerlidir.</p>`,
+          html: emailBody.html,
+          text: emailBody.text,
         })
-        console.log('[forgot] reset email sent to', email)
+        console.log('[forgot] reset email sent to', email, 'info=', info?.messageId || '')
+
+      // fallback: in development use Ethereal so devs can preview messages
+      } else if (process.env.NODE_ENV !== 'production') {
+        // @ts-expect-error - dynamic import may not be present in all environments
+        const nodemailer = await import('nodemailer')
+
+        // If explicit Ethereal credentials are provided via env (for deterministic dev previews), use them.
+        if (process.env.ETHEREAL_USER && process.env.ETHEREAL_PASS) {
+          const transporter = nodemailer.createTransport({
+            host: 'smtp.ethereal.email',
+            port: 587,
+            secure: false,
+            auth: {
+              user: process.env.ETHEREAL_USER,
+              pass: process.env.ETHEREAL_PASS,
+            },
+          })
+
+          const from = process.env.SMTP_FROM || process.env.ETHEREAL_USER
+          const emailBody = resetPasswordEmail({ resetLink, siteName: process.env.NEXT_PUBLIC_SITE_NAME || 'Pehlivan Team' })
+          const info = await transporter.sendMail({
+            from,
+            to: email,
+            subject: 'Şifre sıfırlama isteğiniz (Ethereal preview)',
+            html: emailBody.html,
+            text: emailBody.text,
+          })
+          // nodemailer.getTestMessageUrl works with Ethereal transports too
+          const previewUrl = nodemailer.getTestMessageUrl(info)
+          console.log('[forgot] Ethereal preview URL (from env):', previewUrl)
+        } else {
+          // Create a disposable Ethereal test account when explicit creds aren't supplied
+          const testAccount = await nodemailer.createTestAccount()
+          const transporter = nodemailer.createTransport({
+            host: testAccount.smtp.host,
+            port: testAccount.smtp.port,
+            secure: testAccount.smtp.secure,
+            auth: {
+              user: testAccount.user,
+              pass: testAccount.pass,
+            },
+          })
+
+          const from = process.env.SMTP_FROM || testAccount.user
+          const emailBody = resetPasswordEmail({ resetLink, siteName: process.env.NEXT_PUBLIC_SITE_NAME || 'Pehlivan Team' })
+          const info = await transporter.sendMail({
+            from,
+            to: email,
+            subject: 'Şifre sıfırlama isteğiniz (Ethereal preview)',
+            html: emailBody.html,
+            text: emailBody.text,
+          })
+          const previewUrl = nodemailer.getTestMessageUrl(info)
+          console.log('[forgot] Ethereal preview URL:', previewUrl)
+        }
+
       } else {
         console.log('[forgot] reset link (no SMTP configured):', resetLink)
       }

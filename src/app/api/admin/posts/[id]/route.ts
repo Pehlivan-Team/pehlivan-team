@@ -6,13 +6,15 @@ import { authOptions } from '@/lib/auth'
 import { firestoreAdmin } from '@/lib/firebase-admin'
 
 // YAZI GÜNCELLEME (PUT)
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: any }) {
   try {
-    const session = await getServerSession(authOptions)
+    const params = context.params
+    const resolvedParams: any = await params
+    const session: any = await getServerSession(authOptions as any)
     if (!session?.user?.isAdmin) {
       return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 })
     }
-    const docId = params.id
+    const docId = resolvedParams?.id
     const body = await request.json()
     /*
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -26,13 +28,28 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       manuel olarak eklememiz gerekiyor.
       Ayrıca bunu eklememek firestore'un kendi timestamp'ini render ederken sorunlara yol açıyor.
       */
-    await firestoreAdmin
-      .collection('posts')
-      .doc(docId)
-      .update({
-        ...body,
-        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      })
+    // If status is being updated to PUBLISHED, set publishedAt and publishedBy
+    const updatePayload: any = {
+      ...body,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    }
+
+    try {
+      const newStatus = body?.status
+      if (newStatus === 'PUBLISHED') {
+        updatePayload.publishedAt = admin.firestore.FieldValue.serverTimestamp()
+        updatePayload.publishedBy = session.user?.id || session.user?.email || session.user?.username || null
+        updatePayload.isPublished = true
+      } else if (newStatus === 'UNPUBLISHED') {
+        updatePayload.publishedAt = null
+        updatePayload.publishedBy = null
+        updatePayload.isPublished = false
+      }
+    } catch (e) {
+      console.warn('Error while computing publish audit fields', e)
+    }
+
+    await firestoreAdmin.collection('blogs').doc(docId).update(updatePayload)
 
     return NextResponse.json({ success: true })
   } catch (error) {
@@ -45,14 +62,16 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // YAZI SİLME (DELETE)
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: any }) {
   try {
-    const session = await getServerSession(authOptions)
+    const params = context.params
+    const resolvedParams: any = await params
+    const session: any = await getServerSession(authOptions as any)
     if (!session?.user?.isAdmin) {
       return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 })
     }
-    const docId = params.id
-    await firestoreAdmin.collection('posts').doc(docId).delete()
+    const docId = resolvedParams?.id
+    await firestoreAdmin.collection('blogs').doc(docId).delete()
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Post Delete Error:', error)

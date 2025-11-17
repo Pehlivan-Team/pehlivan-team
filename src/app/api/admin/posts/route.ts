@@ -36,10 +36,31 @@ export async function POST(request: NextRequest) {
       manuel olarak eklememiz gerekiyor.
       Ayrıca bunu eklememek firestore'un kendi timestamp'ini render ederken sorunlara yol açıyor.
       */
-    const newPost = await firestoreAdmin.collection('posts').add({
+    const status = isPublished ? 'PUBLISHED' : 'PENDING'
+
+    // Resolve stable authorId for admin-created posts (prefer session.user.id)
+    let authorId = session?.user?.id ?? null
+    try {
+      if (!authorId && session.user?.username) {
+        let q = await firestoreAdmin.collection('users').where('username', '==', session.user.username).limit(1).get()
+        if (!q.empty) authorId = q.docs[0].id
+        else if (session.user.email) {
+          q = await firestoreAdmin.collection('users').where('email', '==', session.user.email).limit(1).get()
+          if (!q.empty) authorId = q.docs[0].id
+        }
+      }
+    } catch (e) {
+      console.warn('Could not resolve authorId for admin post:', e)
+    }
+
+    const newPost = await firestoreAdmin.collection('blogs').add({
       ...body,
       author: session.user.name,
+      authorUsername: session.user.username || session.user.email || null,
       authorImage: session.user.image,
+      authorId: authorId || null,
+      status,
+      isPublished: Boolean(isPublished),
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     })

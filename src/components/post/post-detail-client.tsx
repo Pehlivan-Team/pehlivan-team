@@ -1,4 +1,5 @@
 'use client'
+// deprecated: replaced by src/components/post/PostDetailClient.tsx
 
 import { formatDistanceToNow } from 'date-fns'
 import { tr } from 'date-fns/locale'

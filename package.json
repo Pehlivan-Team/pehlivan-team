@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "migrate:posts-to-blogs": "node scripts/migrate-posts-to-blogs.js --dry-run"
   },
   "dependencies": {
     "@edgestore/react": "^0.5.4",
@@ -71,7 +72,7 @@
     "libphonenumber-js": "^1.12.23",
     "lucide-react": "^0.451.0",
     "nanoid": "^5.1.6",
-    "next": "14.2.15",
+    "next": "^16.0.3",
     "next-auth": "^4.24.11",
     "next-themes": "^0.3.0",
     "nodemailer": "^7.0.10",

@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { firestoreAdmin } from '@/lib/firebase-admin'
 
-export async function GET(req: NextRequest, { params }: { params: { username: string } }) {
-  const { username } = params
+export async function GET(req: NextRequest, context: { params: any }) {
+  const params = context.params
+  const resolvedParams: any = await params
+  const { username } = resolvedParams
   if (!username) return NextResponse.json({ error: 'username required' }, { status: 400 })
 
   const followsRef = firestoreAdmin.collection('follows')

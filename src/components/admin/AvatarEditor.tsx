@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { useEdgeStore } from '@/lib/edgestore'
+import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 
 type Props = {
@@ -68,6 +69,8 @@ export default function AvatarEditor({ initialImageUrl, onUploadComplete }: Prop
     setCroppedAreaPixels(croppedPixels)
   }, [])
 
+  const { data: session } = useSession()
+
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0]
     if (!f) return
@@ -81,21 +84,43 @@ export default function AvatarEditor({ initialImageUrl, onUploadComplete }: Prop
       toast.error('Lütfen önce bir resim seçin ve kırpın.')
       return
     }
+    if (!edgestore || !edgestore?.profileImages) {
+      // Provide actionable guidance: if user isn't signed in, EdgeStore init may fail
+      if (!session) {
+        toast.error('EdgeStore hazır değil — lütfen önce giriş yapın.')
+      } else if (!edgestore) {
+        toast.error('EdgeStore başlatılamadı. Lütfen birkaç saniye bekleyip tekrar deneyin.')
+      } else {
+        toast.error('EdgeStore hazırlaşıyor veya profil bucket tanımlı değil. Birkaç saniye sonra tekrar deneyin.')
+      }
+      return
+    }
     setLoading(true)
     try {
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 800)
       if (!blob) throw new Error('Kırpma başarısız')
       const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' })
-      if (edgestore && 'profileImages' in edgestore) {
-        const res = await edgestore.profileImages.upload({ file })
-        onUploadComplete(res.url)
-        toast.success('Profil resmi yüklendi')
+      if (edgestore?.profileImages?.upload) {
+        try {
+          const res = await edgestore.profileImages.upload({ file })
+          // Ensure the upload returned a hosted URL before calling the callback
+          if (!res || !res.url) {
+            throw new Error('EdgeStore yükleme sonucu beklenmeyen formatta')
+          }
+          onUploadComplete(res.url)
+          toast.success('Profil resmi yüklendi')
+          setOpen(false)
+        } catch (err) {
+          console.error('EdgeStore upload error', err)
+          toast.error('Profil resmi yüklenirken hata oluştu (EdgeStore)')
+        }
       } else {
+        // Fallback: local preview blob url
         const url = URL.createObjectURL(blob)
         onUploadComplete(url)
         toast.success('Profil resmi hazır (local preview)')
+        setOpen(false)
       }
-      setOpen(false)
     } catch (err) {
       console.error(err)
       toast.error('Resim yüklenirken hata oluştu')
@@ -160,8 +185,8 @@ export default function AvatarEditor({ initialImageUrl, onUploadComplete }: Prop
                 </div>
                 <div className="flex items-center gap-2">
                   <Button variant="outline" onClick={() => setAspect(1)}>1:1</Button>
-                  <Button variant="outline" onClick={() => setAspect(16/9)}>16:9</Button>
-                  <Button variant="outline" onClick={() => setAspect(4/3)}>4:3</Button>
+                  <Button variant="outline" onClick={() => setAspect(16 / 9)}>16:9</Button>
+                  <Button variant="outline" onClick={() => setAspect(4 / 3)}>4:3</Button>
                 </div>
               </div>
             )}

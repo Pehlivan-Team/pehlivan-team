@@ -27,6 +27,7 @@ async function getFeed(limit = 30, cursor?: string) {
         authorUsername: data.authorUsername,
         content: data.content || '',
         imageUrl: data.imageUrl || undefined,
+        imageUrls: data.imageUrls || undefined,
         likeCount: data.likeCount || 0,
         commentCount: data.commentCount || 0,
         type: data.type || 'social',

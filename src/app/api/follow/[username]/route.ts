@@ -14,10 +14,12 @@ async function getCounts(target: string) {
   return { followersCount: followersSnap.size, followingCount: followingSnap.size }
 }
 
-export async function GET(req: NextRequest, { params }: { params: { username: string } }) {
+export async function GET(req: NextRequest, context: { params: any }) {
+  const params = context.params
+  const resolvedParams: any = await params
   const session: any = await getServerSession(authOptions as any)
   const viewer = session?.user?.username
-  const target = params.username
+  const target = resolvedParams.username
   if (!target) return NextResponse.json({ error: 'username required' }, { status: 400 })
 
   const followsRef = firestoreAdmin.collection('follows')
@@ -31,10 +33,12 @@ export async function GET(req: NextRequest, { params }: { params: { username: st
   return NextResponse.json({ ...counts, isFollowing })
 }
 
-export async function POST(req: NextRequest, { params }: { params: { username: string } }) {
+export async function POST(req: NextRequest, context: { params: any }) {
+  const params = context.params
+  const resolvedParams: any = await params
   const session: any = await getServerSession(authOptions as any)
   const follower = session?.user?.username
-  const target = params.username
+  const target = resolvedParams.username
   if (!follower) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   if (follower === target)
     return NextResponse.json({ error: 'Cannot follow yourself' }, { status: 400 })
@@ -50,10 +54,12 @@ export async function POST(req: NextRequest, { params }: { params: { username: s
   return NextResponse.json({ message: 'Followed', ...counts, isFollowing: true })
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { username: string } }) {
+export async function DELETE(req: NextRequest, context: { params: any }) {
+  const params = context.params
+  const resolvedParams: any = await params
   const session: any = await getServerSession(authOptions as any)
   const follower = session?.user?.username
-  const target = params.username
+  const target = resolvedParams.username
   if (!follower) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   if (follower === target)
     return NextResponse.json({ error: 'Cannot unfollow yourself' }, { status: 400 })

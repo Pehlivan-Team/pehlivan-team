@@ -4,7 +4,7 @@ import { teamsData } from '@/constants/teams'
 import { firestoreAdmin } from '@/lib/firebase-admin'
 
 // Belirli bir süre sonra (örn: 24 saat) site haritasının yeniden oluşturulmasını sağlar
-export const revalidate = 60 * 60 * 24
+export const revalidate = 86400 // 24 hours in seconds
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.pehli1team.com'
@@ -27,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 2. Dinamik blog yazılarını Firestore'dan çek
   const postsSnapshot = await firestoreAdmin
-    .collection('posts')
+    .collection('blogs')
     .where('isPublished', '==', true)
     .get()
 

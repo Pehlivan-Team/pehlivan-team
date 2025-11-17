@@ -122,8 +122,8 @@ const Footer = () => {
       {/* Bottom Bar for Copyright */}
       <div className="bg-black/50 py-4">
         <div className="container mx-auto px-6 text-center text-sm text-gray-400">
-          &copy; {currentYear} Tasarım Proje Trakya. Tüm hakları saklıdır. Designed by{' '}
-          <Link href="https://github.com/anshinx">anshinx</Link>
+          &copy; {currentYear} Tasarım Proje Trakya. Tüm hakları saklıdır. Designed and developed by{' '}
+          <Link href="https://github.com/anshinx">anshinx</Link> with ♥.
         </div>
       </div>
     </footer>

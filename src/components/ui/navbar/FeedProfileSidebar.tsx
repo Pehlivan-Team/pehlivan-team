@@ -14,6 +14,7 @@ import {
   CalendarClock,
   Link as LinkIcon,
   Plus,
+  Mail,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -22,7 +23,7 @@ import React, { useMemo, useState } from 'react'
 
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
@@ -37,12 +38,13 @@ export default function FeedProfileSidebar() {
 
   const pathname = usePathname()
   const signedIn = Boolean(session?.user)
-  const [composeOpen, setComposeOpen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const nav = useMemo(
     () => [
 
       { href: '/feed', label: 'Sosyalleş', Icon: MessageCircle },
+      { href: '/messages', label: 'Mesajlar', Icon: Mail },
       { href: '/search', label: 'Ara', Icon: SearchIcon },
       { href: '/blog', label: 'Blog', Icon: FileText },
       { href: '/projects', label: 'Projeler', Icon: FolderGit2 },
@@ -58,11 +60,10 @@ export default function FeedProfileSidebar() {
       <Button
         asChild
         variant="ghost"
-        className={`justify-start gap-2 px-3 py-2 rounded-md border ${
-          active
+        className={`justify-start gap-2 px-3 py-2 rounded-md border ${active
             ? 'bg-emerald-600/10 border-emerald-700/40 text-emerald-300'
             : 'bg-transparent border-transparent text-slate-300 hover:bg-slate-800/70 hover:text-white'
-        }`}
+          }`}
       >
         <Link href={href}>
           <span className={`inline-block h-1.5 w-1.5 rounded-full mr-2 ${active ? 'bg-emerald-400' : 'bg-transparent'}`} />
@@ -75,7 +76,7 @@ export default function FeedProfileSidebar() {
   return (
     // Sidebar is now in-flow (non-fixed). On mobile it becomes a full-width block above content;
     // on large screens it occupies the left column (lg:col-span-3) with a constrained height.
-  <aside className="fixed left-0 top-0 z-40 hidden h-screen w-72 flex-col gap-4 overflow-y-auto border-r border-slate-800 bg-slate-950/90 px-4 py-5 text-white backdrop-blur supports-[backdrop-filter]:backdrop-blur-md lg:flex">
+    <aside className="fixed left-0 top-0 z-40 hidden h-screen w-72 flex-col gap-4 overflow-y-auto border-r border-slate-800 bg-slate-950/90 px-4 py-5 text-white backdrop-blur supports-[backdrop-filter]:backdrop-blur-md lg:flex">
       {/* User header */}
       <div className="mb-2">
         <Link href={username ? `/profile/${username}` : '/feed'} className="flex items-center gap-3">
@@ -95,24 +96,27 @@ export default function FeedProfileSidebar() {
         </Link>
         <div className="mt-3 flex items-center gap-2">
           {signedIn ? (
-            <Collapsible open={composeOpen} onOpenChange={setComposeOpen} className="w-full">
-              <div className="flex items-center gap-2">
-                <CollapsibleTrigger asChild>
+            <>
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
                   <Button className="flex-1 justify-center gap-2 bg-emerald-700/80 hover:bg-emerald-700">
                     <Plus className="h-4 w-4" /> Yeni Gönderi
                   </Button>
-                </CollapsibleTrigger>
-                <Link
-                  href="/feed/settings"
-                  className="rounded px-3 py-2 bg-slate-900/70 hover:bg-slate-800 text-sm flex items-center gap-2 border border-slate-800"
-                >
-                  <Settings className="w-4 h-4" />
-                </Link>
-              </div>
-              <CollapsibleContent className="mt-2">
-                <PostComposer username={username || ''} />
-              </CollapsibleContent>
-            </Collapsible>
+                </DialogTrigger>
+                <DialogContent className="max-w-xl">
+                  <DialogHeader>
+                    <DialogTitle>Yeni Gönderi Oluştur</DialogTitle>
+                  </DialogHeader>
+                  <PostComposer username={username || ''} onPosted={() => setDialogOpen(false)} />
+                </DialogContent>
+              </Dialog>
+              <Link
+                href="/settings/profile"
+                className="rounded px-3 py-2 bg-slate-900/70 hover:bg-slate-800 text-sm flex items-center gap-2 border border-slate-800"
+              >
+                <Settings className="w-4 h-4" />
+              </Link>
+            </>
           ) : (
             <>
               <Button onClick={() => signIn()} className="flex-1 justify-center gap-2 bg-emerald-700/80 hover:bg-emerald-700">
@@ -161,14 +165,7 @@ export default function FeedProfileSidebar() {
                 </TooltipTrigger>
                 <TooltipContent>Yakında</TooltipContent>
               </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button disabled className="justify-start gap-2 bg-transparent text-slate-500 border border-slate-800">
-                    <MessageCircle className="h-4 w-4" /> Mesajlar
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Yakında</TooltipContent>
-              </Tooltip>
+
             </TooltipProvider>
           </div>
         </div>

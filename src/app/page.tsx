@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react'
 import ContactSection from '@/components/main-page-components/ContactSection'
 import FeaturedProjects from '@/components/main-page-components/FeaturedProjects'
 import MainPageAboutCards from '@/components/main-page-components/MainPageAboutCards'
@@ -34,7 +35,9 @@ export default async function Home() {
 
   return (
     <div className="bg-gray-950">
-      <WelcomeModalWrapper />
+      <Suspense fallback={null}>
+        <WelcomeModalWrapper />
+      </Suspense>
 
       <MainPageHeader />
       <MainPageProjects projects={randomProjects} />

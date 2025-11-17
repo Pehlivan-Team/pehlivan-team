@@ -5,13 +5,15 @@ import { authOptions } from '@/lib/auth'
 import { firestoreAdmin } from '@/lib/firebase-admin'
 
 // PROJE GÜNCELLEME (PUT)
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: any }) {
   try {
-    const session = await getServerSession(authOptions)
+    const params = context.params
+    const resolvedParams: any = await params
+    const session: any = await getServerSession(authOptions as any)
     if (!session?.user?.permissions?.canManageProjects) {
       return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 })
     }
-    const docId = params.id
+    const docId = resolvedParams?.id
     const body = await request.json()
     await firestoreAdmin.collection('projects').doc(docId).update(body)
     return NextResponse.json({ success: true })
@@ -24,13 +26,15 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PROJE SİLME (DELETE)
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: any }) {
   try {
-    const session = await getServerSession(authOptions)
+    const params = context.params
+    const resolvedParams: any = await params
+    const session: any = await getServerSession(authOptions as any)
     if (!session?.user?.permissions?.canManageProjects) {
       return NextResponse.json({ success: false, error: 'Yetkiniz yok.' }, { status: 403 })
     }
-    const docId = params.id
+    const docId = resolvedParams?.id
     await firestoreAdmin.collection('projects').doc(docId).delete()
     return NextResponse.json({ success: true })
   } catch (error) {

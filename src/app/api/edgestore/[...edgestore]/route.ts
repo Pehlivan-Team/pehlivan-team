@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth'
 
 import { authOptions } from '@/lib/auth'
 
-export const runtime = 'nodejs'
+// runtime removed temporarily to avoid invalid segment export during build
 
 const es = initEdgeStore.create()
 

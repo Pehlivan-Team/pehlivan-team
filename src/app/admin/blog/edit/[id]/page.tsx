@@ -6,7 +6,7 @@ import { Post } from '@/types/blog'
 import { PostForm } from '../../_components/PostForm'
 
 async function getPost(id: string): Promise<Post | null> {
-  const docRef = firestoreAdmin.collection('posts').doc(id)
+  const docRef = firestoreAdmin.collection('blogs').doc(id)
   const docSnap = await docRef.get()
 
   if (!docSnap.exists) {
@@ -28,8 +28,9 @@ async function getPost(id: string): Promise<Post | null> {
   }
 }
 
-export default async function EditPostPage({ params }: { params: { id: string } }) {
-  const post = await getPost(params.id)
+export default async function EditPostPage({ params }: { params: any }) {
+  const { id } = await params
+  const post = await getPost(id)
 
   if (!post) {
     return notFound()

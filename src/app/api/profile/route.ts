@@ -69,14 +69,20 @@ export async function POST(req: NextRequest) {
   const userRef = firestoreAdmin.collection('users').doc(userEmail)
 
   try {
-    await userRef.update({
-      name: dataToUpdate.name,
-      username,
-      bio,
-      team,
-      profilePictureUrl,
-      socialLinks,
-    })
+    // Build update payload only with fields that are explicitly provided
+    const updatePayload: Record<string, any> = {}
+    if (typeof dataToUpdate.name !== 'undefined') updatePayload.name = dataToUpdate.name
+    if (typeof username !== 'undefined') updatePayload.username = username
+    if (typeof bio !== 'undefined') updatePayload.bio = bio
+    if (typeof team !== 'undefined') updatePayload.team = team
+    if (typeof profilePictureUrl !== 'undefined') updatePayload.profilePictureUrl = profilePictureUrl
+    if (typeof socialLinks !== 'undefined') updatePayload.socialLinks = socialLinks
+
+    if (Object.keys(updatePayload).length === 0) {
+      return NextResponse.json({ success: true, message: 'Güncellenecek alan yok.' })
+    }
+
+    await userRef.update(updatePayload)
     return NextResponse.json({ success: true, message: 'Profil güncellendi.' })
   } catch (error) {
     console.error('Profil güncelleme hatası:', error)

@@ -82,9 +82,15 @@ export function BlogClientPage({ initialPosts }: { initialPosts: Post[] }) {
               <TableRow key={post.id}>
                 <TableCell className="font-medium">{post.title}</TableCell>
                 <TableCell>
-                  <Badge variant={post.isPublished ? 'default' : 'secondary'}>
-                    {post.isPublished ? 'Yayınlandı' : 'Taslak'}
-                  </Badge>
+                  {post.status === 'PENDING' ? (
+                    <Badge variant="secondary">Onay Bekliyor</Badge>
+                  ) : post.status === 'UNPUBLISHED' ? (
+                    <Badge variant="secondary">Yayından Kaldırıldı</Badge>
+                  ) : post.isPublished || post.status === 'PUBLISHED' ? (
+                    <Badge variant="default">Yayınlandı</Badge>
+                  ) : (
+                    <Badge variant="secondary">Taslak</Badge>
+                  )}
                 </TableCell>
                 <TableCell>
                   {format(new Date(post.createdAt), 'dd MMMM yyyy', {
@@ -99,6 +105,29 @@ export function BlogClientPage({ initialPosts }: { initialPosts: Post[] }) {
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
+                    {post.status === 'PENDING' && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={async () => {
+                          try {
+                            const r = await fetch(`/api/admin/posts/${post.id}`, {
+                              method: 'PUT',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ status: 'PUBLISHED', isPublished: true }),
+                            })
+                            const j = await r.json()
+                            if (!j.success) throw new Error(j.error || 'Hata')
+                            setPosts((cur) => cur.map((p) => (p.id === post.id ? { ...p, status: 'PUBLISHED', isPublished: true } : p)))
+                            toast.success('Yazı yayınlandı.')
+                          } catch (err) {
+                            toast.error(err instanceof Error ? err.message : 'Yayınlama hatası')
+                          }
+                        }}
+                      >
+                        Onayla & Yayınla
+                      </Button>
+                    )}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button

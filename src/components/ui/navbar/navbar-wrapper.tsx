@@ -12,8 +12,9 @@ export function NavbarWrapper() {
   const isAdminRoute = pathname.startsWith('/admin')
   if (isAdminRoute) return null
 
-  const isMinimalNav =
-    pathname.startsWith('/feed') || pathname.startsWith('/profile') || pathname.startsWith('/search') || pathname.startsWith('/posts/')
+  const socialRoutes = ['/feed', '/profile', '/search', '/posts/', '/messages']
+
+  const isMinimalNav = socialRoutes.some((route) => pathname.startsWith(route))
 
   // On feed/profile/search pages we don't show the Topbar — render mobile bottom bar only
   if (isMinimalNav) {

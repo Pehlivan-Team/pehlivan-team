@@ -1,0 +1,148 @@
+yarn run v1.22.22
+$ next build
+ ΓÜá `images.domains` is deprecated in favor of `images.remotePatterns`. Please update next.config.mjs to protect your application from malicious users.
+ ΓÜá Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\yener\Desktop\Dev\JS\yarn.lock as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\yener\Desktop\Dev\JS\pehlivan-team\yarn.lock
+
+   Γû▓ Next.js 16.0.3 (Turbopack)
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully in 16.3s
+   Running TypeScript ...
+   Collecting page data using 15 workers ...
+   Generating static pages using 15 workers (0/65) ...
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+   Generating static pages using 15 workers (16/65) 
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+   Generating static pages using 15 workers (32/65) 
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+The `credentials` option is deprecated. Please use the `auth` object constructor instead. For more details, see https://cloud.google.com/docs/authentication/external/externally-sourced-credentials.
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+Kullan─▒c─▒ oturumu: undefined
+   Generating static pages using 15 workers (48/65) 
+Kullan─▒c─▒ oturumu: undefined
+The `fromJSON` method is deprecated. Please use the `JWT` constructor instead. For more details, see https://cloud.google.com/docs/authentication/external/externally-sourced-credentials.
+The `credentials` option is deprecated. Please use the `auth` object constructor instead. For more details, see https://cloud.google.com/docs/authentication/external/externally-sourced-credentials.
+The `fromJSON` method is deprecated. Please use the `JWT` constructor instead. For more details, see https://cloud.google.com/docs/authentication/external/externally-sourced-credentials.
+ Γ£ô Generating static pages using 15 workers (65/65) in 5.8s
+   Finalizing page optimization ...
+
+Route (app)                           Revalidate  Expire
+Γöî Γùï /
+Γö£ Γùï /_not-found
+Γö£ Γùï /add_member
+Γö£ ╞Æ /admin
+Γö£ ╞Æ /admin/admins
+Γö£ ╞Æ /admin/analytics
+Γö£ ╞Æ /admin/blog
+Γö£ ╞Æ /admin/blog/edit/[id]
+Γö£ ╞Æ /admin/blog/new
+Γö£ ╞Æ /admin/community
+Γö£ ╞Æ /admin/links
+Γö£ ╞Æ /admin/members
+Γö£ ╞Æ /admin/needs
+Γö£ ╞Æ /admin/projects
+Γö£ ╞Æ /admin/timeline
+Γö£ ╞Æ /api/add_member
+Γö£ ╞Æ /api/add_needs
+Γö£ ╞Æ /api/admin/admins
+Γö£ ╞Æ /api/admin/links/[id]
+Γö£ ╞Æ /api/admin/needs/categories
+Γö£ ╞Æ /api/admin/posts
+Γö£ ╞Æ /api/admin/posts/[id]
+Γö£ ╞Æ /api/admin/projects
+Γö£ ╞Æ /api/admin/projects/[id]
+Γö£ ╞Æ /api/admin/timeline
+Γö£ ╞Æ /api/admin/timeline/[id]
+Γö£ ╞Æ /api/auth/[...nextauth]
+Γö£ ╞Æ /api/auth/forgot
+Γö£ ╞Æ /api/auth/register
+Γö£ ╞Æ /api/auth/reset/confirm
+Γö£ ╞Æ /api/blogs
+Γö£ ╞Æ /api/edgestore/[...edgestore]
+Γö£ ╞Æ /api/feed/preferences
+Γö£ ╞Æ /api/follow/[username]
+Γö£ ╞Æ /api/follow/[username]/followers
+Γö£ ╞Æ /api/follow/[username]/following
+Γö£ ╞Æ /api/liste/categories
+Γö£ ╞Æ /api/posts
+Γö£ ╞Æ /api/posts/[postId]
+Γö£ ╞Æ /api/posts/[postId]/comments
+Γö£ ╞Æ /api/posts/[postId]/like
+Γö£ ╞Æ /api/profile
+Γö£ ╞Æ /api/profile/[username]
+Γö£ ╞Æ /api/search
+Γö£ ╞Æ /api/shorten
+Γö£ Γùï /auth/forgot
+Γö£ Γùï /auth/login
+Γö£ Γùï /auth/register
+Γö£ ╞Æ /auth/reset/[token]
+Γö£ Γùï /blog
+Γö£ ╞Æ /blog/[slug]
+Γö£ Γùï /blog/new
+Γö£ Γùï /dev/email/reset
+Γö£ Γùï /feed                                    30s      1y
+Γö£ Γùï /liste
+Γö£ Γùï /liste/ekle
+Γö£ Γùï /members
+Γö£ ╞Æ /members/[member]
+Γö£ ╞Æ /posts/[id]
+Γö£ ╞Æ /profile
+Γö£ ╞Æ /profile/[username]
+Γö£ Γùï /projects
+Γö£ ΓùÅ /projects/[slug]
+Γöé Γö£ /projects/boru-otonom
+Γöé Γö£ /projects/elektrak
+Γöé Γö£ /projects/pehli1-ev
+Γöé Γöö [+5 more paths]
+Γö£ Γùï /robots.txt
+Γö£ ╞Æ /s/[slug]
+Γö£ Γùï /search
+Γö£ Γùï /settings/profile
+Γö£ Γùï /shortener
+Γö£ Γùï /sitemap.xml                              1d      1y
+Γö£ Γùï /teams
+Γö£ ΓùÅ /teams/[slug]
+Γöé Γö£ /teams/elektrikli-arac
+Γöé Γö£ /teams/roket
+Γöé Γö£ /teams/boru-otonom
+Γöé Γöö [+2 more paths]
+Γöö Γùï /timeline
+
+
+╞Æ Proxy (Middleware)
+
+Γùï  (Static)   prerendered as static content
+ΓùÅ  (SSG)      prerendered as static HTML (uses generateStaticParams)
+╞Æ  (Dynamic)  server-rendered on demand
+
+Done in 44.03s.

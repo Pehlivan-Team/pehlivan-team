@@ -16,6 +16,9 @@ export interface Post {
   authorId: string
   content: string
   imageUrl?: string
+  imageUrls?: string[]
+  mentions?: string[]
+  hashtags?: string[]
   likeCount: number
   commentCount: number
   createdAt: Timestamp // Firestore Timestamp
@@ -36,6 +39,9 @@ export interface PostComment {
 export interface CreatePostRequest {
   content: string
   imageUrl?: string
+  imageUrls?: string[]
+  mentions?: string[]
+  hashtags?: string[]
   type?: PostType // optional on create; defaults to 'social'
   linkUrl?: string // required if type === 'linked'
 }

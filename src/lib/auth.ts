@@ -155,6 +155,8 @@ export const authOptions: NextAuthOptions = {
           const userRef = firestoreAdmin.collection('users').doc(userEmail)
           const userDoc = await userRef.get()
           const defaultUsername = userEmail.split('@')[0]
+          // canonical user id (Firestore doc id) — used as stable authorId
+          const userId = userRef.id
 
           if (!userDoc.exists) {
             // YENİ OAuth kullanıcısı için profil oluştur
@@ -173,10 +175,12 @@ export const authOptions: NextAuthOptions = {
             await userRef.set(defaultProfile)
             token.username = defaultUsername
             token.profilePictureUrl = defaultProfile.profilePictureUrl || ''
+            token.userId = userId
           } else {
             // Mevcut kullanıcı (OAuth veya Credentials)
             token.username = userDoc.data()?.username || defaultUsername
             token.profilePictureUrl = userDoc.data()?.profilePictureUrl || user.image || ''
+            token.userId = userDoc.id
           }
         } catch (error) {
           console.error('JWT user profile error:', error)
@@ -197,6 +201,8 @@ export const authOptions: NextAuthOptions = {
         ;(session.user as any).profilePictureUrl = token.profilePictureUrl as string
         // Also set the canonical `session.user.image` so existing UI that reads `image` shows the stored picture
         session.user.image = (token.profilePictureUrl as string) || session.user.image
+        // Expose stable user id (Firestore doc id) in session
+        ;(session.user as any).id = token.userId as string
       }
       return session
     },

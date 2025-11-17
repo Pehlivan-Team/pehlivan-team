@@ -6,18 +6,23 @@ import { firestoreAdmin } from '@/lib/firebase-admin'
 import { createPostSchema } from '@/lib/validation/posts' // PostValidation'ı import et
 
 // Mevcut GET fonksiyonunuz...
-export async function GET(req: Request, { params }: { params: { postId: string } }) {
+export async function GET(req: Request, context: { params: any }) {
+  const params = context.params
+  const resolvedParams: any = await params
+  const { postId } = resolvedParams
   // ... (Bu fonksiyon aynı kalıyor)
 }
 
 // YENİ: POST SİLME FONKSİYONU
-export async function DELETE(req: Request, { params }: { params: { postId: string } }) {
-  const session = await getServerSession(authOptions)
+export async function DELETE(req: Request, context: { params: any }) {
+  const params = context.params
+  const resolvedParams: any = await params
+  const session: any = await getServerSession(authOptions as any)
   if (!session?.user?.username) {
     return NextResponse.json({ error: 'Yetkiniz yok' }, { status: 401 })
   }
 
-  const { postId } = params
+  const { postId } = resolvedParams
   if (!postId) {
     return NextResponse.json({ error: 'Post ID gerekli' }, { status: 400 })
   }
@@ -52,13 +57,15 @@ export async function DELETE(req: Request, { params }: { params: { postId: strin
 }
 
 // YENİ: POST DÜZENLEME FONKSİYONU
-export async function PUT(req: Request, { params }: { params: { postId: string } }) {
-  const session = await getServerSession(authOptions)
+export async function PUT(req: Request, context: { params: any }) {
+  const params = context.params
+  const resolvedParams: any = await params
+  const session: any = await getServerSession(authOptions as any)
   if (!session?.user?.username) {
     return NextResponse.json({ error: 'Yetkiniz yok' }, { status: 401 })
   }
 
-  const { postId } = params
+  const { postId } = resolvedParams
   if (!postId) {
     return NextResponse.json({ error: 'Post ID gerekli' }, { status: 400 })
   }

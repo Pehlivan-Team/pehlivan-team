@@ -15,11 +15,14 @@ export const createPostSchema = z
   .object({
     content: z.string().trim().max(5000).optional().or(z.literal('')),
     imageUrl: z.string().url().optional(),
+    imageUrls: z.array(z.string().url()).max(5).optional(),
+    mentions: z.array(z.string()).optional(),
+    hashtags: z.array(z.string()).optional(),
     type: postTypeEnum.optional().default('social'),
     linkUrl: z.string().url().optional(),
   })
   .refine(
-    (v) => (v.content && v.content.length > 0) || v.imageUrl || (v.type === 'linked' && v.linkUrl),
+    (v) => (v.content && v.content.length > 0) || v.imageUrl || (Array.isArray(v.imageUrls) && v.imageUrls.length > 0) || (v.type === 'linked' && v.linkUrl),
     {
       message: 'Content, image, or link is required',
     }

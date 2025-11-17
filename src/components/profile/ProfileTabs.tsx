@@ -3,8 +3,9 @@ import Link from 'next/link'
 import * as React from 'react'
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import PostCard from '@/components/post/PostCard'
 
-type PostItem = { id: string; content: string; imageUrl?: string; likeCount: number; commentCount: number }
+type PostItem = { id: string; content: string; imageUrl?: string; imageUrls?: string[]; likeCount: number; commentCount: number }
 interface ProfileTabsProps {
   posts: PostItem[]
   blogs: { slug: string; title: string }[]
@@ -28,21 +29,18 @@ export default function ProfileTabs({ posts, blogs, username, name }: ProfileTab
         ) : (
           <ul className="space-y-4">
             {posts.map((p) => (
-              <li key={p.id} className="rounded-xl border border-slate-700 bg-slate-800/70 p-4">
-                <p className="text-slate-100 whitespace-pre-wrap">{p.content}</p>
-                {p.imageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={p.imageUrl}
-                    alt="post image"
-                    className="mt-3 max-h-72 w-full object-cover rounded-lg"
-                  />
-                ) : null}
-                <div className="text-sm text-slate-400 mt-2">
-                  <span>{p.likeCount || 0} beğeni</span>
-                  <span className="mx-2">•</span>
-                  <span>{p.commentCount || 0} yorum</span>
-                </div>
+              <li key={p.id}>
+                <PostCard
+                  post={{
+                    id: p.id,
+                    authorUsername: username,
+                    content: p.content,
+                    imageUrl: p.imageUrl,
+                    imageUrls: p.imageUrls,
+                    likeCount: p.likeCount,
+                    commentCount: p.commentCount,
+                  }}
+                />
               </li>
             ))}
           </ul>

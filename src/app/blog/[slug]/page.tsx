@@ -5,10 +5,13 @@ import he from 'he'
 import { JSDOM } from 'jsdom'
 import { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { firestoreAdmin } from '@/lib/firebase-admin'
 import { Post } from '@/types/blog'
+import AuthorHeader from '@/components/blog/AuthorHeader'
+import HeaderImage from '@/components/blog/HeaderImage'
 
 export const revalidate = 60 // 60 saniyede bir ISR
 
@@ -18,7 +21,7 @@ const DOMPurify = createDOMPurify(window as any)
 
 async function getPostBySlug(slug: string): Promise<Post | null> {
   const snapshot = await firestoreAdmin
-    .collection('posts')
+    .collection('blogs')
     .where('slug', '==', slug)
     .where('isPublished', '==', true)
     .limit(1)
@@ -40,7 +43,7 @@ async function getPostBySlug(slug: string): Promise<Post | null> {
 
 async function getPublishedPosts(): Promise<Post[]> {
   const snapshot = await firestoreAdmin
-    .collection('posts')
+    .collection('blogs')
     .where('isPublished', '==', true)
     .orderBy('createdAt', 'desc')
     .get()
@@ -50,7 +53,7 @@ async function getPublishedPosts(): Promise<Post[]> {
 
 async function getMoreByAuthor(author: string, excludeSlug: string, limit = 5): Promise<Post[]> {
   const snapshot = await firestoreAdmin
-    .collection('posts')
+    .collection('blogs')
     .where('author', '==', author)
     .where('isPublished', '==', true)
     .orderBy('createdAt', 'desc')
@@ -63,12 +66,9 @@ async function getMoreByAuthor(author: string, excludeSlug: string, limit = 5): 
     .slice(0, limit)
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string }
-}): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug)
+export async function generateMetadata({ params }: { params: any }): Promise<Metadata> {
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
 
   if (!post) {
     return {
@@ -102,12 +102,13 @@ export async function generateMetadata({
   }
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = await getPostBySlug(params.slug)
+export default async function BlogPostPage({ params }: { params: any }) {
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
   if (!post) {
     notFound()
   }
-  const moreByAuthor = await getMoreByAuthor(post.author, post.slug)
+  const moreByAuthor = await getMoreByAuthor(post.author || '', post.slug)
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -134,40 +135,16 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       <main className="container mx-auto py-12 px-4">
         <div className="mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 max-w-6xl">
           <article className="lg:col-span-8">
-            <header className="text-center mb-12">
-              <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight">{post.title}</h1>
-              <div className="flex items-center justify-center gap-4 mt-6 text-lg text-muted-foreground">
-                <Image
-                  src={post.authorImage || '/default-avatar.png'}
-                  alt={post.author}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                  style={{
-                    maxWidth: '100%',
-                    height: 'auto',
-                  }}
-                />
-                <span>{post.author}</span>
-                <span>•</span>
-                <span>
-                  {format(new Date(post.createdAt), 'dd MMMM yyyy', {
-                    locale: tr,
-                  })}
-                </span>
-              </div>
-            </header>
+            <AuthorHeader
+              title={post.title}
+              author={post.author}
+              authorUsername={(post as any).authorUsername}
+              authorImage={(post as any).authorImage}
+              createdAt={format(new Date(post.createdAt), 'dd MMMM yyyy', { locale: tr })}
+            />
 
             {post.imageUrl && (
-              <div className="relative aspect-auto w-max rounded-lg overflow-hidden mb-12">
-                <Image
-                  src={post.imageUrl}
-                  alt={post.title}
-                  width={800}
-                  height={450}
-                  sizes="100vw"
-                />
-              </div>
+              <HeaderImage src={post.imageUrl} alt={post.title} />
             )}
 
             <div
@@ -178,9 +155,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
           <aside className="lg:col-span-4 lg:pl-4">
             <div className="sticky top-24">
+            <div id="aside-image-slot" className="mt-4 hidden md:block" />
               <h2 className="text-xl font-semibold mb-4">
                 {post.author} tarafından yazılan diğer blog postları
               </h2>
+              {/* slot for header image when it shrinks */}
               {moreByAuthor.length === 0 ? (
                 <p className="text-muted-foreground">No other posts yet.</p>
               ) : (

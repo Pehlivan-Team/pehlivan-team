@@ -7,12 +7,12 @@ import { Badge } from '@/components/ui/badge'
 import { firestoreAdmin } from '@/lib/firebase-admin'
 import { Post } from '@/types/blog'
 
-export const dynamic = 'force-dynamic'
+// dynamic routing/config removed temporarily to avoid invalid segment export during build
 
 // Sunucu tarafında yayınlanmış tüm yazıları çeken fonksiyon
 async function getPublishedPosts(): Promise<Post[]> {
   const snapshot = await firestoreAdmin
-    .collection('posts')
+    .collection('blogs')
     .where('isPublished', '==', true)
     .orderBy('createdAt', 'desc')
     .get()
@@ -76,7 +76,7 @@ export default async function BlogPage() {
                   <div className="flex items-center gap-2 mt-4">
                     <Image
                       src={post.authorImage || '/default-avatar.png'}
-                      alt={post.author}
+                      alt={post.author || post.authorUsername || 'author'}
                       width={24}
                       height={24}
                       className="rounded-full"
@@ -85,7 +85,7 @@ export default async function BlogPage() {
                         height: 'auto',
                       }}
                     />
-                    <span className="text-sm text-gray-300">{post.author}</span>
+                    <span className="text-sm text-gray-300">{post.author || post.authorUsername || 'Author'}</span>
                   </div>
                 </div>
               </div>

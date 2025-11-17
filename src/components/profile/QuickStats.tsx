@@ -1,6 +1,7 @@
 "use client"
 import Link from 'next/link'
 import { useEffect, useState, forwardRef } from 'react'
+import { MessageCircle } from 'lucide-react'
 
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
@@ -28,24 +29,24 @@ export default function QuickStats({ username, initialPostCount = 0, className }
 
   useEffect(() => {
     let active = true
-    ;(async () => {
-      try {
-        setLoading(true)
-        setError(null)
-        const res = await fetch(`/api/follow/${encodeURIComponent(username)}`)
-        if (res.ok) {
-          const data = await res.json()
-          if (active) {
-            setFollowers(data.followersCount || 0)
-            setFollowing(data.followingCount || 0)
+      ; (async () => {
+        try {
+          setLoading(true)
+          setError(null)
+          const res = await fetch(`/api/follow/${encodeURIComponent(username)}`)
+          if (res.ok) {
+            const data = await res.json()
+            if (active) {
+              setFollowers(data.followersCount || 0)
+              setFollowing(data.followingCount || 0)
+            }
           }
+        } catch (e: any) {
+          if (active) setError(e.message)
+        } finally {
+          if (active) setLoading(false)
         }
-      } catch (e: any) {
-        if (active) setError(e.message)
-      } finally {
-        if (active) setLoading(false)
-      }
-    })()
+      })()
     return () => { active = false }
   }, [username])
 
@@ -63,16 +64,17 @@ export default function QuickStats({ username, initialPostCount = 0, className }
 
   return (
     <div className={className}>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-4 gap-3">
+        <PostsDialog username={username} initialCount={initialPostCount}>
+          <StatCard label="Gönderi" value={initialPostCount} />
+        </PostsDialog>
+        <MessagesCard username={username} />
         <FollowDialog username={username} type="followers" count={followers}>
           <StatCard label="Takipçi" value={followers} interactive />
         </FollowDialog>
         <FollowDialog username={username} type="following" count={following}>
           <StatCard label="Takip" value={following} interactive />
         </FollowDialog>
-        <PostsDialog username={username} initialCount={initialPostCount}>
-          <StatCard label="Gönderi" value={initialPostCount} interactive />
-        </PostsDialog>
       </div>
       {error && <p className="text-[10px] text-red-400 mt-2">Hata: {error}</p>}
     </div>
@@ -220,6 +222,24 @@ function FollowDialog({ username, type, count, children }: FollowDialogProps) {
   )
 }
 
+function MessagesCard({ username }: { username: string }) {
+  return (
+    <Link href="/messages" className="focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 rounded-xl group">
+      <Card className="bg-slate-900/70 border-slate-700 transition-colors cursor-pointer hover:border-emerald-600/50">
+        <CardContent className="p-3 text-center">
+          <div className="text-xs uppercase tracking-wide text-slate-400 group-hover:text-slate-300 flex items-center justify-center gap-1">
+            <MessageCircle className="h-3 w-3" />
+            Mesaj
+          </div>
+          <div className="mt-1 text-lg font-semibold text-white group-hover:scale-[1.04] transition-transform">
+            💬
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
+  )
+}
+
 interface PostsDialogProps {
   username: string
   initialCount: number
@@ -248,46 +268,14 @@ function PostsDialog({ username, initialCount, children }: PostsDialogProps) {
     }
   }
 
-  function handleOpen(next: boolean) {
-    setOpen(next)
-    if (next) load()
-  }
+
 
   return (
     <>
-      <div onClick={() => handleOpen(true)} className="contents">
+      <div className="contents">
         {children}
       </div>
-      <Dialog open={open} onOpenChange={handleOpen}>
-        <DialogContent className="bg-slate-950 border border-slate-800 text-slate-100">
-          <DialogHeader>
-            <DialogTitle>Gönderiler ({initialCount}{posts && posts.length !== initialCount ? '+' : ''})</DialogTitle>
-            <DialogDescription>Kullanıcının son gönderileri.</DialogDescription>
-          </DialogHeader>
-          <div className="max-h-[60vh] overflow-y-auto space-y-3 mt-2">
-            {loading && <p className="text-xs text-slate-400">Yükleniyor…</p>}
-            {error && <p className="text-xs text-red-400">{error}</p>}
-            {!loading && !error && posts && !posts.length && (
-              <p className="text-xs text-slate-500">Henüz gönderi yok.</p>
-            )}
-            {posts?.map((p) => (
-              <div
-                key={p.id}
-                className="rounded-md border border-slate-800 bg-slate-900/50 p-3 text-sm space-y-1"
-              >
-                <p className="whitespace-pre-wrap text-slate-200 line-clamp-4">{p.content}</p>
-                {p.imageUrl && (
-                  <div className="text-[10px] text-slate-500">Resimli gönderi</div>
-                )}
-                <div className="flex gap-3 text-[10px] text-slate-400">
-                  <span className="flex items-center gap-1">❤ {p.likeCount ?? 0}</span>
-                  <span className="flex items-center gap-1">💬 {p.commentCount ?? 0}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
+
     </>
   )
 }

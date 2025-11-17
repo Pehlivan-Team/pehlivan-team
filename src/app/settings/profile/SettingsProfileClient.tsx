@@ -144,8 +144,29 @@ export default function ProfileEditPage() {
         setProfile({ ...profile, team: value });
     };
 
-    const handleProfilePictureChange = (url: string) => {
+    const handleProfilePictureChange = async (url: string) => {
         setProfile({ ...profile, profilePictureUrl: url });
+        // If we have a real edgestore upload, persist immediately so other pages see it.
+        if (edgestore && 'profileImages' in edgestore) {
+            try {
+                const res = await fetch('/api/profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ profilePictureUrl: url }),
+                })
+                if (!res.ok) {
+                    const json = await res.json().catch(() => ({}))
+                    throw new Error(json.error || 'Profil resmi kaydedilemedi')
+                }
+                toast.success('Profil resmi kaydedildi')
+            } catch (err: any) {
+                console.error('Profile picture save failed', err)
+                toast.error('Profil resmi kaydedilirken hata oluştu')
+            }
+        } else {
+            // In dev with no edgestore, object URLs are ephemeral — let user save manually.
+            toast('Profil resmi önizlemede. Kaydetmek için "Kaydet" butonuna tıklayın.')
+        }
     };
 
     // 3. Formu API'ye gönder
@@ -153,6 +174,25 @@ export default function ProfileEditPage() {
         e.preventDefault();
         setIsSaving(true);
         try {
+            // If profilePictureUrl is an ephemeral blob URL, upload it only to EdgeStore (client-side).
+            if (profile.profilePictureUrl && typeof profile.profilePictureUrl === 'string' && profile.profilePictureUrl.startsWith('blob:')) {
+                if (!edgestore || !edgestore?.profileImages) {
+                    throw new Error('EdgeStore hazır değil veya yapılandırılmamış. Lütfen önce giriş yapın veya birkaç saniye bekleyin.')
+                }
+
+                try {
+                    const blobRes = await fetch(profile.profilePictureUrl)
+                    const blob = await blobRes.blob()
+                    const file = new File([blob], 'profile.jpg', { type: blob.type || 'image/jpeg' })
+                    const up = await edgestore.profileImages.upload({ file })
+                    profile.profilePictureUrl = up.url
+                    setProfile({ ...profile })
+                    toast.success('Profil resmi yüklendi')
+                } catch (err: any) {
+                    console.error('EdgeStore upload failed', err)
+                    throw new Error(err?.message || 'EdgeStore yüklemesi başarısız')
+                }
+            }
             const response = await fetch("/api/profile", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -281,7 +321,7 @@ export default function ProfileEditPage() {
                                     <div className="flex items-start gap-4">
                                         <div className="flex flex-col items-center">
                                             <div>
-                                                <AvatarEditor initialImageUrl={profile.profilePictureUrl as string | undefined} onUploadComplete={(url) => setProfile(p => ({ ...p, profilePictureUrl: url }))} />
+                                                <AvatarEditor initialImageUrl={profile.profilePictureUrl as string | undefined} onUploadComplete={handleProfilePictureChange} />
                                             </div>
                                             <p className="text-xs text-muted-foreground mt-2">Profil resmini düzenlemek için tıklayın</p>
                                         </div>

@@ -9,6 +9,7 @@ type PostDetail = {
   authorUsername: string
   content: string
   imageUrl?: string | null
+  imageUrls?: string[] | null
   likeCount: number
   commentCount: number
   type?: string
@@ -27,6 +28,7 @@ async function getPost(id: string): Promise<PostDetail | null> {
     authorUsername: data?.authorUsername || '',
     content: data?.content || '',
     imageUrl: data?.imageUrl || null,
+    imageUrls: data?.imageUrls || null,
     likeCount: data?.likeCount || 0,
     commentCount: data?.commentCount || 0,
     type: data?.type || 'social',
@@ -36,7 +38,8 @@ async function getPost(id: string): Promise<PostDetail | null> {
 }
 
 export default async function PostPage({ params }: { params: { id: string } }) {
-  const post = await getPost(params.id)
+  const { id } = await params
+  const post = await getPost(id)
   if (!post) return notFound()
   return <PostDetailClient post={post} />
 }
