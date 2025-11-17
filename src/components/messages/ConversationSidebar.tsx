@@ -5,6 +5,7 @@ import { tr } from 'date-fns/locale'
 import { MessageCircle, Users, Lock, Search, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -22,6 +23,7 @@ export default function ConversationSidebar({
     onConversationSelect
 }: ConversationSidebarProps) {
     const router = useRouter()
+    const { data: session } = useSession()
     const [conversations, setConversations] = useState<ConversationWithParticipants[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState('')
@@ -73,10 +75,41 @@ export default function ConversationSidebar({
             return conversation.name || 'İsimsiz Grup'
         }
 
-        // For direct messages, show the other participant's name
-        const otherParticipant = conversation.participantDetails.find(p =>
-            p.userId !== conversation.createdBy // This is simplified - you'd want current user ID
-        ) || conversation.participantDetails[0]
+        // For direct messages, show the other participant's name (not current user)
+        const currentUserId = session?.user?.id
+        const currentUsername = session?.user?.username
+        const currentName = session?.user?.name
+        
+        // Find the participant that is NOT the current user
+        // Try multiple matching strategies
+        let otherParticipant = conversation.participantDetails.find(p => {
+            // Strategy 1: Match by userId
+            if (currentUserId && p.userId === currentUserId) {
+                return false // This is the current user, skip
+            }
+            
+            // Strategy 2: Match by username
+            if (currentUsername && p.username === currentUsername) {
+                return false // This is the current user, skip
+            }
+            
+            // Strategy 3: Match by name
+            if (currentName && p.name === currentName) {
+                return false // This is the current user, skip
+            }
+            
+            return true // This is the other participant
+        })
+        
+        // If we have exactly 2 participants and couldn't find other, take the second one
+        if (!otherParticipant && conversation.participantDetails.length === 2) {
+            otherParticipant = conversation.participantDetails[1]
+        }
+        
+        // Final fallback
+        if (!otherParticipant) {
+            otherParticipant = conversation.participantDetails[0]
+        }
 
         return otherParticipant?.name || otherParticipant?.username || 'Bilinmeyen Kullanıcı'
     }
@@ -86,9 +119,27 @@ export default function ConversationSidebar({
             return null // Group avatar
         }
 
-        const otherParticipant = conversation.participantDetails.find(p =>
-            p.userId !== conversation.createdBy
-        ) || conversation.participantDetails[0]
+        const currentUserId = session?.user?.id
+        const currentUsername = session?.user?.username
+        const currentName = session?.user?.name
+        
+        // Find the participant that is NOT the current user
+        let otherParticipant = conversation.participantDetails.find(p => {
+            // Skip if this is the current user
+            if (currentUserId && p.userId === currentUserId) return false
+            if (currentUsername && p.username === currentUsername) return false
+            if (currentName && p.name === currentName) return false
+            return true
+        })
+        
+        // Fallback strategies
+        if (!otherParticipant && conversation.participantDetails.length === 2) {
+            otherParticipant = conversation.participantDetails[1]
+        }
+        
+        if (!otherParticipant) {
+            otherParticipant = conversation.participantDetails[0]
+        }
 
         return otherParticipant?.profilePictureUrl
     }
@@ -96,8 +147,15 @@ export default function ConversationSidebar({
     const getLastMessagePreview = (conversation: ConversationWithParticipants): string => {
         if (!conversation.lastMessage) return 'Mesaj yok'
 
-        // Since message is encrypted, we can only show a generic preview
-        return '🔒 Şifreli mesaj'
+        // lastMessage is already a string preview
+        const content = conversation.lastMessage
+        
+        // Limit length for preview
+        if (content.length > 50) {
+            return content.substring(0, 50) + '...'
+        }
+        
+        return content || 'Mesaj'
     }
 
     const handleConversationClick = (conversationId: string) => {
