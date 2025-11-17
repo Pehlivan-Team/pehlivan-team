@@ -6,6 +6,32 @@ import { authOptions } from '@/lib/auth'
 import { firestoreAdmin } from '@/lib/firebase-admin'
 import { CreateConversationRequest } from '@/types/messages'
 
+// Simple in-memory cache for user data (expires after 5 minutes)
+const userCache = new Map<string, { data: any; timestamp: number }>()
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
+function getCachedUser(userId: string) {
+  const cached = userCache.get(userId)
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.data
+  }
+  return null
+}
+
+function setCachedUser(userId: string, data: any) {
+  userCache.set(userId, { data, timestamp: Date.now() })
+}
+
+// Clean up expired cache entries
+setInterval(() => {
+  const now = Date.now()
+  for (const [key, value] of userCache.entries()) {
+    if (now - value.timestamp > CACHE_TTL) {
+      userCache.delete(key)
+    }
+  }
+}, CACHE_TTL)
+
 // Get user's conversations
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
@@ -46,28 +72,58 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         .where('conversationId', '==', conversationDoc.id)
         .get()
 
-      // Get participant details
+      // Get participant details with batch processing and caching
       const participantDetails = []
+      const uncachedUserIds = []
+      const cachedUsers = new Map()
+      
+      // Check cache first
       for (const participantDoc of participantsQuery.docs) {
         const participantData = participantDoc.data()
+        const cached = getCachedUser(participantData.userId)
+        if (cached) {
+          cachedUsers.set(participantData.userId, cached)
+        } else {
+          uncachedUserIds.push(participantData.userId)
+        }
+      }
+      
+      // Batch fetch uncached users
+      const batchedUsers = new Map()
+      if (uncachedUserIds.length > 0) {
+        // Process in chunks of 10 (Firestore 'in' query limit)
+        const chunks = []
+        for (let i = 0; i < uncachedUserIds.length; i += 10) {
+          chunks.push(uncachedUserIds.slice(i, i + 10))
+        }
         
-        // Get user details
-        const userDoc = await firestoreAdmin
-          .collection('users')
-          .doc(participantData.userId)
-          .get()
+        for (const chunk of chunks) {
+          const usersQuery = await firestoreAdmin
+            .collection('users')
+            .where(admin.firestore.FieldPath.documentId(), 'in', chunk)
+            .get()
           
-        if (userDoc.exists) {
-          const userData = userDoc.data()
-          participantDetails.push({
-            userId: participantData.userId,
-            username: userData?.username || 'Unknown',
-            name: userData?.name || userData?.username || 'Unknown',
-            profilePictureUrl: userData?.profilePictureUrl || userData?.image,
-            role: participantData.role,
-            lastReadAt: participantData.lastReadAt
+          usersQuery.docs.forEach(doc => {
+            const userData = doc.data()
+            batchedUsers.set(doc.id, userData)
+            setCachedUser(doc.id, userData)
           })
         }
+      }
+      
+      // Build participant details
+      for (const participantDoc of participantsQuery.docs) {
+        const participantData = participantDoc.data()
+        const userData = cachedUsers.get(participantData.userId) || batchedUsers.get(participantData.userId)
+        
+        participantDetails.push({
+          userId: participantData.userId,
+          username: userData?.username || 'Unknown',
+          name: userData?.name || userData?.username || 'Unknown',
+          profilePictureUrl: userData?.profilePictureUrl || userData?.image,
+          role: participantData.role,
+          lastReadAt: participantData.lastReadAt
+        })
       }
 
       // Count unread messages - temporarily disabled due to index requirements
@@ -112,8 +168,25 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
 
     return NextResponse.json({ conversations })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error getting conversations:', error)
+    
+    // Handle quota exhausted errors
+    if (error.code === 8 || error.message?.includes('Quota exceeded')) {
+      return NextResponse.json({ 
+        error: 'Service temporarily unavailable. Please try again in a few minutes.',
+        code: 'QUOTA_EXCEEDED'
+      }, { status: 503 })
+    }
+    
+    // Handle other rate limit errors
+    if (error.code === 14 || error.message?.includes('UNAVAILABLE')) {
+      return NextResponse.json({ 
+        error: 'Service temporarily busy. Please try again shortly.',
+        code: 'SERVICE_UNAVAILABLE'
+      }, { status: 503 })
+    }
+    
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

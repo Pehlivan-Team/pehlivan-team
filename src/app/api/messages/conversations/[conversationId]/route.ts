@@ -6,6 +6,22 @@ import { authOptions } from '@/lib/auth'
 import { firestoreAdmin } from '@/lib/firebase-admin'
 import { SendMessageRequest } from '@/types/messages'
 
+// Simple in-memory cache for user data
+const userCache = new Map<string, { data: any; timestamp: number }>()
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
+function getCachedUser(userId: string) {
+  const cached = userCache.get(userId)
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.data
+  }
+  return null
+}
+
+function setCachedUser(userId: string, data: any) {
+  userCache.set(userId, { data, timestamp: Date.now() })
+}
+
 // Get messages for a conversation
 export async function GET(
   req: NextRequest,
@@ -104,8 +120,25 @@ export async function GET(
       nextCursor,
       hasMore
     })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error getting messages:', error)
+    
+    // Handle quota exhausted errors
+    if (error.code === 8 || error.message?.includes('Quota exceeded')) {
+      return NextResponse.json({ 
+        error: 'Service temporarily unavailable. Please try again in a few minutes.',
+        code: 'QUOTA_EXCEEDED'
+      }, { status: 503 })
+    }
+    
+    // Handle other rate limit errors
+    if (error.code === 14 || error.message?.includes('UNAVAILABLE')) {
+      return NextResponse.json({ 
+        error: 'Service temporarily busy. Please try again shortly.',
+        code: 'SERVICE_UNAVAILABLE'
+      }, { status: 503 })
+    }
+    
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

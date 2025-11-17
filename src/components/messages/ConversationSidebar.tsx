@@ -2,8 +2,8 @@
 
 import { formatDistanceToNow } from 'date-fns'
 import { tr } from 'date-fns/locale'
-import { MessageCircle, Users, Lock, Search, Plus } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { MessageCircle, Users, Lock, Search, Plus, AlertCircle } from 'lucide-react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 
@@ -11,7 +11,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ConversationWithParticipants } from '@/types/messages'
+
+// Client-side cache
+const conversationsCache = {
+  data: null as ConversationWithParticipants[] | null,
+  timestamp: 0,
+  TTL: 2 * 60 * 1000 // 2 minutes
+}
 
 interface ConversationSidebarProps {
     currentConversationId?: string
@@ -28,32 +36,126 @@ export default function ConversationSidebar({
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState('')
     const [error, setError] = useState<string | null>(null)
+    const [isQuotaExceeded, setIsQuotaExceeded] = useState(false)
+    const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+    // Check cache first
+    const getCachedConversations = () => {
+        const now = Date.now()
+        if (conversationsCache.data && now - conversationsCache.timestamp < conversationsCache.TTL) {
+            return conversationsCache.data
+        }
+        return null
+    }
+
+    // Update cache
+    const setCachedConversations = (data: ConversationWithParticipants[]) => {
+        conversationsCache.data = data
+        conversationsCache.timestamp = Date.now()
+    }
 
     useEffect(() => {
-        loadConversations()
+        // Try to load from cache first
+        const cached = getCachedConversations()
+        if (cached) {
+            setConversations(cached)
+            setLoading(false)
+        } else {
+            loadConversations()
+        }
     }, [])
 
-    const loadConversations = async () => {
+    const loadConversations = useCallback(async (forceRefresh = false) => {
         try {
-            setLoading(true)
-            setError(null)
-
-            const response = await fetch('/api/messages/conversations')
-            if (!response.ok) {
-                throw new Error('Failed to load conversations')
+            // Check cache unless force refresh
+            if (!forceRefresh) {
+                const cached = getCachedConversations()
+                if (cached) {
+                    setConversations(cached)
+                    setLoading(false)
+                    return
+                }
             }
 
+            setLoading(true)
+            setError(null)
+            setIsQuotaExceeded(false)
+
+            // Clear any existing timeouts
+            if (loadingTimeoutRef.current) {
+                clearTimeout(loadingTimeoutRef.current)
+            }
+
+            const response = await fetch('/api/messages/conversations')
             const data = await response.json()
-            setConversations(data.conversations || [])
+
+            if (!response.ok) {
+                if (response.status === 503 && data.code === 'QUOTA_EXCEEDED') {
+                    setIsQuotaExceeded(true)
+                    setError('Firebase quota exceeded. Please try again later.')
+                    
+                    // Auto-retry after 5 minutes
+                    retryTimeoutRef.current = setTimeout(() => {
+                        loadConversations(true)
+                    }, 5 * 60 * 1000)
+                    
+                    return
+                }
+                throw new Error(data.error || 'Failed to load conversations')
+            }
+
+            const conversationsData = data.conversations || []
+            setConversations(conversationsData)
+            setCachedConversations(conversationsData)
         } catch (err: any) {
             console.error('Error loading conversations:', err)
             setError(err.message)
+            
+            // If we have cached data, show it instead of error
+            const cached = getCachedConversations()
+            if (cached) {
+                setConversations(cached)
+                setError('Using cached data. Some information may be outdated.')
+            }
         } finally {
             setLoading(false)
         }
+    }, [])
+
+    // Cleanup timeouts
+    useEffect(() => {
+        return () => {
+            if (loadingTimeoutRef.current) {
+                clearTimeout(loadingTimeoutRef.current)
+            }
+            if (retryTimeoutRef.current) {
+                clearTimeout(retryTimeoutRef.current)
+            }
+        }
+    }, [])
+
+    // Manual retry function
+    const handleRetry = () => {
+        if (retryTimeoutRef.current) {
+            clearTimeout(retryTimeoutRef.current)
+        }
+        loadConversations(true)
     }
 
-    const filteredConversations = conversations.filter(conv => {
+    // Cleanup timeouts
+    useEffect(() => {
+        return () => {
+            if (loadingTimeoutRef.current) {
+                clearTimeout(loadingTimeoutRef.current)
+            }
+            if (retryTimeoutRef.current) {
+                clearTimeout(retryTimeoutRef.current)
+            }
+        }
+    }, [])
+
+    const filteredConversations = conversations.filter((conv: ConversationWithParticipants) => {
         if (!searchQuery.trim()) return true
 
         const query = searchQuery.toLowerCase()
@@ -169,7 +271,7 @@ export default function ConversationSidebar({
 
     if (loading) {
         return (
-            <div className="w-80 border-r border-slate-700 bg-slate-900/50 h-screen flex flex-col overflow-hidden">
+            <div className="w-full md:w-80 border-r border-slate-700 bg-slate-900/50 h-screen flex flex-col overflow-hidden">
                 <div className="p-4 border-b border-slate-700">
                     <Skeleton className="h-10 w-full" />
                 </div>
@@ -183,7 +285,7 @@ export default function ConversationSidebar({
     }
 
     return (
-        <div className="w-80 border-r border-slate-700 bg-slate-900/50 h-screen flex flex-col overflow-hidden">
+        <div className="w-full md:w-80 border-r border-slate-700 bg-slate-900/50 h-screen flex flex-col overflow-hidden">
             {/* Header */}
             <div className="p-4 border-b border-slate-700">
                 <div className="flex items-center justify-between mb-3">
@@ -225,7 +327,7 @@ export default function ConversationSidebar({
                         <Button
                             variant="ghost"
                             size="sm"
-                            onClick={loadConversations}
+                            onClick={() => loadConversations(true)}
                             className="mt-2 text-emerald-400"
                         >
                             Tekrar Dene

@@ -1,6 +1,6 @@
 'use client'
 
-import { MessageSquare, Plus, User, Menu as MenuIcon, Search as SearchIcon, Instagram, Linkedin } from 'lucide-react'
+import { MessageSquare, Plus, User, Menu as MenuIcon, Search as SearchIcon, Instagram, Linkedin, MessageCircleCodeIcon } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signIn, signOut } from 'next-auth/react'
@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '../drawer'
+import { PersonIcon } from '@radix-ui/react-icons'
 
 export default function FeedMobileBottomBar() {
   const { data: session } = useSession()
@@ -34,7 +36,7 @@ export default function FeedMobileBottomBar() {
                       : 'text-gray-300 hover:bg-white/10'
                   )}
                 >
-                  <MessageSquare className="w-6 h-6" />
+                  <MessageCircleCodeIcon className='w-6 h-6' />
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
@@ -66,7 +68,7 @@ export default function FeedMobileBottomBar() {
               <TooltipTrigger asChild>
                 {username ? (
                   <Link
-                    href={`/messages/${username}`}
+                    href={`/messages`}
                     aria-label="messages"
                     className="p-2 rounded-full text-gray-300 hover:bg-white/10"
                   >
@@ -104,42 +106,37 @@ export default function FeedMobileBottomBar() {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+          {session?.user ? (
+            <Drawer>
+              <DrawerTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-gray-300"
+                  aria-label="Yeni Gönderi"
+                >
+                  <Plus className="w-6 h-6" />
+                </Button>
+              </DrawerTrigger>
+              <DrawerTitle className='hidden'>Yeni Gönderi</DrawerTitle>
+              <DrawerContent
+                className="bg-gray-950/90 backdrop-blur-lg border-l-slate-700 text-white flex flex-col p-4 rounded-t-3xl"
+
+              >
+                <PostComposer username={session.user.username} />
+              </DrawerContent>
+
+            </Drawer>
+
+          ) : (
+            null
+          )}
         </div>
 
-        {/* Center CTA (absolute, centered) */}
-        <div className="absolute left-1/2 bottom-3 transform -translate-x-1/2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="w-11 h-11 rounded-full bg-white/5 border border-white/10 text-amber-400 flex items-center justify-center shadow-none backdrop-blur-sm"
-                        aria-label="Yeni Gönderi"
-                      >
-                        <Plus className="w-5 h-5" />
-                      </Button>
-                    </div>
-                  </SheetTrigger>
-                  <SheetContent className="bg-gray-950/90 backdrop-blur-lg border-l-slate-700 text-white flex flex-col p-4 rounded-t-3xl">
-                    <SheetHeader>
-                      <SheetTitle className="text-slate-900 dark:text-white text-2xl">Yeni Gönderi</SheetTitle>
-                    </SheetHeader>
-                    <div className="mt-4">
-                      <PostComposer username={username || ''} />
-                    </div>
-                  </SheetContent>
-                </Sheet>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Yeni Gönderi</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
+
+
+
+
 
         <div className="pr-2">
           <TooltipProvider>

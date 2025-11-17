@@ -124,7 +124,7 @@ export default function MessageInput({
         </div>
       </div>
       
-      <div className="mt-2 text-xs text-muted-foreground">
+      <div className="mt-2 text-xs text-muted-foreground hidden md:block">
         <span>Enter ile gönder, Shift+Enter ile yeni satır</span>
       </div>
     </div>

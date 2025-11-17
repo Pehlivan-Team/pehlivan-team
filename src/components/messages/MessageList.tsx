@@ -44,12 +44,12 @@ export default function MessageList({ conversationId, currentUserId }: MessageLi
         if (shouldScrollToBottom && messages.length > 0 && messagesContainerRef.current) {
             const container = messagesContainerRef.current
             const isAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100
-            
+
             // Always scroll on initial load, or only if user is near bottom for new messages
             if (isAtBottom || loading) {
                 // Immediate scroll
                 container.scrollTop = container.scrollHeight
-                
+
                 // Additional scroll after DOM updates
                 setTimeout(() => {
                     if (container.parentElement) {
@@ -100,13 +100,29 @@ export default function MessageList({ conversationId, currentUserId }: MessageLi
                         setLastMessageId(newestMessage.id)
                     }
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error polling for messages:', error)
+
+                // If quota exceeded, stop polling temporarily
+                if (error.message?.includes('quota') || error.message?.includes('QUOTA_EXCEEDED')) {
+                    console.log('Quota exceeded, stopping polling for 5 minutes')
+                    if (pollingIntervalRef.current) {
+                        clearInterval(pollingIntervalRef.current)
+                        pollingIntervalRef.current = null
+                    }
+
+                    // Resume polling after 5 minutes
+                    setTimeout(() => {
+                        if (conversationId) {
+                            pollingIntervalRef.current = setInterval(pollForNewMessages, 10000)
+                        }
+                    }, 5 * 60 * 1000)
+                }
             }
         }
 
-        // Start polling every 2 seconds
-        pollingIntervalRef.current = setInterval(pollForNewMessages, 2000)
+        // Start polling every 10 seconds (reduced from 2 to save quota)
+        pollingIntervalRef.current = setInterval(pollForNewMessages, 10000)
 
         return () => {
             if (pollingIntervalRef.current) {
@@ -153,20 +169,20 @@ export default function MessageList({ conversationId, currentUserId }: MessageLi
                 }
                 // Always scroll to bottom on initial load
                 setShouldScrollToBottom(true)
-                
+
                 // Multiple scroll attempts to ensure it works on initial load
                 requestAnimationFrame(() => {
                     if (messagesContainerRef.current) {
                         messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
                     }
                 })
-                
+
                 setTimeout(() => {
                     if (messagesContainerRef.current) {
                         messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
                     }
                 }, 100)
-                
+
                 setTimeout(() => {
                     if (messagesContainerRef.current) {
                         messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
@@ -192,11 +208,17 @@ export default function MessageList({ conversationId, currentUserId }: MessageLi
             await markMessagesAsRead()
         } catch (err: any) {
             console.error('Error loading messages:', err)
-            setError(err.message)
+
+            // Handle quota errors specifically
+            if (err.message?.includes('quota') || err.message?.includes('QUOTA_EXCEEDED') || err.message?.includes('Service temporarily unavailable')) {
+                setError('Service temporarily unavailable due to quota limits. Please try again later.')
+            } else {
+                setError(err.message)
+            }
         } finally {
             setLoading(false)
             setLoadingMore(false)
-            
+
             // Ensure scroll to bottom after loading completes (especially initial load)
             if (isInitial) {
                 setTimeout(() => {
@@ -337,7 +359,7 @@ export default function MessageList({ conversationId, currentUserId }: MessageLi
     }
 
     return (
-        <div className="h-0 flex-1 flex flex-col bg-slate-950/30">
+        <div className="h-10 flex-1 flex flex-col bg-slate-950/30">
             {/* Messages container */}
             <div
                 ref={messagesContainerRef}

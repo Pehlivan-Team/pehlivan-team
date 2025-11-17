@@ -96,14 +96,17 @@ export default function MessagesPage() {
 
 
     return (
-        <div className="h-screen bg-slate-950 flex">
-            {/* Conversation Sidebar */}
-            <ConversationSidebar
-                currentConversationId={conversationId}
-            />
+        <div className=" bg-slate-950 flex">
+            {/* Conversation Sidebar - hidden on mobile when conversation is selected */}
+            <div className={`${conversationId ? 'hidden md:block' : 'block'}`}>
+                <ConversationSidebar
+                    currentConversationId={conversationId}
+                />
+            </div>
 
-            {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col h-screen overflow-hidden">
+            {/* Main Chat Area - full width on mobile when conversation selected */}
+            <div className={`flex flex-col h-screen overflow-hidden ${conversationId ? 'flex-1 h-[90vh]' : 'hidden md:flex md:flex-1 '
+                }`}>
                 {conversationId ? (
                     <>
                         {/* Chat Header */}
@@ -193,8 +196,8 @@ export default function MessagesPage() {
                         ) : null}
                     </>
                 ) : (
-                    // No conversation selected
-                    <div className="flex-1 flex items-center justify-center">
+                    // No conversation selected - only show on desktop
+                    <div className="hidden md:flex flex-1 items-center justify-center">
                         <div className="text-center max-w-md mx-auto">
                             <MessageCircle className="h-16 w-16 text-slate-600 mx-auto mb-4" />
                             <h3 className="text-xl font-semibold text-slate-200 mb-2">
