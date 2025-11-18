@@ -1,6 +1,20 @@
 'use client'
 
-import { MessageSquare, Plus, User, Menu as MenuIcon, Search as SearchIcon, Instagram, Linkedin, MessageCircleCodeIcon } from 'lucide-react'
+import {
+  MessageSquare,
+  Plus,
+  User,
+  Menu as MenuIcon,
+  Search as SearchIcon,
+  Instagram,
+  Linkedin,
+  MessageCircleCodeIcon,
+  Users,
+  CalendarClock,
+  FileText,
+  FolderGit2,
+  Link as LinkIcon
+} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signIn, signOut } from 'next-auth/react'
@@ -36,7 +50,11 @@ export default function FeedMobileBottomBar() {
                       : 'text-gray-300 hover:bg-white/10'
                   )}
                 >
-                  <MessageCircleCodeIcon className='w-6 h-6' />
+                  <img
+                    src="/tp-sosyal.svg"
+                    alt="Pehlivan Team Social"
+                    className="h-8 w-auto brightness-0 invert"
+                  />
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
@@ -135,9 +153,6 @@ export default function FeedMobileBottomBar() {
 
 
 
-
-
-
         <div className="pr-2">
           <TooltipProvider>
             <Tooltip>
@@ -148,41 +163,75 @@ export default function FeedMobileBottomBar() {
                       <MenuIcon className="w-6 h-6" />
                     </Button>
                   </SheetTrigger>
-                  <SheetContent className="bg-gray-950/90 backdrop-blur-lg border-l-slate-700 text-white flex flex-col p-4 rounded-t-3xl">
+                  <SheetContent className="bg-gray-950/95 backdrop-blur-lg border-l-slate-700 text-white flex flex-col p-6 rounded-t-3xl h-full">
                     <SheetHeader>
-                      <div className="flex items-center justify-between">
-                        <SheetTitle className="text-slate-900 dark:text-white text-2xl">Menü</SheetTitle>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src="/tp-sosyal.svg"
+                            alt="Pehlivan Team Social"
+                            className="h-8 w-auto brightness-0 invert"
+                          />
+                          <SheetTitle className="text-white text-2xl font-bold">Menü</SheetTitle>
+                        </div>
                       </div>
                     </SheetHeader>
-                    <div className="mt-6 grid gap-3 py-2">
-                      <Link href="/teams" className="py-3 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-slate-800">Takımlar</Link>
-                      <Link href="/timeline" className="py-3 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-slate-800">Tarihçe</Link>
-                      <Link href="/blog" className="py-3 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-slate-800">Blog</Link>
-                      <Link href="/feed/settings" className="py-3 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-slate-800">Feed Ayarları</Link>
-                    </div>
-                    <div className="mt-4">
-                      {session?.user ? (
-                        <Button
-                          type="button"
-                          onClick={() => signOut({ redirect: true, callbackUrl: '/' })}
-                          className="w-full bg-red-600 hover:bg-red-700"
-                        >
-                          Çıkış Yap
-                        </Button>
-                      ) : (
-                        <Button type="button" onClick={() => signIn()} className="w-full">Giriş Yap</Button>
-                      )}
-                    </div>
-                    <div className="mt-6 border-t pt-4 flex items-center justify-between">
-                      <div className="flex space-x-4">
-                        <a href="https://www.instagram.com/pehlivanteam" target="_blank" rel="noreferrer" className="text-gray-500 hover:text-slate-700" aria-label="Instagram">
-                          <Instagram className="w-5 h-5" />
-                        </a>
-                        <a href="https://www.linkedin.com/company/pehlivan-team/" target="_blank" rel="noreferrer" className="text-gray-500 hover:text-slate-700" aria-label="LinkedIn">
-                          <Linkedin className="w-5 h-5" />
-                        </a>
+
+                    {/* Main content with flex-grow */}
+                    <div className="flex-grow flex flex-col">
+                      <div className="grid gap-2 py-2">
+                        <Link href="/teams" className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-slate-800/70 transition-colors">
+                          <Users className="w-5 h-5" />
+                          <span>Takımlar</span>
+                        </Link>
+                        <Link href="/timeline" className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-slate-800/70 transition-colors">
+                          <CalendarClock className="w-5 h-5" />
+                          <span>Timeline</span>
+                        </Link>
+                        <Link href="/blog" className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-slate-800/70 transition-colors">
+                          <FileText className="w-5 h-5" />
+                          <span>Blog</span>
+                        </Link>
+                        <Link href="/projects" className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-slate-800/70 transition-colors">
+                          <FolderGit2 className="w-5 h-5" />
+                          <span>Projeler</span>
+                        </Link>
+                        <Link href="/shortener" className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-slate-800/70 transition-colors">
+                          <LinkIcon className="w-5 h-5" />
+                          <span>Kısaltıcı</span>
+                        </Link>
                       </div>
-                      <div className="text-sm text-gray-400">{new Date().getFullYear()} · {process.env.NEXT_PUBLIC_SITE_NAME || 'Pehlivan Team'}</div>
+
+
+                    </div>
+                    {/* Footer pushed to bottom */}
+                    <div className="border-t border-slate-700 pt-4 mt-auto">
+                      {/* Auth button in footer */}
+                      <div className="mb-4">
+                        {session?.user ? (
+                          <Button
+                            type="button"
+                            onClick={() => signOut({ redirect: true, callbackUrl: '/' })}
+                            className="w-full bg-red-600 hover:bg-red-700"
+                          >
+                            Çıkış Yap
+                          </Button>
+                        ) : (
+                          <Button type="button" onClick={() => signIn()} className="w-full">Giriş Yap</Button>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex space-x-4">
+                          <a href="https://www.instagram.com/pehlivanteam" target="_blank" rel="noreferrer" className="text-gray-500 hover:text-slate-400 transition-colors" aria-label="Instagram">
+                            <Instagram className="w-5 h-5" />
+                          </a>
+                          <a href="https://www.linkedin.com/company/pehlivan-team/" target="_blank" rel="noreferrer" className="text-gray-500 hover:text-slate-400 transition-colors" aria-label="LinkedIn">
+                            <Linkedin className="w-5 h-5" />
+                          </a>
+                        </div>
+                        <div className="text-sm text-gray-400">{new Date().getFullYear()} · {process.env.NEXT_PUBLIC_SITE_NAME || 'Pehlivan Team'}</div>
+                      </div>
                     </div>
                   </SheetContent>
                 </Sheet>

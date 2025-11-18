@@ -12,7 +12,7 @@ export function NavbarWrapper() {
   const isAdminRoute = pathname.startsWith('/admin')
   if (isAdminRoute) return null
 
-  const socialRoutes = ['/feed', '/profile', '/search', '/posts/', '/messages']
+  const socialRoutes = ['/feed', '/profile', '/search', '/posts/', '/messages', "/settings/profile"]
 
   const isMinimalNav = socialRoutes.some((route) => pathname.startsWith(route))
 

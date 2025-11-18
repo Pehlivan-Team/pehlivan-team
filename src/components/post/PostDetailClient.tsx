@@ -2,7 +2,7 @@
 
 import { formatDistanceToNow } from 'date-fns'
 import { tr } from 'date-fns/locale'
-import { MessageCircle, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { MessageCircle, ChevronLeft, ChevronRight, X, Share2, } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { VisuallyHidden } from '@/components/ui/visually-hidden'
+import { toast } from 'sonner'
 // server-admin SDK is not available in client components; we'll fetch the public profile via the API route
 
 interface PostDetailClientProps {
@@ -53,13 +54,13 @@ export default function PostDetailClient({ post }: PostDetailClientProps) {
     session?.user?.username === post.authorUsername
       ? session.user
       : postAuthorProfile
-      ? {
+        ? {
           username: postAuthorProfile.username,
           name: postAuthorProfile.name,
           image: postAuthorProfile.profilePictureUrl || null,
           bio: postAuthorProfile.bio,
         }
-      : profileHook.profile
+        : profileHook.profile
 
 
 
@@ -130,7 +131,7 @@ export default function PostDetailClient({ post }: PostDetailClientProps) {
                 <div className="grid grid-cols-2 gap-3">
                   {images.map((u: string, i: number) => (
                     <div key={u} className="relative h-64 w-full overflow-hidden rounded-md border border-slate-700 hover:shadow-lg transition-transform transform-gpu hover:scale-[1.01] cursor-pointer">
-                      <Image src={u} alt={`post image ${i+1}`} fill className="object-cover" sizes="(max-width: 768px) 50vw, 400px" onClick={() => { setViewerIndex(i); setViewerOpen(true) }} />
+                      <Image src={u} alt={`post image ${i + 1}`} fill className="object-cover" sizes="(max-width: 768px) 50vw, 400px" onClick={() => { setViewerIndex(i); setViewerOpen(true) }} />
                     </div>
                   ))}
                 </div>
@@ -138,7 +139,7 @@ export default function PostDetailClient({ post }: PostDetailClientProps) {
                 <div className="grid grid-cols-3 gap-2">
                   {images.map((u: string, i: number) => (
                     <div key={u} className="relative h-48 w-full overflow-hidden rounded-md border border-slate-700 hover:shadow-lg transition-transform transform-gpu hover:scale-[1.01] cursor-pointer">
-                      <Image src={u} alt={`post image ${i+1}`} fill className="object-cover" sizes="(max-width: 768px) 33vw, 300px" onClick={() => { setViewerIndex(i); setViewerOpen(true) }} />
+                      <Image src={u} alt={`post image ${i + 1}`} fill className="object-cover" sizes="(max-width: 768px) 33vw, 300px" onClick={() => { setViewerIndex(i); setViewerOpen(true) }} />
                     </div>
                   ))}
                 </div>
@@ -146,7 +147,7 @@ export default function PostDetailClient({ post }: PostDetailClientProps) {
                 <div className="grid grid-cols-2 gap-2">
                   {images.slice(0, 4).map((u: string, i: number) => (
                     <div key={u} className="relative h-48 w-full overflow-hidden rounded-md border border-slate-700 hover:shadow-lg transition-transform transform-gpu hover:scale-[1.01] cursor-pointer">
-                      <Image src={u} alt={`post image ${i+1}`} fill className="object-cover" sizes="(max-width: 768px) 50vw, 400px" onClick={() => { setViewerIndex(i); setViewerOpen(true) }} />
+                      <Image src={u} alt={`post image ${i + 1}`} fill className="object-cover" sizes="(max-width: 768px) 50vw, 400px" onClick={() => { setViewerIndex(i); setViewerOpen(true) }} />
                       {i === 3 && images.length > 4 && (
                         <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-lg font-semibold">
                           +{images.length - 4}
@@ -171,8 +172,17 @@ export default function PostDetailClient({ post }: PostDetailClientProps) {
                 <MessageCircle className="h-4 w-4" /> <span className="ml-1">{post.commentCount}</span>
               </Button>
               <div className="ml-auto flex items-center gap-2">
-                <Button variant="ghost" size="sm" className="gap-2 px-3" onClick={() => navigator.clipboard?.writeText(`${location.origin}/posts/${post.id}`)}>
-                  <span className="text-xs">Linki Kopyala</span>
+                <Button variant="ghost" size="sm" className="gap-2 px-3" onClick={() => {
+                  navigator.clipboard?.writeText(`${location.origin}/posts/${post.id}`)
+                  toast(
+                    'Gönderi bağlantısı kopyalandı.',
+                    { duration: 3000 }
+                  )
+                }
+                }>
+                  <span className="text-xs">
+                    <Share2 />
+                  </span>
                 </Button>
               </div>
             </div>

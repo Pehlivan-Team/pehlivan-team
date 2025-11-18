@@ -6,59 +6,6 @@ import { z } from 'zod'
 import { authOptions } from '@/lib/auth'
 import { firestoreAdmin } from '@/lib/firebase-admin'
 
-// In-memory cache for posts with TTL
-interface CacheEntry {
-  data: any
-  timestamp: number
-  ttl: number
-}
-
-const postsCache = new Map<string, CacheEntry>()
-const CACHE_TTL = 2 * 60 * 1000 // 2 minutes in milliseconds
-
-function getCacheKey(params: {
-  username?: string | null
-  cursor?: string | null
-  limit: number
-  following?: boolean
-  trending?: boolean
-  postType?: string | null
-  timeRange?: string | null
-}): string {
-  return JSON.stringify(params)
-}
-
-function getCachedPosts(key: string): any | null {
-  const entry = postsCache.get(key)
-  if (!entry) return null
-  
-  const now = Date.now()
-  if (now - entry.timestamp > entry.ttl) {
-    postsCache.delete(key)
-    return null
-  }
-  
-  return entry.data
-}
-
-function setCachedPosts(key: string, data: any, ttl: number = CACHE_TTL): void {
-  postsCache.set(key, {
-    data,
-    timestamp: Date.now(),
-    ttl
-  })
-  
-  // Clean up old entries periodically
-  if (postsCache.size > 100) {
-    const now = Date.now()
-    for (const [k, entry] of postsCache.entries()) {
-      if (now - entry.timestamp > entry.ttl) {
-        postsCache.delete(k)
-      }
-    }
-  }
-}
-
 // Validation schemas
 const createPostSchema = z.object({
   content: z.string().min(1, 'Content is required').max(2000, 'Content too long'),
@@ -155,15 +102,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const docRef = await firestoreAdmin.collection('posts').add(docData)
 
-    // Invalidate relevant cache entries when a new post is created
-    for (const [key] of postsCache.entries()) {
-      const params = JSON.parse(key)
-      // Clear general feeds and user-specific feeds
-      if (!params.username || params.username === session.user.username) {
-        postsCache.delete(key)
-      }
-    }
-
     const res: CreatePostResponse = { id: docRef.id }
     return NextResponse.json(res, { status: 201 })
   } catch (error) {
@@ -186,22 +124,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const trending = searchParams.get('trending') === 'true'
     const postType = searchParams.get('postType')
     const timeRange = searchParams.get('timeRange')
-
-    // Check cache first
-    const cacheKey = getCacheKey({
-      username,
-      cursor,
-      limit,
-      following,
-      trending,
-      postType,
-      timeRange
-    })
-    
-    const cachedResult = getCachedPosts(cacheKey)
-    if (cachedResult) {
-      return NextResponse.json(cachedResult, { status: 200 })
-    }
 
     // Validate limits
     if (limit > 50) {
@@ -245,9 +167,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         ? posts[posts.length - 1].createdAt
         : undefined
 
-      const result = { posts, nextCursor }
-      setCachedPosts(cacheKey, result)
-      return NextResponse.json(result, { status: 200 })
+      return NextResponse.json({ posts, nextCursor }, { status: 200 })
     }
 
     // General feed logic
@@ -292,9 +212,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       const followingUsernames = followingSnapshot.docs.map(doc => doc.data().target)
       
       if (followingUsernames.length === 0) {
-        const result = { posts: [], nextCursor: undefined }
-        setCachedPosts(cacheKey, result, CACHE_TTL * 2) // Cache empty results longer
-        return NextResponse.json(result, { status: 200 })
+        return NextResponse.json({ posts: [], nextCursor: undefined }, { status: 200 })
       }
       
       // Handle Firestore 'in' query limitation (max 10 values)
@@ -346,9 +264,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         ? posts[posts.length - 1].createdAt
         : undefined
       
-      const result = { posts, nextCursor }
-      setCachedPosts(cacheKey, result)
-      return NextResponse.json(result, { status: 200 })
+      return NextResponse.json({ posts, nextCursor }, { status: 200 })
     }
 
     // Trending feed logic
@@ -436,9 +352,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       ? (finalPosts[finalPosts.length - 1] as any).createdAt
       : undefined
 
-    const result = { posts: finalPosts, nextCursor }
-    setCachedPosts(cacheKey, result)
-    return NextResponse.json(result, { status: 200 })
+    return NextResponse.json({ posts: finalPosts, nextCursor }, { status: 200 })
     
   } catch (error) {
     console.error('Get posts error', error)

@@ -33,7 +33,7 @@ export default function ShortenPage() {
   const [isLoading, setIsLoading] = useState(false) // Link oluşturma yüklemesi
   const [error, setError] = useState('')
   const [logoDataUrl, setLogoDataUrl] = useState<string>('')
-  const [selectedLogo, setSelectedLogo] = useState<string>(logo.src)
+  const [selectedLogo, setSelectedLogo] = useState<string>(communityLogo.src)
 
   const [isLogoLoading, setIsLogoLoading] = useState(false)
 
@@ -45,23 +45,72 @@ export default function ShortenPage() {
         return
       }
 
-      const img = new window.Image()
-      img.src = src
-      img.crossOrigin = 'Anonymous'
-      img.onload = () => {
-        const canvas = document.createElement('canvas')
-        canvas.width = img.width
-        canvas.height = img.height
-        const ctx = canvas.getContext('2d')
-        if (ctx) {
-          ctx.drawImage(img, 0, 0)
-          setLogoDataUrl(canvas.toDataURL('image/png'))
+      // Special handling for SVG files
+      if (src.endsWith('.svg')) {
+        fetch(src)
+          .then(response => response.text())
+          .then(svgText => {
+            // Create a blob from SVG text and convert to data URL
+            const blob = new Blob([svgText], { type: 'image/svg+xml' })
+            const url = URL.createObjectURL(blob)
+            
+            const img = new window.Image()
+            img.onload = () => {
+              const canvas = document.createElement('canvas')
+              // Increase resolution for better quality
+              const scale = 4
+              canvas.width = 128 * scale
+              canvas.height = 128 * scale
+              const ctx = canvas.getContext('2d')
+              if (ctx) {
+                // Enable image smoothing for better quality
+                ctx.imageSmoothingEnabled = true
+                ctx.imageSmoothingQuality = 'high'
+                ctx.fillStyle = 'white'
+                ctx.fillRect(0, 0, canvas.width, canvas.height)
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+                setLogoDataUrl(canvas.toDataURL('image/png'))
+              }
+              URL.revokeObjectURL(url)
+              setIsLogoLoading(false)
+            }
+            img.onerror = () => {
+              console.error('SVG logo yüklenemedi:', src)
+              URL.revokeObjectURL(url)
+              setIsLogoLoading(false)
+            }
+            img.src = url
+          })
+          .catch(error => {
+            console.error('SVG fetch error:', error)
+            setIsLogoLoading(false)
+          })
+      } else {
+        // Handle regular image files (PNG, JPG)
+        const img = new window.Image()
+        img.src = src
+        img.crossOrigin = 'Anonymous'
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          // Increase resolution for better quality
+          const scale = 2
+          canvas.width = img.width * scale
+          canvas.height = img.height * scale
+          const ctx = canvas.getContext('2d')
+          if (ctx) {
+            // Enable image smoothing for better quality
+            ctx.imageSmoothingEnabled = true
+            ctx.imageSmoothingQuality = 'high'
+            ctx.scale(scale, scale)
+            ctx.drawImage(img, 0, 0)
+            setLogoDataUrl(canvas.toDataURL('image/png'))
+          }
+          setIsLogoLoading(false) // Yükleme bitti
         }
-        setIsLogoLoading(false) // Yükleme bitti
-      }
-      img.onerror = () => {
-        console.error('Logo yüklenemedi:', src)
-        setIsLogoLoading(false)
+        img.onerror = () => {
+          console.error('Logo yüklenemedi:', src)
+          setIsLogoLoading(false)
+        }
       }
     }
 
@@ -279,8 +328,8 @@ export default function ShortenPage() {
                         logoDataUrl
                           ? {
                               src: logoDataUrl,
-                              height: 48,
-                              width: 48,
+                              height: 64,
+                              width: 64,
                               excavate: true,
                             }
                           : undefined
@@ -327,6 +376,9 @@ export default function ShortenPage() {
                     <DropdownMenuContent className="bg-slate-700 text-white border-slate-600">
                       <DropdownMenuItem onClick={() => setSelectedLogo(logo.src)}>
                         Pehlivan Team Logolu
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSelectedLogo('/tp-sosyal.svg')}>
+                        TP-Sosyal Logolu
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setSelectedLogo(communityLogo.src)}>
                         Tasarım Proje Topluluğu Logosu

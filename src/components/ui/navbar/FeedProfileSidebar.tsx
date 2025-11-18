@@ -61,8 +61,8 @@ export default function FeedProfileSidebar() {
         asChild
         variant="ghost"
         className={`justify-start gap-2 px-3 py-2 rounded-md border ${active
-            ? 'bg-emerald-600/10 border-emerald-700/40 text-emerald-300'
-            : 'bg-transparent border-transparent text-slate-300 hover:bg-slate-800/70 hover:text-white'
+          ? 'bg-emerald-600/10 border-emerald-700/40 text-emerald-300'
+          : 'bg-transparent border-transparent text-slate-300 hover:bg-slate-800/70 hover:text-white'
           }`}
       >
         <Link href={href}>
@@ -77,6 +77,15 @@ export default function FeedProfileSidebar() {
     // Sidebar is now in-flow (non-fixed). On mobile it becomes a full-width block above content;
     // on large screens it occupies the left column (lg:col-span-3) with a constrained height.
     <aside className="fixed left-0 top-0 z-40 hidden h-screen w-72 flex-col gap-4 overflow-y-auto border-r border-slate-800 bg-slate-950/90 px-4 py-5 text-white backdrop-blur supports-[backdrop-filter]:backdrop-blur-md lg:flex">
+      {/* Logo */}
+      <div className="mb-4 flex items-center justify-center">
+        <img
+          src="/tp-sosyal.svg"
+          alt="Pehlivan Team Social"
+          className="h-16 w-auto brightness-0 invert"
+        />
+      </div>
+
       {/* User header */}
       <div className="mb-2">
         <Link href={username ? `/profile/${username}` : '/feed'} className="flex items-center gap-3">

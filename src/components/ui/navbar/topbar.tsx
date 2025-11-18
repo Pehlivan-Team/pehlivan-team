@@ -49,7 +49,7 @@ const socialLinks = [
 ]
 
 const internalLinks = [
-  { href: '/feed', label: 'Sosyalleş', Icon: MessageSquare },
+  { href: '/feed', label: 'Sosyalleş', Icon: MessageSquare, useLogo: true },
   { href: '/search', label: 'Ara', Icon: SearchIcon },
   { href: '/teams', label: 'Takımlar', Icon: Users },
   { href: '/timeline', label: 'Tarihçe', Icon: Milestone },
@@ -111,7 +111,7 @@ const Topbar = () => {
             </a>
           ))}
           <div className="h-6 w-px bg-slate-700" />
-          {internalLinks.map(({ href, label, Icon }) => (
+          {internalLinks.map(({ href, label, Icon, useLogo }) => (
             <Link
               key={href}
               href={href}
@@ -120,7 +120,15 @@ const Topbar = () => {
                 activeSection === href && 'font-bold text-red-400'
               )}
             >
-              <Icon className="h-5 w-5" />
+              {useLogo ? (
+                <img
+                  src="/tp-sosyal.svg"
+                  alt="TP-Sosyal"
+                  className="h-5 w-5 brightness-0 invert"
+                />
+              ) : (
+                <Icon className="h-5 w-5" />
+              )}
               <span>{label}</span>
             </Link>
           ))}
@@ -135,6 +143,7 @@ const Topbar = () => {
 const BottomBar = () => {
   const activeSection = useActiveSection(internalLinkIds)
   const [isSheetOpen, setIsSheetOpen] = React.useState(false)
+  const pathname = usePathname()
 
   const primaryActions = [
     { href: '/add_member', label: 'Bize Katıl', Icon: UserPlus },
@@ -195,7 +204,7 @@ const BottomBar = () => {
                   <SheetTitle className="text-white text-2xl">Menü</SheetTitle>
                 </SheetHeader>
                 <div className="mt-8 flex flex-col space-y-4">
-                  {menuLinks.map(({ href, label, Icon }) => (
+                  {menuLinks.map(({ href, label, Icon, useLogo }) => (
                     <Link
                       key={href}
                       href={href}
@@ -205,7 +214,15 @@ const BottomBar = () => {
                         activeSection === href ? 'bg-red-500/50 text-white' : 'hover:bg-slate-800'
                       )}
                     >
-                      <Icon className="w-6 h-6" />
+                      {useLogo ? (
+                        <img
+                          src="/tp-sosyal.svg"
+                          alt="TP-Sosyal"
+                          className="w-6 h-6 brightness-0 invert"
+                        />
+                      ) : (
+                        <Icon className="w-6 h-6" />
+                      )}
                       <span>{label}</span>
                     </Link>
                   ))}

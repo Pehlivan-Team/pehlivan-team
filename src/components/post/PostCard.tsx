@@ -1,7 +1,7 @@
 "use client"
 import { formatDistanceToNow } from 'date-fns'
 import { tr } from 'date-fns/locale'
-import { MoreHorizontal, Trash, Edit, MessageCircle, Heart, Loader2, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { MoreHorizontal, Trash, Edit, MessageCircle, Heart, Loader2, ChevronLeft, ChevronRight, X, MessageSquareShareIcon, Share2Icon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { VisuallyHidden } from '@/components/ui/visually-hidden'
+import { toast } from 'sonner'
 
 interface PostCardProps {
   post: {
@@ -117,7 +118,7 @@ export default function PostCard({ post }: PostCardProps) {
       setDeleting(false)
     }
   }
-  
+
   useEffect(() => {
     // Prefer session user image when author is the session user (fast)
     if (session?.user?.username === post.authorUsername) {
@@ -226,7 +227,7 @@ export default function PostCard({ post }: PostCardProps) {
                   <div className="grid grid-cols-2 gap-2 mt-0">
                     {images.map((u: string, i: number) => (
                       <div key={u} className="relative h-48 w-full overflow-hidden rounded-md border border-slate-700 hover:shadow-lg transition-transform transform-gpu hover:scale-[1.01] cursor-pointer">
-                        <Image src={u} alt={`post image ${i+1}`} fill className="object-cover" sizes="(max-width: 768px) 50vw, 350px" onClick={(e) => openViewer(i, e)} />
+                        <Image src={u} alt={`post image ${i + 1}`} fill className="object-cover" sizes="(max-width: 768px) 50vw, 350px" onClick={(e) => openViewer(i, e)} />
                       </div>
                     ))}
                   </div>
@@ -234,7 +235,7 @@ export default function PostCard({ post }: PostCardProps) {
                   <div className="grid grid-cols-3 gap-2 mt-0">
                     {images.map((u: string, i: number) => (
                       <div key={u} className="relative h-32 w-full overflow-hidden rounded-md border border-slate-700 hover:shadow-lg transition-transform transform-gpu hover:scale-[1.01] cursor-pointer">
-                        <Image src={u} alt={`post image ${i+1}`} fill className="object-cover" sizes="(max-width: 768px) 33vw, 233px" onClick={(e) => openViewer(i, e)} />
+                        <Image src={u} alt={`post image ${i + 1}`} fill className="object-cover" sizes="(max-width: 768px) 33vw, 233px" onClick={(e) => openViewer(i, e)} />
                       </div>
                     ))}
                   </div>
@@ -242,7 +243,7 @@ export default function PostCard({ post }: PostCardProps) {
                   <div className="grid grid-cols-2 gap-2 mt-0">
                     {images.slice(0, 4).map((u: string, i: number) => (
                       <div key={u} className="relative h-32 w-full overflow-hidden rounded-md border border-slate-700 hover:shadow-lg transition-transform transform-gpu hover:scale-[1.01] cursor-pointer">
-                        <Image src={u} alt={`post image ${i+1}`} fill className="object-cover" sizes="(max-width: 768px) 50vw, 350px" onClick={(e) => openViewer(i, e)} />
+                        <Image src={u} alt={`post image ${i + 1}`} fill className="object-cover" sizes="(max-width: 768px) 50vw, 350px" onClick={(e) => openViewer(i, e)} />
                         {i === 3 && images.length > 4 && (
                           <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-lg font-semibold">
                             +{images.length - 4}
@@ -272,8 +273,8 @@ export default function PostCard({ post }: PostCardProps) {
                 <span className="ml-1">{post.commentCount ?? 0}</span>
               </Button>
               <div className="ml-auto flex items-center gap-2">
-                <Button variant="ghost" size="sm" className="gap-2 px-3" onClick={(e) => { e.stopPropagation(); navigator.clipboard?.writeText(`${location.origin}/posts/${post.id}`) }}>
-                  <span className="text-xs">Paylaş</span>
+                <Button variant="ghost" size="sm" className="gap-2 px-3" onClick={(e) => { e.stopPropagation(); navigator.clipboard?.writeText(`${location.origin}/posts/${post.id}`); toast('Gönderi bağlantısı kopyalandı.', { duration: 3000 }) }}>
+                  <span className="text-xs"><Share2Icon /></span>
                 </Button>
               </div>
             </div>
@@ -295,7 +296,7 @@ export default function PostCard({ post }: PostCardProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      
+
       {/* Image viewer dialog */}
       <Dialog open={viewerOpen} onOpenChange={setViewerOpen}>
         <DialogContent className="max-w-4xl w-[90%] p-0 bg-transparent shadow-none">
