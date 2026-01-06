@@ -1,3 +1,5 @@
+# DEPRECATED
+
 #  Pehlivan Team - Resmi Web Sitesi & Sosyal Medya Platformu
 
 **Trakya Üniversitesi Tasarım ve Proje Topluluğu**
